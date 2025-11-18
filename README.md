@@ -229,6 +229,55 @@ if (isSupabaseConfigured()) {
 }
 \`\`\`
 
+### Database Schema
+
+The application includes a complete database schema for tracking friends and their calendar progress:
+
+**Tables:**
+- `friends` - Stores friend information (name, email, unique access code)
+- `friend_window_opens` - Tracks which windows each friend has opened
+
+**Features:**
+- Prevents duplicate window opens (each friend can only open each window once)
+- TypeScript types for type-safe database operations
+- Helper functions for common database queries
+- Seed data for development and testing
+
+**Setup:**
+
+1. Run the migration in your Supabase SQL Editor:
+   \`\`\`bash
+   # Copy the contents of supabase/migrations/20250101000000_create_friend_calendar_schema.sql
+   # Paste and run in Supabase Dashboard → SQL Editor
+   \`\`\`
+
+2. (Optional) Load seed data for testing:
+   \`\`\`bash
+   # Copy the contents of supabase/seed.sql
+   # Paste and run in Supabase Dashboard → SQL Editor
+   \`\`\`
+
+**Usage:**
+
+\`\`\`typescript
+import { getFriendByCode, recordWindowOpen, getFriendWithProgress } from '~/lib/database';
+
+// Get friend by their unique code
+const { data: friend } = await getFriendByCode('ALICE123');
+
+// Record window open
+await recordWindowOpen({
+  friend_id: friend.id,
+  window_number: 1,
+});
+
+// Get friend's progress
+const { data: progress } = await getFriendWithProgress(friend.id);
+console.log(progress.windows_opened); // [1, 2, 3]
+\`\`\`
+
+📚 **Full documentation**: See [supabase/README.md](supabase/README.md) for detailed schema documentation, TypeScript types, and examples.
+
 ## 📝 Project Structure
 
 \`\`\`
@@ -244,14 +293,21 @@ if (isSupabaseConfigured()) {
 │   │   └── calendar-content.ts    # Calendar configuration
 │   ├── lib/
 │   │   ├── supabase.ts            # Supabase client setup
+│   │   ├── database.ts            # Database helper functions
 │   │   └── featureFlags.ts        # Feature flag system (demo mode)
 │   ├── types/
-│   │   └── calendar.ts            # TypeScript interfaces
+│   │   ├── calendar.ts            # Content type interfaces
+│   │   └── database.ts            # Database schema types
 │   ├── styles/
 │   │   └── globals.css            # Global styles and theme
 │   ├── pages/
 │   │   └── index.astro            # Main page
 │   └── env.d.ts                   # Environment variable types
+├── supabase/
+│   ├── migrations/
+│   │   └── 20250101000000_create_friend_calendar_schema.sql
+│   ├── seed.sql                   # Test data for development
+│   └── README.md                  # Database schema documentation
 ├── public/                        # Static assets
 ├── .env.example                   # Environment variables template
 ├── astro.config.mjs              # Astro configuration
