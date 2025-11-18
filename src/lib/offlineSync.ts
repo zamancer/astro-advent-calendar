@@ -93,6 +93,7 @@ export async function syncQueue(): Promise<{ synced: number; failed: number; err
   };
 
   const remainingQueue: QueuedWindowOpen[] = [];
+  const originalTimestamps = new Set(queue.map((item) => item.timestamp));
 
   for (const item of queue) {
     try {
@@ -130,8 +131,21 @@ export async function syncQueue(): Promise<{ synced: number; failed: number; err
     }
   }
 
-  // Update the queue with only the failed items
-  setSyncQueue(remainingQueue);
+  // Prevent race condition: Check if new items were added during processing
+  // Read current queue from storage and merge any items that weren't in our original snapshot
+  const currentQueue = getSyncQueue();
+  const newItemsAddedDuringSync = currentQueue.filter(
+    (item) => !originalTimestamps.has(item.timestamp)
+  );
+
+  // Merge: failed items from our processing + any new items added concurrently
+  // Preserve chronological order by sorting by timestamp
+  const mergedQueue = [...remainingQueue, ...newItemsAddedDuringSync].sort(
+    (a, b) => a.timestamp - b.timestamp
+  );
+
+  // Update the queue with the merged result
+  setSyncQueue(mergedQueue);
 
   return results;
 }
