@@ -22,7 +22,7 @@ export default function SpotifyContent({ content }: SpotifyContentProps) {
           src={content.embedUrl}
           width="100%"
           height="352"
-          frameBorder="0"
+          style={{ border: 0 }}
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
           className="w-full"

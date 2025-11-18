@@ -28,6 +28,10 @@ export default function Snowfall({ enabled }: SnowfallProps) {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
+    // Capture canvas dimensions for use in class
+    const getCanvasWidth = () => canvas.width;
+    const getCanvasHeight = () => canvas.height;
+
     // Snowflake class
     class Snowflake {
       x: number;
@@ -37,8 +41,8 @@ export default function Snowfall({ enabled }: SnowfallProps) {
       wind: number;
 
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height - canvas.height;
+        this.x = Math.random() * getCanvasWidth();
+        this.y = Math.random() * getCanvasHeight() - getCanvasHeight();
         this.radius = Math.random() * 2 + 1;
         this.speed = Math.random() * 1 + 0.5;
         this.wind = Math.random() * 0.5 - 0.25;
@@ -48,9 +52,9 @@ export default function Snowfall({ enabled }: SnowfallProps) {
         this.y += this.speed;
         this.x += this.wind;
 
-        if (this.y > canvas.height) {
+        if (this.y > getCanvasHeight()) {
           this.y = -10;
-          this.x = Math.random() * canvas.width;
+          this.x = Math.random() * getCanvasWidth();
         }
       }
 

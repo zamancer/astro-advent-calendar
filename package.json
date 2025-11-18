@@ -6,11 +6,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "upload-images": "node scripts/upload-images.js"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@astrojs/ts-plugin": "^1.10.5",
+    "@supabase/supabase-js": "^2.83.0",
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
@@ -20,6 +22,9 @@
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
-    "tw-animate-css": "^1.4.0"
+    "@astrojs/check": "^0.9.5",
+    "dotenv": "^17.2.3",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "^5.9.3"
   }
 }
