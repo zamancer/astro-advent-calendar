@@ -2,20 +2,24 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * Initialize Supabase client
- * Only created if not in demo mode
+ * Only created if PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY are provided
  */
 export const supabase =
   import.meta.env.PUBLIC_SUPABASE_URL &&
   import.meta.env.PUBLIC_SUPABASE_ANON_KEY
     ? createClient(
         import.meta.env.PUBLIC_SUPABASE_URL,
-        import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+        import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+        {
+          auth: {
+            persistSession: false,
+            detectSessionInUrl: false,
+          },
+        }
       )
     : null;
 
 /**
  * Check if Supabase is configured and available
  */
-export const isSupabaseConfigured = (): boolean => {
-  return supabase !== null;
-};
+export const isSupabaseConfigured = !!supabase;

@@ -168,7 +168,7 @@ For demo mode (no backend), deploy as a static site to:
 2. **Add environment variables** in your Vercel project settings:
    - Go to Project Settings → Environment Variables
    - Add the following variables:
-     ```
+     ```env
      PUBLIC_SUPABASE_URL=your-project-url.supabase.co
      PUBLIC_SUPABASE_ANON_KEY=your-anon-key
      PUBLIC_DEMO_MODE=false
