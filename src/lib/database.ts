@@ -22,7 +22,7 @@ import type {
  * Get all friends
  */
 export async function getAllFriends(): Promise<{ data: Friend[] | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -35,7 +35,7 @@ export async function getAllFriends(): Promise<{ data: Friend[] | null; error: E
  * Get a friend by ID
  */
 export async function getFriendById(id: string): Promise<{ data: Friend | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -48,7 +48,7 @@ export async function getFriendById(id: string): Promise<{ data: Friend | null; 
  * Get a friend by their unique code
  */
 export async function getFriendByCode(code: string): Promise<{ data: Friend | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -61,7 +61,7 @@ export async function getFriendByCode(code: string): Promise<{ data: Friend | nu
  * Get a friend by email
  */
 export async function getFriendByEmail(email: string): Promise<{ data: Friend | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -74,7 +74,7 @@ export async function getFriendByEmail(email: string): Promise<{ data: Friend | 
  * Create a new friend
  */
 export async function createFriend(friend: FriendInsert): Promise<{ data: Friend | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -90,7 +90,7 @@ export async function updateFriend(
   id: string,
   updates: FriendUpdate,
 ): Promise<{ data: Friend | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -103,7 +103,7 @@ export async function updateFriend(
  * Delete a friend (and all their window opens via CASCADE)
  */
 export async function deleteFriend(id: string): Promise<{ error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { error: new Error('Supabase is not configured') };
   }
 
@@ -123,7 +123,7 @@ export async function deleteFriend(id: string): Promise<{ error: Error | null }>
 export async function recordWindowOpen(
   windowOpen: FriendWindowOpenInsert,
 ): Promise<{ data: FriendWindowOpen | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -138,7 +138,7 @@ export async function recordWindowOpen(
 export async function getFriendWindowOpens(
   friendId: string,
 ): Promise<{ data: FriendWindowOpen[] | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -157,7 +157,7 @@ export async function getFriendWindowOpens(
 export async function getWindowOpeners(
   windowNumber: number,
 ): Promise<{ data: FriendWindowOpen[] | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -174,7 +174,7 @@ export async function getWindowOpeners(
  * Check if a friend has opened a specific window
  */
 export async function hasOpenedWindow(friendId: string, windowNumber: number): Promise<{ data: boolean; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: false, error: new Error('Supabase is not configured') };
   }
 
@@ -198,7 +198,7 @@ export async function hasOpenedWindow(friendId: string, windowNumber: number): P
 export async function getFriendWithProgress(
   friendId: string,
 ): Promise<{ data: FriendWithProgress | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
@@ -230,7 +230,7 @@ export async function getFriendWithProgress(
  * Get progress summary for all friends
  */
 export async function getAllFriendsProgress(): Promise<{ data: FriendProgressSummary[] | null; error: Error | null }> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
 
