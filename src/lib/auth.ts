@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { getFriendByEmail } from './database';
 import type { User } from '@supabase/supabase-js';
+import type { Friend } from '../types/database';
 
 /**
  * Send a magic link to the specified email address
@@ -16,7 +17,16 @@ export async function sendMagicLink(email: string): Promise<{
 
   try {
     // Check if email is authorized (exists in friends table)
-    const friend = await getFriendByEmail(email);
+    const { data: friend, error: dbError } = await getFriendByEmail(email);
+
+    if (dbError) {
+      console.error('Database error checking email:', dbError);
+      return {
+        success: false,
+        error: 'Failed to verify email authorization',
+      };
+    }
+
     if (!friend) {
       return {
         success: false,
@@ -117,9 +127,16 @@ export async function isAuthenticated(): Promise<boolean> {
 /**
  * Get the friend record for the current authenticated user
  */
-export async function getCurrentFriend() {
+export async function getCurrentFriend(): Promise<Friend | null> {
   const user = await getCurrentUser();
   if (!user?.email) return null;
 
-  return await getFriendByEmail(user.email);
+  const { data: friend, error } = await getFriendByEmail(user.email);
+
+  if (error) {
+    console.error('Failed to get friend record:', error);
+    return null;
+  }
+
+  return friend;
 }

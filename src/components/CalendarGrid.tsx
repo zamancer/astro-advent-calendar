@@ -38,9 +38,14 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           const friend = await getCurrentFriend();
           if (friend) {
             setFriendId(friend.id);
-            const windowOpens = await getFriendWindowOpens(friend.id);
-            const openedWindowNumbers = windowOpens.map((wo) => wo.window_number);
-            setOpenedDays(new Set(openedWindowNumbers));
+            const { data: windowOpens, error } = await getFriendWindowOpens(friend.id);
+
+            if (error) {
+              console.error('Failed to load progress:', error);
+            } else {
+              const openedWindowNumbers = (windowOpens || []).map((wo) => wo.window_number);
+              setOpenedDays(new Set(openedWindowNumbers));
+            }
           }
         } catch (error) {
           console.error('Failed to load progress:', error);
