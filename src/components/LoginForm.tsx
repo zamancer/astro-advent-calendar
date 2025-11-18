@@ -14,26 +14,35 @@ export default function LoginForm() {
     const params = new URLSearchParams(window.location.search);
     const error = params.get('error');
 
-    if (error === 'auth_failed') {
-      setMessage({
-        type: 'error',
-        text: 'Authentication failed. Please try logging in again.',
-      });
-    } else if (error === 'config') {
-      setMessage({
-        type: 'error',
-        text: 'Authentication is not properly configured. Please contact support.',
-      });
-    } else if (error === 'auth') {
-      setMessage({
-        type: 'error',
-        text: 'Authentication error. Please try again.',
-      });
-    } else if (error === 'session') {
-      setMessage({
-        type: 'error',
-        text: 'No valid session found. Please request a new magic link.',
-      });
+    if (error) {
+      // Set error message based on error type
+      if (error === 'auth_failed') {
+        setMessage({
+          type: 'error',
+          text: 'Authentication failed. Please try logging in again.',
+        });
+      } else if (error === 'config') {
+        setMessage({
+          type: 'error',
+          text: 'Authentication is not properly configured. Please contact support.',
+        });
+      } else if (error === 'auth') {
+        setMessage({
+          type: 'error',
+          text: 'Authentication error. Please try again.',
+        });
+      } else if (error === 'session') {
+        setMessage({
+          type: 'error',
+          text: 'No valid session found. Please request a new magic link.',
+        });
+      }
+
+      // Remove error param from URL to prevent stale messages
+      params.delete('error');
+      const newSearch = params.toString();
+      const newUrl = newSearch ? `${window.location.pathname}?${newSearch}` : window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
     }
   }, []);
 
@@ -117,6 +126,7 @@ export default function LoginForm() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <circle
                     className="opacity-25"
