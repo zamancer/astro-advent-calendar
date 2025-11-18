@@ -12,8 +12,9 @@ export const supabase =
         import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
         {
           auth: {
-            persistSession: false,
-            detectSessionInUrl: false,
+            persistSession: true,
+            detectSessionInUrl: true,
+            storage: typeof window !== 'undefined' ? window.localStorage : undefined,
           },
         }
       )

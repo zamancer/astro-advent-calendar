@@ -1,0 +1,21 @@
+---
+import LoginForm from '../components/LoginForm';
+import ThemeToggle from '../components/ThemeToggle';
+import '../styles/global.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Login - Advent Calendar</title>
+  </head>
+  <body>
+    <div class="fixed top-4 right-4 z-50">
+      <ThemeToggle client:load />
+    </div>
+    <LoginForm client:load />
+  </body>
+</html>
