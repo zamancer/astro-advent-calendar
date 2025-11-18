@@ -9,7 +9,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "photo",
       day: 1,
-      imageUrl: "/cozy-winter-coffee-shop-with-friends.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop",
       caption: "Remember our first coffee date this winter? ☕",
       alt: "Friends at coffee shop",
     },
@@ -33,12 +33,12 @@ export const calendarConfig: CalendarConfig = {
       title: "Movie Night",
       message:
         "Can't wait for our annual holiday movie marathon! Hot cocoa and terrible Christmas movies are the best combo.",
-      imageUrl: "/cozy-movie-night-with-blankets-and-popcorn.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800&auto=format&fit=crop",
     },
     {
       type: "photo",
       day: 5,
-      imageUrl: "/snowy-mountain-landscape-winter-adventure.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=800&auto=format&fit=crop",
       caption: "That epic ski trip we took! Best adventure ever! 🎿",
       alt: "Ski trip memories",
     },
@@ -62,12 +62,12 @@ export const calendarConfig: CalendarConfig = {
       title: "Baking Disaster",
       message:
         "Remember when we tried to bake cookies and set off the smoke alarm? 😂 Good times!",
-      imageUrl: "/messy-kitchen-with-baking-ingredients-and-cookies.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
     },
     {
       type: "photo",
       day: 9,
-      imageUrl: "/beautiful-christmas-lights-downtown-city.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=800&auto=format&fit=crop",
       caption: "The night we went to see the Christmas lights downtown ✨",
       alt: "Christmas lights downtown",
     },
@@ -84,12 +84,12 @@ export const calendarConfig: CalendarConfig = {
       title: "New Year Plans",
       message:
         "Let's make next year even more amazing! So many adventures await us. 🎉",
-      imageUrl: "/fireworks-celebration-new-year.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=800&auto=format&fit=crop",
     },
     {
       type: "photo",
       day: 12,
-      imageUrl: "/group-of-friends-laughing-together-at-dinner.jpg",
+      imageUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
       caption: "To friendship, love, and endless memories. Merry Christmas! 🎁",
       alt: "Friends celebrating together",
     },
