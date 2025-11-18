@@ -14,6 +14,10 @@ An elegant, interactive Advent Calendar web application built with Astro, React,
 
 ## 🚀 Quick Start
 
+### Demo Mode (No Setup Required)
+
+The app runs in **demo mode** by default, allowing you to develop and test without any backend setup:
+
 1. **Install dependencies**:
    \`\`\`bash
    npm install
@@ -25,6 +29,35 @@ An elegant, interactive Advent Calendar web application built with Astro, React,
    \`\`\`
 
 3. **Open in browser**: Navigate to `http://localhost:4321`
+
+### Full Setup with Supabase (Optional)
+
+To enable backend features like user authentication and data persistence:
+
+1. **Create a Supabase project**:
+   - Go to [https://supabase.com](https://supabase.com) and create a new project
+   - Wait for the project to finish setting up
+
+2. **Get your Supabase credentials**:
+   - Navigate to Project Settings → API
+   - Copy your `Project URL` and `anon/public` key
+
+3. **Configure environment variables**:
+   \`\`\`bash
+   cp .env.example .env
+   \`\`\`
+
+   Edit `.env` and add your Supabase credentials:
+   \`\`\`env
+   PUBLIC_SUPABASE_URL=your-project-url.supabase.co
+   PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   PUBLIC_DEMO_MODE=false
+   \`\`\`
+
+4. **Start development server**:
+   \`\`\`bash
+   npm run dev
+   \`\`\`
 
 ## 🎨 Customization
 
@@ -118,11 +151,40 @@ The static site will be generated in the `dist/` folder, ready for deployment.
 
 ## 🚢 Deployment
 
-This project is optimized for static hosting. Deploy to:
+### Demo Mode Deployment
+
+For demo mode (no backend), deploy as a static site to:
 
 - **Vercel**: Connect your GitHub repo and deploy automatically
 - **Netlify**: Drag and drop the `dist` folder or connect via Git
 - **GitHub Pages**: Push the `dist` folder to a `gh-pages` branch
+
+### Deployment with Supabase
+
+#### Vercel Deployment
+
+1. **Connect your repository** to Vercel
+
+2. **Add environment variables** in your Vercel project settings:
+   - Go to Project Settings → Environment Variables
+   - Add the following variables:
+     ```
+     PUBLIC_SUPABASE_URL=your-project-url.supabase.co
+     PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+     PUBLIC_DEMO_MODE=false
+     ```
+
+3. **Deploy**: Vercel will automatically deploy your site with Supabase integration
+
+#### Other Platforms
+
+For Netlify, GitHub Pages, or other platforms:
+
+1. Add the environment variables in your platform's settings
+2. Ensure the variables are prefixed with `PUBLIC_` to be accessible in the browser
+3. Deploy as usual
+
+**Important**: Never commit your `.env` file to version control. Always use your platform's environment variable settings for production deployments.
 
 ## 🛠️ Tech Stack
 
@@ -131,6 +193,41 @@ This project is optimized for static hosting. Deploy to:
 - **TypeScript**: Type-safe development
 - **Tailwind CSS**: Utility-first styling
 - **Canvas API**: Snowfall animation
+- **Supabase**: Backend platform (optional, for authentication and data persistence)
+
+## 🏗️ Infrastructure
+
+### Demo Mode
+
+The application includes a **demo mode** feature flag system that allows development without requiring Supabase setup:
+
+- **Default**: Demo mode is ON
+- **Toggle**: Set `PUBLIC_DEMO_MODE=false` in `.env` to disable
+- **Usage**: Import `isDemoMode()`, `isAuthRequired()`, or `isSupabaseEnabled()` from `src/lib/featureFlags.ts`
+
+Example:
+\`\`\`typescript
+import { isDemoMode, isAuthRequired } from '~/lib/featureFlags';
+
+if (isDemoMode()) {
+  // Use local state or mock data
+} else {
+  // Use Supabase for real data
+}
+\`\`\`
+
+### Supabase Integration
+
+Supabase client is available at `src/lib/supabase.ts`:
+
+\`\`\`typescript
+import { supabase, isSupabaseConfigured } from '~/lib/supabase';
+
+if (isSupabaseConfigured()) {
+  // Supabase is ready to use
+  const { data, error } = await supabase.from('table').select();
+}
+\`\`\`
 
 ## 📝 Project Structure
 
@@ -145,13 +242,18 @@ This project is optimized for static hosting. Deploy to:
 │   │   └── content/               # Content type components
 │   ├── config/
 │   │   └── calendar-content.ts    # Calendar configuration
+│   ├── lib/
+│   │   ├── supabase.ts            # Supabase client setup
+│   │   └── featureFlags.ts        # Feature flag system (demo mode)
 │   ├── types/
 │   │   └── calendar.ts            # TypeScript interfaces
 │   ├── styles/
 │   │   └── globals.css            # Global styles and theme
-│   └── pages/
-│       └── index.astro            # Main page
+│   ├── pages/
+│   │   └── index.astro            # Main page
+│   └── env.d.ts                   # Environment variable types
 ├── public/                        # Static assets
+├── .env.example                   # Environment variables template
 ├── astro.config.mjs              # Astro configuration
 ├── package.json
 └── tsconfig.json
