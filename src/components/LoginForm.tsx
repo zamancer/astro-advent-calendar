@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sendMagicLink } from '../lib/auth';
 
 export default function LoginForm() {
@@ -8,6 +8,34 @@ export default function LoginForm() {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+
+  // Check for error in URL params on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+
+    if (error === 'auth_failed') {
+      setMessage({
+        type: 'error',
+        text: 'Authentication failed. Please try logging in again.',
+      });
+    } else if (error === 'config') {
+      setMessage({
+        type: 'error',
+        text: 'Authentication is not properly configured. Please contact support.',
+      });
+    } else if (error === 'auth') {
+      setMessage({
+        type: 'error',
+        text: 'Authentication error. Please try again.',
+      });
+    } else if (error === 'session') {
+      setMessage({
+        type: 'error',
+        text: 'No valid session found. Please request a new magic link.',
+      });
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

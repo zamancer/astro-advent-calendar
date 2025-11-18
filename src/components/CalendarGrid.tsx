@@ -73,17 +73,37 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
       // Only record if not already opened
       if (!openedDays.has(day)) {
+        // Optimistic update: update UI immediately for better UX
         setOpenedDays((prev) => new Set([...prev, day]));
 
         // Save to Supabase if authenticated
         if (!isDemoMode() && friendId) {
           try {
-            await recordWindowOpen({
+            const { error } = await recordWindowOpen({
               friend_id: friendId,
               window_number: day,
             });
+
+            // If database write failed, rollback the optimistic update
+            if (error) {
+              console.error('Failed to record window open:', error);
+              setOpenedDays((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(day);
+                return newSet;
+              });
+              // Optionally show user-facing error message
+              alert('Failed to save your progress. Please try again.');
+            }
           } catch (error) {
             console.error('Failed to record window open:', error);
+            // Rollback on exception as well
+            setOpenedDays((prev) => {
+              const newSet = new Set(prev);
+              newSet.delete(day);
+              return newSet;
+            });
+            alert('Failed to save your progress. Please try again.');
           }
         }
       }

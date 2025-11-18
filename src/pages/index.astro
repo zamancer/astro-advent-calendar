@@ -44,20 +44,26 @@ const { title, subtitle, contents } = calendarConfig;
           return;
         }
 
-        // Check if user is authenticated
-        const user = await getCurrentUser();
-        if (!user) {
-          // Redirect to login if not authenticated
-          window.location.href = '/login';
-          return;
-        }
+        try {
+          // Check if user is authenticated
+          const user = await getCurrentUser();
+          if (!user) {
+            // Redirect to login if not authenticated
+            window.location.href = '/login';
+            return;
+          }
 
-        // Get friend info and display user menu
-        const friend = await getCurrentFriend();
-        if (friend) {
-          displayUserMenu(friend.name, friend.email);
-        } else {
-          displayUserMenu(user.email || 'User', user.email || '');
+          // Get friend info and display user menu
+          const friend = await getCurrentFriend();
+          if (friend) {
+            displayUserMenu(friend.name, friend.email);
+          } else {
+            displayUserMenu(user.email || 'User', user.email || '');
+          }
+        } catch (error) {
+          console.error('Authentication check failed:', error);
+          // Redirect to login on authentication error
+          window.location.href = '/login?error=auth_failed';
         }
       }
 
