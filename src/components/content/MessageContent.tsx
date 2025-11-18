@@ -19,6 +19,9 @@ export default function MessageContent({ content }: MessageContentProps) {
             src={content.imageUrl || "/placeholder.svg"}
             alt={content.title}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg";
+            }}
           />
         </div>
       )}

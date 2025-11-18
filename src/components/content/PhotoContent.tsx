@@ -14,6 +14,9 @@ export default function PhotoContent({ content }: PhotoContentProps) {
           src={content.imageUrl || "/placeholder.svg"}
           alt={content.alt}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = "/placeholder.svg";
+          }}
         />
       </div>
       <p className="text-lg text-center text-foreground leading-relaxed">
