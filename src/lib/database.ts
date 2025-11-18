@@ -12,6 +12,7 @@ import type {
   FriendWindowOpenInsert,
   FriendWithProgress,
   FriendProgressSummary,
+  WindowOpenWithFriend,
 } from '../types/database';
 
 // ============================================
@@ -156,7 +157,7 @@ export async function getFriendWindowOpens(
  */
 export async function getWindowOpeners(
   windowNumber: number,
-): Promise<{ data: FriendWindowOpen[] | null; error: Error | null }> {
+): Promise<{ data: WindowOpenWithFriend[] | null; error: Error | null }> {
   if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
@@ -239,25 +240,44 @@ export async function getAllFriendsProgress(): Promise<{ data: FriendProgressSum
     return { data: null, error: friendsError };
   }
 
-  const progressData: FriendProgressSummary[] = [];
+  // Fetch all window opens in a single query to avoid N+1 problem
+  const { data: allWindowOpens, error: opensError } = await supabase
+    .from('friend_window_opens')
+    .select('*')
+    .order('friend_id', { ascending: true });
 
-  for (const friend of friends) {
-    const { data: windowOpens, error: opensError } = await getFriendWindowOpens(friend.id);
-    if (opensError) {
-      return { data: null, error: opensError };
-    }
+  if (opensError) {
+    return { data: null, error: opensError };
+  }
 
-    const windows_opened = windowOpens?.map((wo) => wo.window_number).sort((a, b) => a - b) || [];
-    const last_opened_at = windowOpens?.length ? windowOpens[windowOpens.length - 1].opened_at : null;
+  // Group window opens by friend_id
+  const windowOpensByFriend = new Map<string, FriendWindowOpen[]>();
+  allWindowOpens?.forEach((windowOpen) => {
+    const friendOpens = windowOpensByFriend.get(windowOpen.friend_id) || [];
+    friendOpens.push(windowOpen);
+    windowOpensByFriend.set(windowOpen.friend_id, friendOpens);
+  });
 
-    progressData.push({
+  // Build progress data for each friend
+  const progressData: FriendProgressSummary[] = friends.map((friend) => {
+    const windowOpens = windowOpensByFriend.get(friend.id) || [];
+    const windows_opened = windowOpens.map((wo) => wo.window_number).sort((a, b) => a - b);
+
+    // Find the latest opened_at timestamp
+    const last_opened_at = windowOpens.length
+      ? windowOpens.reduce((latest, wo) => {
+          return wo.opened_at > latest ? wo.opened_at : latest;
+        }, windowOpens[0].opened_at)
+      : null;
+
+    return {
       friend_id: friend.id,
       friend_name: friend.name,
       windows_opened,
       total_windows: windows_opened.length,
       last_opened_at,
-    });
-  }
+    };
+  });
 
   return { data: progressData, error: null };
 }
