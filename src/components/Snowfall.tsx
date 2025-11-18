@@ -1,5 +1,3 @@
-"use client";
-
 // Optional animated snowfall background effect
 
 import { useEffect, useRef } from "react";
