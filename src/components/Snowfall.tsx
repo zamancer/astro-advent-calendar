@@ -1,5 +1,3 @@
-"use client";
-
 // Optional animated snowfall background effect
 
 import { useEffect, useRef } from "react";
@@ -27,6 +25,18 @@ export default function Snowfall({ enabled }: SnowfallProps) {
     };
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
+
+    // Detect current theme
+    const isDarkMode = () => {
+      return document.documentElement.classList.contains("dark");
+    };
+
+    // Get snowflake color based on theme
+    const getSnowflakeColor = () => {
+      return isDarkMode()
+        ? "rgba(255, 255, 255, 0.8)"  // White for dark mode
+        : "rgba(30, 41, 59, 0.6)";     // Dark slate for light mode
+    };
 
     // Snowflake class
     class Snowflake {
@@ -58,7 +68,7 @@ export default function Snowfall({ enabled }: SnowfallProps) {
         if (!ctx) return;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        ctx.fillStyle = getSnowflakeColor();
         ctx.fill();
       }
     }

@@ -2,6 +2,7 @@
 // Main calendar page
 import CalendarGrid from '../components/CalendarGrid';
 import Snowfall from '../components/Snowfall';
+import ThemeToggle from '../components/ThemeToggle';
 import { calendarConfig } from '../config/calendar-content';
 import "../styles/global.css";
 
@@ -16,10 +17,28 @@ const { title, subtitle, contents } = calendarConfig;
     <meta name="generator" content={Astro.generator} />
     <title>{title} - Advent Calendar</title>
     <meta name="description" content={subtitle} />
+
+    <!-- Theme initialization script - runs before page load to prevent flash -->
+    <script is:inline>
+      (function() {
+        const storedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const theme = storedTheme || systemTheme;
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <!-- Snowfall effect -->
     <Snowfall client:load enabled={true} />
+
+    <!-- Theme toggle button -->
+    <ThemeToggle client:load />
 
     <!-- Main content -->
     <div class="relative z-10">
