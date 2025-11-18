@@ -14,7 +14,7 @@ interface CalendarWindowProps {
 
 export default function CalendarWindow({
   day,
-  content,
+  content: _content,
   isOpened,
   onOpen,
 }: CalendarWindowProps) {
