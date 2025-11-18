@@ -6,6 +6,9 @@ import { useState, useEffect } from "react";
 import CalendarWindow from "./CalendarWindow";
 import ContentModal from "./ContentModal";
 import type { CalendarContent } from "../types/calendar";
+import { isDemoMode } from "../lib/featureFlags";
+import { getCurrentFriend } from "../lib/auth";
+import { getFriendWindowOpens, recordWindowOpen } from "../lib/database";
 
 interface CalendarGridProps {
   contents: CalendarContent[];
@@ -16,26 +19,69 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   const [selectedContent, setSelectedContent] =
     useState<CalendarContent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [friendId, setFriendId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load opened days from localStorage
+  // Load opened days from localStorage or Supabase
   useEffect(() => {
-    const saved = localStorage.getItem("advent-opened-days");
-    if (saved) {
-      setOpenedDays(new Set(JSON.parse(saved)));
+    async function loadProgress() {
+      if (isDemoMode()) {
+        // Demo mode: use localStorage
+        const saved = localStorage.getItem("advent-opened-days");
+        if (saved) {
+          setOpenedDays(new Set(JSON.parse(saved)));
+        }
+        setLoading(false);
+      } else {
+        // Authenticated mode: use Supabase
+        try {
+          const friend = await getCurrentFriend();
+          if (friend) {
+            setFriendId(friend.id);
+            const windowOpens = await getFriendWindowOpens(friend.id);
+            const openedWindowNumbers = windowOpens.map((wo) => wo.window_number);
+            setOpenedDays(new Set(openedWindowNumbers));
+          }
+        } catch (error) {
+          console.error('Failed to load progress:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
     }
+
+    loadProgress();
   }, []);
 
-  // Save opened days to localStorage
+  // Save opened days to localStorage in demo mode
   useEffect(() => {
-    localStorage.setItem("advent-opened-days", JSON.stringify([...openedDays]));
+    if (isDemoMode()) {
+      localStorage.setItem("advent-opened-days", JSON.stringify([...openedDays]));
+    }
   }, [openedDays]);
 
-  const handleOpenWindow = (day: number) => {
+  const handleOpenWindow = async (day: number) => {
     const content = contents.find((c) => c.day === day);
     if (content) {
       setSelectedContent(content);
       setIsModalOpen(true);
-      setOpenedDays((prev) => new Set([...prev, day]));
+
+      // Only record if not already opened
+      if (!openedDays.has(day)) {
+        setOpenedDays((prev) => new Set([...prev, day]));
+
+        // Save to Supabase if authenticated
+        if (!isDemoMode() && friendId) {
+          try {
+            await recordWindowOpen({
+              friend_id: friendId,
+              window_number: day,
+            });
+          } catch (error) {
+            console.error('Failed to record window open:', error);
+          }
+        }
+      }
     }
   };
 
@@ -43,6 +89,14 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     setIsModalOpen(false);
     setTimeout(() => setSelectedContent(null), 300);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+      </div>
+    );
+  }
 
   return (
     <>

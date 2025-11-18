@@ -32,13 +32,88 @@ const { title, subtitle, contents } = calendarConfig;
         }
       })();
     </script>
+
+    <!-- Auth check script -->
+    <script>
+      import { isDemoMode } from '../lib/featureFlags';
+      import { getCurrentUser, getCurrentFriend } from '../lib/auth';
+
+      async function checkAuth() {
+        // In demo mode, skip authentication
+        if (isDemoMode()) {
+          return;
+        }
+
+        // Check if user is authenticated
+        const user = await getCurrentUser();
+        if (!user) {
+          // Redirect to login if not authenticated
+          window.location.href = '/login';
+          return;
+        }
+
+        // Get friend info and display user menu
+        const friend = await getCurrentFriend();
+        if (friend) {
+          displayUserMenu(friend.name, friend.email);
+        } else {
+          displayUserMenu(user.email || 'User', user.email || '');
+        }
+      }
+
+      function displayUserMenu(name: string, email: string) {
+        const userMenuElement = document.getElementById('user-menu');
+        if (!userMenuElement) return;
+
+        userMenuElement.innerHTML = `
+          <div class="relative group">
+            <button class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold">
+                ${name.charAt(0).toUpperCase()}
+              </div>
+              <div class="text-left hidden md:block">
+                <div class="text-sm font-medium text-gray-900 dark:text-white">${name}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">${email}</div>
+              </div>
+            </button>
+            <div class="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-gray-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+              <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                Sign out
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Add logout handler
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', handleLogout);
+        }
+      }
+
+      async function handleLogout() {
+        const { signOut } = await import('../lib/auth');
+        const result = await signOut();
+        if (result.success) {
+          window.location.href = '/login';
+        } else {
+          alert('Failed to sign out: ' + result.error);
+        }
+      }
+
+      // Run auth check on page load
+      checkAuth();
+    </script>
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <!-- Snowfall effect -->
     <Snowfall client:load enabled={true} />
 
-    <!-- Theme toggle button -->
-    <ThemeToggle client:load />
+    <!-- Theme toggle and user menu -->
+    <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+      <div id="user-menu"></div>
+      <ThemeToggle client:load />
+    </div>
 
     <!-- Main content -->
     <div class="relative z-10">
