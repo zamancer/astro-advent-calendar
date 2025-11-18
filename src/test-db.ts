@@ -7,14 +7,28 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
-import {
-  generateUniqueCode,
-  isValidEmail,
-  isValidWindowNumber,
-} from './lib/database.js';
 
 // Load environment variables from .env file
 config();
+
+// Utility functions (copied from database.ts to avoid importing Astro-specific modules)
+function generateUniqueCode(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < 8; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function isValidWindowNumber(windowNumber: number, maxWindows: number = 24): boolean {
+  return Number.isInteger(windowNumber) && windowNumber >= 1 && windowNumber <= maxWindows;
+}
 
 // Check required environment variables
 if (!process.env.PUBLIC_SUPABASE_URL || !process.env.PUBLIC_SUPABASE_ANON_KEY) {
