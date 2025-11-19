@@ -13,6 +13,9 @@ import type {
   FriendWithProgress,
   FriendProgressSummary,
   WindowOpenWithFriend,
+  AdminFriendProgress,
+  AdminStatistics,
+  AdminWindowPopularity,
 } from '../types/database';
 
 // ============================================
@@ -312,4 +315,80 @@ export function isValidEmail(email: string): boolean {
  */
 export function isValidWindowNumber(windowNumber: number, maxWindows: number = 24): boolean {
   return Number.isInteger(windowNumber) && windowNumber >= 1 && windowNumber <= maxWindows;
+}
+
+// ============================================
+// ADMIN OPERATIONS
+// ============================================
+
+/**
+ * Check if a user is an admin by email
+ */
+export async function isAdmin(email: string): Promise<{ data: boolean; error: Error | null }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { data: false, error: new Error('Supabase is not configured') };
+  }
+
+  const { data, error } = await supabase
+    .from('friends')
+    .select('is_admin')
+    .eq('email', email)
+    .single();
+
+  if (error) {
+    return { data: false, error };
+  }
+
+  return { data: data?.is_admin || false, error: null };
+}
+
+/**
+ * Get all friends' progress for admin dashboard
+ * Uses the admin_friend_progress database view for optimized queries
+ */
+export async function getAdminFriendProgress(): Promise<{ data: AdminFriendProgress[] | null; error: Error | null }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { data: null, error: new Error('Supabase is not configured') };
+  }
+
+  const { data, error } = await supabase
+    .from('admin_friend_progress')
+    .select('*')
+    .order('total_windows_opened', { ascending: false });
+
+  return { data, error };
+}
+
+/**
+ * Get overall statistics for admin dashboard
+ * Uses the admin_statistics database view
+ */
+export async function getAdminStatistics(): Promise<{ data: AdminStatistics | null; error: Error | null }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { data: null, error: new Error('Supabase is not configured') };
+  }
+
+  const { data, error } = await supabase
+    .from('admin_statistics')
+    .select('*')
+    .single();
+
+  return { data, error };
+}
+
+/**
+ * Get window popularity statistics for admin dashboard
+ * Uses the admin_window_popularity database view
+ */
+export async function getAdminWindowPopularity(): Promise<{ data: AdminWindowPopularity[] | null; error: Error | null }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { data: null, error: new Error('Supabase is not configured') };
+  }
+
+  const { data, error } = await supabase
+    .from('admin_window_popularity')
+    .select('*')
+    .order('window_number', { ascending: true });
+
+  return { data, error };
 }

@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { getFriendByEmail } from './database';
+import { getFriendByEmail, isAdmin as checkIsAdmin } from './database';
 import type { User } from '@supabase/supabase-js';
 import type { Friend } from '../types/database';
 
@@ -139,4 +139,21 @@ export async function getCurrentFriend(): Promise<Friend | null> {
   }
 
   return friend;
+}
+
+/**
+ * Check if the current authenticated user is an admin
+ */
+export async function isCurrentUserAdmin(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user?.email) return false;
+
+  const { data: isAdminUser, error } = await checkIsAdmin(user.email);
+
+  if (error) {
+    console.error('Failed to check admin status:', error);
+    return false;
+  }
+
+  return isAdminUser;
 }
