@@ -15,6 +15,7 @@ export interface Friend {
   name: string;
   email: string;
   unique_code: string;
+  is_admin: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -90,6 +91,47 @@ export interface FriendProgressSummary {
   windows_opened: number[];
   total_windows: number;
   last_opened_at: string | null;
+}
+
+// ============================================
+// ADMIN DASHBOARD TYPES
+// ============================================
+
+/**
+ * Admin view of friend progress (from admin_friend_progress view)
+ */
+export interface AdminFriendProgress {
+  friend_id: string;
+  friend_name: string;
+  friend_email: string;
+  joined_at: string;
+  windows_opened: number[];
+  total_windows_opened: number;
+  last_opened_at: string | null;
+  first_opened_at: string | null;
+}
+
+/**
+ * Overall statistics for admin dashboard (from admin_statistics view)
+ */
+export interface AdminStatistics {
+  total_friends: number;
+  total_window_opens: number;
+  avg_windows_per_friend: number;
+  max_windows_opened: number;
+  most_popular_window: number | null;
+  most_popular_window_count: number | null;
+}
+
+/**
+ * Window popularity statistics (from admin_window_popularity view)
+ */
+export interface AdminWindowPopularity {
+  window_number: number;
+  friends_count: number;
+  friend_ids: string[];
+  last_opened_at: string | null;
+  first_opened_at: string | null;
 }
 
 // ============================================
