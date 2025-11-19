@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAdminFriendProgress, getAdminStatistics, getAdminWindowPopularity } from '../lib/database';
-import type { AdminFriendProgress, AdminStatistics, AdminWindowPopularity } from '../types/database';
+import { getAdminFriendProgress, getAdminStatistics } from '../lib/database';
+import type { AdminFriendProgress, AdminStatistics } from '../types/database';
 import { supabase } from '../lib/supabase';
 import { Users, TrendingUp, Calendar, Clock, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -14,7 +14,6 @@ interface AdminDashboardProps {
 export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
   const [friendProgress, setFriendProgress] = useState<AdminFriendProgress[]>([]);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
-  const [windowPopularity, setWindowPopularity] = useState<AdminWindowPopularity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('progress');
@@ -31,22 +30,18 @@ export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
         // Load demo data
         setFriendProgress(generateDemoFriendProgress());
         setStatistics(generateDemoStatistics());
-        setWindowPopularity(generateDemoWindowPopularity());
       } else {
         // Load real data from database
-        const [progressResult, statsResult, popularityResult] = await Promise.all([
+        const [progressResult, statsResult] = await Promise.all([
           getAdminFriendProgress(),
           getAdminStatistics(),
-          getAdminWindowPopularity(),
         ]);
 
         if (progressResult.error) throw new Error(progressResult.error.message);
         if (statsResult.error) throw new Error(statsResult.error.message);
-        if (popularityResult.error) throw new Error(popularityResult.error.message);
 
         setFriendProgress(progressResult.data || []);
         setStatistics(statsResult.data);
-        setWindowPopularity(popularityResult.data || []);
       }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -258,45 +253,6 @@ export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
           )}
         </div>
       </div>
-
-      {/* Window Popularity */}
-      <div className="rounded-lg border bg-card">
-        <div className="border-b p-6">
-          <h2 className="text-xl font-semibold">Window Popularity</h2>
-          <p className="mt-1 text-sm text-muted-foreground">How many friends opened each window</p>
-        </div>
-        <div className="grid gap-2 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((windowNum) => {
-            const popularity = windowPopularity.find((w) => w.window_number === windowNum);
-            const count = popularity?.friends_count || 0;
-            const total = friendProgress.length;
-            const percentage = total > 0 ? (count / total) * 100 : 0;
-
-            return (
-              <div
-                key={windowNum}
-                className="rounded-md border p-3 transition-colors hover:bg-accent"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Window {windowNum}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {count}/{total}
-                  </span>
-                </div>
-                <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full bg-primary transition-all"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {percentage.toFixed(0)}% opened
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
@@ -498,14 +454,4 @@ function generateDemoStatistics(): AdminStatistics {
     most_popular_window: 1,
     most_popular_window_count: 5,
   };
-}
-
-function generateDemoWindowPopularity(): AdminWindowPopularity[] {
-  return Array.from({ length: 12 }, (_, i) => ({
-    window_number: i + 1,
-    friends_count: Math.floor(Math.random() * 6),
-    friend_ids: [],
-    last_opened_at: new Date(Date.now() - Math.random() * 7 * 86400000).toISOString(),
-    first_opened_at: new Date(Date.now() - 14 * 86400000).toISOString(),
-  }));
 }
