@@ -20,6 +20,7 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
   const [friendProgress, setFriendProgress] = useState<AdminFriendProgress[]>([]);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('progress');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -48,8 +49,13 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
   }, [isDemo]);
 
   // Load data function wrapped in useCallback to fix React hooks warning
-  const loadDashboardData = useCallback(async () => {
-    setLoading(true);
+  const loadDashboardData = useCallback(async (isBackgroundRefresh = false) => {
+    // Use different loading state for background refreshes
+    if (isBackgroundRefresh) {
+      setIsRefreshing(true);
+    } else {
+      setLoading(true);
+    }
     setError(null);
 
     try {
@@ -74,21 +80,25 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
       console.error('Failed to load dashboard data:', err);
       setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
     } finally {
-      setLoading(false);
+      if (isBackgroundRefresh) {
+        setIsRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   }, [isDemo]);
 
   // Load data on mount and when isDemo changes
   useEffect(() => {
-    // Only load data if authorized
+    // Only load data if authorized (initial load)
     if (isAuthorized) {
-      loadDashboardData();
+      loadDashboardData(false);
     }
   }, [loadDashboardData, isAuthorized]);
 
   // Real-time updates
   useEffect(() => {
-    if (isDemo || !supabase) return;
+    if (isDemo || !supabase || !isAuthorized) return;
 
     const channel = supabase
       .channel('admin-dashboard')
@@ -100,7 +110,8 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
           table: 'friend_window_opens',
         },
         () => {
-          loadDashboardData();
+          // Use background refresh to avoid jarring UX
+          loadDashboardData(true);
         }
       )
       .subscribe();
@@ -108,7 +119,7 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
     return () => {
       channel.unsubscribe();
     };
-  }, [isDemo, loadDashboardData]);
+  }, [isDemo, loadDashboardData, isAuthorized]);
 
   // Sort friends
   const sortedFriends = [...friendProgress].sort((a, b) => {
@@ -225,7 +236,7 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
           <p className="font-semibold text-destructive">Error loading dashboard</p>
           <p className="mt-2 text-sm text-muted-foreground">{error}</p>
           <button
-            onClick={loadDashboardData}
+            onClick={() => loadDashboardData(false)}
             className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             Retry
@@ -239,15 +250,26 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
     <div className="mx-auto max-w-7xl space-y-8 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="mt-1 text-muted-foreground">Track all friends&apos; calendar progress</p>
-        </div>
-        {isDemo && (
-          <div className="rounded-md border border-amber-500 bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-            Demo Mode
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <p className="mt-1 text-muted-foreground">Track all friends&apos; calendar progress</p>
           </div>
-        )}
+          {/* Subtle refresh indicator */}
+          {isRefreshing && (
+            <div className="flex items-center gap-2 rounded-md bg-muted px-3 py-1.5 text-sm text-muted-foreground">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <span>Updating...</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {isDemo && (
+            <div className="rounded-md border border-amber-500 bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+              Demo Mode
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Statistics Cards */}
