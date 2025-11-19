@@ -45,3 +45,35 @@ export interface CalendarConfig {
   subtitle: string;
   contents: CalendarContent[];
 }
+
+/**
+ * Friend-specific calendar configuration
+ * Links a friend's database ID with their personalized calendar content
+ */
+export interface FriendCalendarConfig extends CalendarConfig {
+  /** Friend ID from the database (must match friends table) */
+  friendId: string;
+  /** Friend's name for display purposes */
+  friendName: string;
+  /** Optional custom greeting message */
+  greeting?: string;
+}
+
+/**
+ * Validation result for friend configuration
+ */
+export interface ConfigValidationResult {
+  valid: boolean;
+  errors: string[];
+  warnings?: string[];
+}
+
+/**
+ * Metadata about a friend's configuration file
+ */
+export interface FriendConfigMetadata {
+  friendId: string;
+  friendName: string;
+  windowCount: number;
+  lastModified?: Date;
+}
