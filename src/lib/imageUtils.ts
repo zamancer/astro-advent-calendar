@@ -18,8 +18,13 @@ import {
 
 /**
  * Validate an image file
+ *
+ * Note: This function performs synchronous validation of file type and size only.
+ * Dimension-related options (maxWidth, maxHeight, minWidth, minHeight) are ignored.
+ * For dimension validation, use validateImageDimensions() which performs async checks.
+ *
  * @param file Image file to validate
- * @param options Validation options
+ * @param options Validation options (dimension options are ignored)
  * @returns Validation result with any errors
  */
 export function validateImage(
@@ -31,10 +36,6 @@ export function validateImage(
   const {
     maxSize = MAX_FILE_SIZE,
     allowedTypes = [...SUPPORTED_IMAGE_TYPES],
-    maxWidth,
-    maxHeight,
-    minWidth,
-    minHeight,
   } = options || {};
 
   // Check file type
@@ -53,13 +54,8 @@ export function validateImage(
     );
   }
 
-  // Check dimensions if specified (requires async operation)
-  if (maxWidth || maxHeight || minWidth || minHeight) {
-    // Note: Dimension validation is async, handle separately with validateImageDimensions
-    errors.push(
-      'Dimension validation requires async operation. Use validateImageDimensions()'
-    );
-  }
+  // Note: Dimension validation is ignored in this synchronous function.
+  // Use validateImageDimensions() for async dimension checks.
 
   return {
     valid: errors.length === 0,
