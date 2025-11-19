@@ -16,6 +16,35 @@ import type {
 import { STORAGE_BUCKET } from '../types/storage';
 
 // ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Build the storage path for a friend's window image
+ * @param friendId Friend's unique ID
+ * @param windowNumber Window number (1-24)
+ * @param extension File extension (without dot)
+ * @returns Storage path
+ */
+function buildFriendImagePath(
+  friendId: string,
+  windowNumber: number,
+  extension: string
+): string {
+  return `friends/${friendId}/window-${windowNumber}.${extension}`;
+}
+
+/**
+ * Extract file extension from filename
+ * @param filename Filename
+ * @returns Extension without dot
+ */
+function extractExtension(filename: string): string {
+  const parts = filename.split('.');
+  return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : 'jpg';
+}
+
+// ============================================
 // UPLOAD FUNCTIONS
 // ============================================
 
@@ -96,7 +125,7 @@ export async function uploadImage(
  * @param friendId Friend's unique ID
  * @param windowNumber Window number (1-24)
  * @param file Image file to upload
- * @returns Upload result with public URL
+ * @returns Upload result with public URL and extension
  */
 export async function uploadFriendImage(
   friendId: string,
@@ -104,15 +133,22 @@ export async function uploadFriendImage(
   file: File
 ): Promise<ImageUploadResult> {
   // Extract file extension
-  const extension = file.name.split('.').pop() || 'jpg';
+  const extension = extractExtension(file.name);
 
   // Build path: friends/{friend-id}/window-{number}.{ext}
-  const path = `friends/${friendId}/window-${windowNumber}.${extension}`;
+  const path = buildFriendImagePath(friendId, windowNumber, extension);
 
-  return uploadImage({
+  const result = await uploadImage({
     file,
     path,
   });
+
+  // Include extension in result for consistent retrieval
+  if (result.success && result.data) {
+    result.data.extension = extension;
+  }
+
+  return result;
 }
 
 /**
@@ -217,7 +253,7 @@ export function getImageUrl(
  * Get URL for a friend's window image
  * @param friendId Friend's unique ID
  * @param windowNumber Window number (1-24)
- * @param extension File extension (default: jpg)
+ * @param extension File extension (default: jpg). Should match the extension used during upload.
  * @returns Public URL for the image
  */
 export function getFriendImageUrl(
@@ -225,7 +261,7 @@ export function getFriendImageUrl(
   windowNumber: number,
   extension = 'jpg'
 ): string | null {
-  const path = `friends/${friendId}/window-${windowNumber}.${extension}`;
+  const path = buildFriendImagePath(friendId, windowNumber, extension);
   return getImageUrl(path);
 }
 
@@ -329,7 +365,7 @@ export async function deleteImage(path: string): Promise<boolean> {
  * Delete a friend's window image
  * @param friendId Friend's unique ID
  * @param windowNumber Window number (1-24)
- * @param extension File extension (default: jpg)
+ * @param extension File extension (default: jpg). Should match the extension used during upload.
  * @returns Success status
  */
 export async function deleteFriendImage(
@@ -337,7 +373,7 @@ export async function deleteFriendImage(
   windowNumber: number,
   extension = 'jpg'
 ): Promise<boolean> {
-  const path = `friends/${friendId}/window-${windowNumber}.${extension}`;
+  const path = buildFriendImagePath(friendId, windowNumber, extension);
   return deleteImage(path);
 }
 

@@ -79,6 +79,7 @@ export interface ImageUploadResult {
     path: string;
     publicUrl: string;
     fullPath: string;
+    extension?: string;
   };
   error?: {
     message: string;

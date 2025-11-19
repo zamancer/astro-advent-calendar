@@ -348,7 +348,7 @@ The calendar supports cloud-based image storage using **Supabase Storage** with 
 
 ## 🎁 Tips
 
-- Upload images to Supabase Storage for CDN-backed delivery (see [Image Storage](#-image-storage))
+- Upload images to Supabase Storage for CDN-backed delivery (see [Image Storage](#image-storage))
 - Or add images to the `public/` folder and reference them locally
 - Get Spotify embed URLs by clicking "Share" → "Embed" on any track
 - The calendar remembers opened windows even after page refresh
