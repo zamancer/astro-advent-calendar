@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getAdminFriendProgress, getAdminStatistics } from '../lib/database';
+import { isCurrentUserAdmin } from '../lib/auth';
 import type { AdminFriendProgress, AdminStatistics } from '../types/database';
 import { supabase } from '../lib/supabase';
 import { Users, TrendingUp, Calendar, Clock, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
@@ -23,6 +24,28 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
   const [sortField, setSortField] = useState<SortField>('progress');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [selectedFriend, setSelectedFriend] = useState<AdminFriendProgress | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+
+  // Check admin authorization
+  useEffect(() => {
+    async function checkAuthorization() {
+      // Skip auth check in demo mode
+      if (isDemo) {
+        setIsAuthorized(true);
+        return;
+      }
+
+      try {
+        const adminStatus = await isCurrentUserAdmin();
+        setIsAuthorized(adminStatus);
+      } catch (err) {
+        console.error('Failed to check admin authorization:', err);
+        setIsAuthorized(false);
+      }
+    }
+
+    checkAuthorization();
+  }, [isDemo]);
 
   // Load data function wrapped in useCallback to fix React hooks warning
   const loadDashboardData = useCallback(async () => {
@@ -57,8 +80,11 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
 
   // Load data on mount and when isDemo changes
   useEffect(() => {
-    loadDashboardData();
-  }, [loadDashboardData]);
+    // Only load data if authorized
+    if (isAuthorized) {
+      loadDashboardData();
+    }
+  }, [loadDashboardData, isAuthorized]);
 
   // Real-time updates
   useEffect(() => {
@@ -130,6 +156,55 @@ export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_CO
     if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
 
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // Show loading while checking authorization
+  if (isAuthorized === null) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted-foreground">Verifying admin access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show unauthorized if not admin
+  if (!isAuthorized) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="rounded-lg border border-destructive bg-destructive/10 p-6 text-center">
+          <div className="mb-4 flex justify-center">
+            <svg
+              className="h-16 w-16 text-destructive"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-destructive">Access Denied</h2>
+          <p className="mt-2 text-muted-foreground">
+            You don&apos;t have permission to access the admin dashboard.
+          </p>
+          <div className="mt-6 flex flex-col gap-2">
+            <a
+              href="/"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Go to Calendar
+            </a>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (loading) {
@@ -338,7 +413,25 @@ function FriendRow({
   onToggle: () => void;
   formatDate: (date: string | null) => string;
 }) {
-  const progressPercent = (friend.total_windows_opened / windowCount) * 100;
+  // Calculate progress percentage with safety guards
+  const calculateProgressPercent = () => {
+    // Guard against invalid windowCount
+    if (!windowCount || !Number.isFinite(windowCount) || windowCount <= 0) {
+      return 0;
+    }
+
+    // Calculate percentage
+    const percent = (friend.total_windows_opened / windowCount) * 100;
+
+    // Ensure result is finite and clamp to 0-100 range
+    if (!Number.isFinite(percent)) {
+      return 0;
+    }
+
+    return Math.min(Math.max(percent, 0), 100);
+  };
+
+  const progressPercent = calculateProgressPercent();
 
   return (
     <div>
