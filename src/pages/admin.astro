@@ -2,6 +2,7 @@
 import { AdminDashboard } from '../components/AdminDashboard';
 import ThemeToggle from '../components/ThemeToggle';
 import { isDemoMode } from '../lib/featureFlags';
+import "../styles/global.css";
 
 const demoMode = isDemoMode();
 const pageTitle = 'Admin Dashboard - Advent Calendar';
@@ -15,6 +16,21 @@ const pageTitle = 'Admin Dashboard - Advent Calendar';
     <meta name="description" content="Admin Dashboard for Advent Calendar" />
     <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Theme initialization script - runs before page load to prevent flash -->
+    <script is:inline>
+      (function() {
+        const storedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const theme = storedTheme || systemTheme;
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
   <body class="bg-background text-foreground">
     <!-- Loading State -->
