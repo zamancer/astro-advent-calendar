@@ -284,6 +284,37 @@ supabase db dump -f backup.sql
 supabase db reset
 ```
 
+## Image Storage
+
+The application uses **Supabase Storage** for storing and serving calendar images via CDN.
+
+### Storage Bucket
+
+**Bucket name**: `calendar-images`
+
+**Folder structure**:
+```
+calendar-images/
+├── friends/{friend-id}/window-{number}.{ext}
+├── shared/{image-name}.{ext}
+└── placeholders/{placeholder}.{ext}
+```
+
+### Setup
+
+1. Create bucket in Supabase Dashboard → Storage
+2. Name it `calendar-images`
+3. Set to **Public** bucket
+4. Run migration: `supabase/migrations/20250119000000_create_image_storage.sql`
+
+### Usage
+
+See [docs/IMAGE_STORAGE.md](../docs/IMAGE_STORAGE.md) for complete documentation on:
+- Image optimization
+- Bulk uploading
+- Using images in code
+- Demo mode placeholders
+
 ## Future Enhancements
 
 Potential schema improvements:
@@ -292,3 +323,4 @@ Potential schema improvements:
 - Track IP addresses or user agents for security
 - Add `window_unlock_date` to enforce temporal constraints
 - Add analytics tables for aggregated statistics
+- Add `images` table to track uploaded images and metadata
