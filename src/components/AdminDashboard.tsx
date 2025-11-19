@@ -4,14 +4,18 @@ import type { AdminFriendProgress, AdminStatistics } from '../types/database';
 import { supabase } from '../lib/supabase';
 import { Users, TrendingUp, Calendar, Clock, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
 
+// Calendar configuration
+const DEFAULT_WINDOW_COUNT = 12;
+
 type SortField = 'name' | 'progress' | 'lastActivity';
 type SortDirection = 'asc' | 'desc';
 
 interface AdminDashboardProps {
   isDemo?: boolean;
+  windowCount?: number;
 }
 
-export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
+export function AdminDashboard({ isDemo = false, windowCount = DEFAULT_WINDOW_COUNT }: AdminDashboardProps) {
   const [friendProgress, setFriendProgress] = useState<AdminFriendProgress[]>([]);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
   const [loading, setLoading] = useState(true);
@@ -91,11 +95,12 @@ export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
       case 'progress':
         comparison = a.total_windows_opened - b.total_windows_opened;
         break;
-      case 'lastActivity':
+      case 'lastActivity': {
         const aTime = a.last_opened_at ? new Date(a.last_opened_at).getTime() : 0;
         const bTime = b.last_opened_at ? new Date(b.last_opened_at).getTime() : 0;
         comparison = aTime - bTime;
         break;
+      }
     }
 
     return sortDirection === 'asc' ? comparison : -comparison;
@@ -185,7 +190,7 @@ export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
           />
           <StatCard
             title="Avg Progress"
-            value={`${statistics.avg_windows_per_friend.toFixed(1)}/12`}
+            value={`${statistics.avg_windows_per_friend.toFixed(1)}/${windowCount}`}
             icon={<TrendingUp className="h-4 w-4" />}
           />
           <StatCard
@@ -241,6 +246,7 @@ export function AdminDashboard({ isDemo = false }: AdminDashboardProps) {
               <FriendRow
                 key={friend.friend_id}
                 friend={friend}
+                windowCount={windowCount}
                 isExpanded={selectedFriend?.friend_id === friend.friend_id}
                 onToggle={() =>
                   setSelectedFriend(
@@ -321,16 +327,18 @@ function SortButton({
 // Friend Row Component
 function FriendRow({
   friend,
+  windowCount,
   isExpanded,
   onToggle,
   formatDate,
 }: {
   friend: AdminFriendProgress;
+  windowCount: number;
   isExpanded: boolean;
   onToggle: () => void;
   formatDate: (date: string | null) => string;
 }) {
-  const progressPercent = (friend.total_windows_opened / 12) * 100;
+  const progressPercent = (friend.total_windows_opened / windowCount) * 100;
 
   return (
     <div>
@@ -354,7 +362,7 @@ function FriendRow({
             <div className="text-center">
               <p className="text-sm font-medium text-muted-foreground">Progress</p>
               <p className="mt-1 text-lg font-bold">
-                {friend.total_windows_opened}/12
+                {friend.total_windows_opened}/{windowCount}
               </p>
             </div>
             <div className="text-center">
@@ -383,7 +391,7 @@ function FriendRow({
         <div className="border-t bg-muted/50 px-6 py-4">
           <h4 className="mb-3 text-sm font-semibold">Opened Windows</h4>
           <div className="grid grid-cols-12 gap-2">
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((day) => {
+            {Array.from({ length: windowCount }, (_, i) => i + 1).map((day) => {
               const isOpened = friend.windows_opened.includes(day);
               return (
                 <div
