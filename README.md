@@ -315,9 +315,41 @@ console.log(progress.windows_opened); // [1, 2, 3]
 └── tsconfig.json
 \`\`\`
 
+## 📸 Image Storage
+
+The calendar supports cloud-based image storage using **Supabase Storage** with CDN delivery for fast loading.
+
+### Quick Start
+
+1. **Create Storage Bucket** in Supabase Dashboard → Storage → `calendar-images`
+2. **Upload Images** using the bulk upload script:
+   ```bash
+   pnpm upload-images --friend-id abc123 --dir ./images/friend1
+   ```
+3. **Use in Code**:
+   ```typescript
+   import { getFriendImageUrl } from '~/lib/storage';
+   const imageUrl = getFriendImageUrl('friend123', 1);
+   ```
+
+### Features
+
+- ✅ **CDN-backed**: Fast delivery worldwide
+- ✅ **Organized by friend**: Each friend has their own folder
+- ✅ **Bulk upload script**: Upload multiple images at once
+- ✅ **Image optimization utilities**: Compress and validate images
+- ✅ **Demo mode**: Automatic placeholders for development
+
+📚 **Complete Guide**: See [docs/IMAGE_STORAGE.md](docs/IMAGE_STORAGE.md) for:
+- Image optimization best practices
+- Bulk uploading instructions
+- Using images in code
+- API reference
+
 ## 🎁 Tips
 
-- Add your own images to the `public/` folder and reference them in the config
+- Upload images to Supabase Storage for CDN-backed delivery (see [Image Storage](#-image-storage))
+- Or add images to the `public/` folder and reference them locally
 - Get Spotify embed URLs by clicking "Share" → "Embed" on any track
 - The calendar remembers opened windows even after page refresh
 - All windows can be opened in any order (not date-locked)
