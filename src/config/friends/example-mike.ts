@@ -40,7 +40,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 2,
-      embedUrl: "https://open.spotify.com/embed/track/7qiZfU4dY1lWllzX7mPBI?w=800&auto=format&fit=crop",
+      embedUrl: "https://open.spotify.com/embed/track/7qiZfU4dY1lWllzX7mPBI",
       title: "Rock Concert Vibes",
       description: "This song was INSANE live! Best concert we've been to.",
     },
