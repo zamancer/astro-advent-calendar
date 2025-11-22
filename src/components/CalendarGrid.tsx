@@ -134,7 +134,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     return cleanup;
   }, [friendId]);
 
-  const handleOpenWindow = async (day: number) => {
+  const handleOpenWindow = (day: number) => {
     const content = contents.find((c) => c.day === day);
     if (content) {
       // Update progress BEFORE opening modal for better sync
@@ -154,13 +154,16 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           return newOpenedDays;
         });
 
+        // Snapshot friendId before async operation to avoid issues if state changes
+        const currentFriendId = friendId;
+
         // Save to Supabase if authenticated (non-blocking for instant modal)
-        if (!isDemoMode() && friendId) {
+        if (!isDemoMode() && currentFriendId) {
           setSyncStatus('syncing');
 
           // Fire and forget - don't block modal opening
           recordWindowOpen({
-            friend_id: friendId,
+            friend_id: currentFriendId,
             window_number: day,
           })
             .then(({ error }) => {
@@ -178,7 +181,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
                 if (!isDuplicate) {
                   // Queue for later sync
                   queueWindowOpen({
-                    friend_id: friendId,
+                    friend_id: currentFriendId,
                     window_number: day,
                   });
                   setSyncStatus('offline');
@@ -196,7 +199,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
               // Queue for later sync
               queueWindowOpen({
-                friend_id: friendId,
+                friend_id: currentFriendId,
                 window_number: day,
               });
               setSyncStatus('offline');
@@ -236,7 +239,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
-              style={{ width: `${(openedDays.size / (contents.length || 1)) * 100}%` }}
+              style={{ width: `${Math.min(100, (openedDays.size / (contents.length || 1)) * 100)}%` }}
               aria-label={`${openedDays.size} of ${contents.length} windows opened`}
             />
           </div>
