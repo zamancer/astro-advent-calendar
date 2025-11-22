@@ -220,15 +220,30 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     <>
       {/* Progress indicator */}
       <div className="mb-8 text-center">
-        <p className="text-muted-foreground text-sm uppercase tracking-wider mb-2">
+        <p className="text-muted-foreground text-sm uppercase tracking-wider mb-3">
           Progress
         </p>
-        <div className="flex justify-center gap-2">
+
+        {/* Progress bar */}
+        <div className="max-w-md mx-auto mb-3">
+          <div className="h-3 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
+              style={{ width: `${(openedDays.size / 12) * 100}%` }}
+              aria-label={`${openedDays.size} of 12 windows opened`}
+            />
+          </div>
+        </div>
+
+        {/* Dots indicator */}
+        <div className="flex justify-center gap-2 mb-2">
           {Array.from({ length: 12 }, (_, i) => i + 1).map((day) => (
             <div
               key={day}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                openedDays.has(day) ? "bg-accent" : "bg-muted"
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                openedDays.has(day)
+                  ? "bg-accent shadow-[0_0_8px_rgba(251,191,36,0.6)] scale-110"
+                  : "bg-muted"
               }`}
               aria-label={`Day ${day} ${
                 openedDays.has(day) ? "opened" : "not opened"
@@ -236,8 +251,15 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             />
           ))}
         </div>
-        <p className="text-sm text-muted-foreground mt-2">
-          {openedDays.size} of 12 opened
+
+        {/* Progress text */}
+        <p className="text-sm font-medium mt-1">
+          <span className="text-green-600 dark:text-green-500">
+            {openedDays.size}
+          </span>
+          <span className="text-muted-foreground">
+            {" "}of 12 opened
+          </span>
         </p>
 
         {/* Sync status indicator (only in authenticated mode) */}
