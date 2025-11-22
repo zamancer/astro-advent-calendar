@@ -137,9 +137,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   const handleOpenWindow = async (day: number) => {
     const content = contents.find((c) => c.day === day);
     if (content) {
-      setSelectedContent(content);
-      setIsModalOpen(true);
-
+      // Update progress BEFORE opening modal for better sync
       // Only record if not already opened
       if (!openedDays.has(day)) {
         // Update UI immediately for better UX
@@ -149,53 +147,58 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
         // Always save to localStorage immediately (works offline)
         saveLocalProgress(newOpenedDays);
 
-        // Save to Supabase if authenticated
+        // Save to Supabase if authenticated (non-blocking for instant modal)
         if (!isDemoMode() && friendId) {
           setSyncStatus('syncing');
 
-          try {
-            const { error } = await recordWindowOpen({
-              friend_id: friendId,
-              window_number: day,
-            });
+          // Fire and forget - don't block modal opening
+          recordWindowOpen({
+            friend_id: friendId,
+            window_number: day,
+          })
+            .then(({ error }) => {
+              if (error) {
+                console.error('Failed to record window open:', error);
 
-            if (error) {
-              console.error('Failed to record window open:', error);
+                // Check if it's a duplicate error (already saved)
+                const isDuplicate =
+                  error.code === 'PGRST116' ||
+                  error.code === '23505' ||
+                  error.message?.includes('duplicate') ||
+                  error.message?.includes('unique');
 
-              // Check if it's a duplicate error (already saved)
-              const isDuplicate =
-                error.code === 'PGRST116' ||
-                error.code === '23505' ||
-                error.message?.includes('duplicate') ||
-                error.message?.includes('unique');
-
-              if (!isDuplicate) {
-                // Queue for later sync
-                queueWindowOpen({
-                  friend_id: friendId,
-                  window_number: day,
-                });
-                setSyncStatus('offline');
+                if (!isDuplicate) {
+                  // Queue for later sync
+                  queueWindowOpen({
+                    friend_id: friendId,
+                    window_number: day,
+                  });
+                  setSyncStatus('offline');
+                } else {
+                  // Already saved, all good
+                  setSyncStatus('synced');
+                }
               } else {
-                // Already saved, all good
+                // Successfully saved to cloud
                 setSyncStatus('synced');
               }
-            } else {
-              // Successfully saved to cloud
-              setSyncStatus('synced');
-            }
-          } catch (error) {
-            console.error('Failed to record window open:', error);
+            })
+            .catch((error) => {
+              console.error('Failed to record window open:', error);
 
-            // Queue for later sync
-            queueWindowOpen({
-              friend_id: friendId,
-              window_number: day,
+              // Queue for later sync
+              queueWindowOpen({
+                friend_id: friendId,
+                window_number: day,
+              });
+              setSyncStatus('offline');
             });
-            setSyncStatus('offline');
-          }
         }
       }
+
+      // Open modal immediately after progress update (don't wait for DB)
+      setSelectedContent(content);
+      setIsModalOpen(true);
     }
   };
 
