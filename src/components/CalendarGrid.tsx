@@ -8,7 +8,7 @@ import ContentModal from "./ContentModal";
 import type { CalendarContent } from "../types/calendar";
 import { isDemoMode } from "../lib/featureFlags";
 import { getCurrentFriend } from "../lib/auth";
-import { getFriendWindowOpens, recordWindowOpen } from "../lib/database";
+import { getFriendWindowOpens, recordWindowOpen, isPostgrestError } from "../lib/database";
 import {
   getLocalProgress,
   saveLocalProgress,
@@ -161,9 +161,10 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
                 console.error('Failed to record window open:', error);
 
                 // Check if it's a duplicate error (already saved)
+                // Use type guard to safely access error.code
                 const isDuplicate =
-                  error.code === 'PGRST116' ||
-                  error.code === '23505' ||
+                  (isPostgrestError(error) &&
+                    (error.code === 'PGRST116' || error.code === '23505')) ||
                   error.message?.includes('duplicate') ||
                   error.message?.includes('unique');
 

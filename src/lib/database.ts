@@ -4,6 +4,7 @@
  */
 
 import { supabase, isSupabaseConfigured } from './supabase';
+import type { PostgrestError } from '@supabase/supabase-js';
 import type {
   Friend,
   FriendInsert,
@@ -17,6 +18,23 @@ import type {
   AdminStatistics,
   AdminWindowPopularity,
 } from '../types/database';
+
+// Database error type: can be either a regular Error (when Supabase isn't configured)
+// or a PostgrestError (from Supabase operations)
+export type DatabaseError = PostgrestError | Error | null;
+
+/**
+ * Type guard to check if an error is a PostgrestError (has a 'code' property)
+ */
+export function isPostgrestError(error: unknown): error is PostgrestError {
+  return (
+    error !== null &&
+    error !== undefined &&
+    typeof error === 'object' &&
+    'code' in error &&
+    typeof (error as PostgrestError).code === 'string'
+  );
+}
 
 // ============================================
 // FRIENDS OPERATIONS
@@ -126,7 +144,7 @@ export async function deleteFriend(id: string): Promise<{ error: Error | null }>
  */
 export async function recordWindowOpen(
   windowOpen: FriendWindowOpenInsert,
-): Promise<{ data: FriendWindowOpen | null; error: Error | null }> {
+): Promise<{ data: FriendWindowOpen | null; error: DatabaseError }> {
   if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }

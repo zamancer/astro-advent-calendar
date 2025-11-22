@@ -3,7 +3,7 @@
  * Handles offline progress tracking with automatic sync when connection is restored
  */
 
-import { recordWindowOpen } from './database';
+import { recordWindowOpen, isPostgrestError } from './database';
 import type { FriendWindowOpenInsert } from '../types/database';
 
 const SYNC_QUEUE_KEY = 'advent-sync-queue';
@@ -105,9 +105,10 @@ export async function syncQueue(): Promise<{ synced: number; failed: number; err
       if (error) {
         // Check if it's a duplicate error (PGRST116 or unique constraint violation)
         // In this case, we can safely remove it from the queue
+        // Use type guard to safely access error.code
         const isDuplicate =
-          error.code === 'PGRST116' ||
-          error.code === '23505' ||
+          (isPostgrestError(error) &&
+            (error.code === 'PGRST116' || error.code === '23505')) ||
           error.message?.includes('duplicate') ||
           error.message?.includes('unique');
 
