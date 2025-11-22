@@ -140,12 +140,19 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
       // Update progress BEFORE opening modal for better sync
       // Only record if not already opened
       if (!openedDays.has(day)) {
-        // Update UI immediately for better UX
-        const newOpenedDays = new Set([...openedDays, day]);
-        setOpenedDays(newOpenedDays);
+        // Use functional update to avoid race conditions with rapid clicks
+        setOpenedDays((prev) => {
+          if (prev.has(day)) {
+            return prev; // Already opened, no update needed
+          }
+          const newOpenedDays = new Set(prev);
+          newOpenedDays.add(day);
 
-        // Always save to localStorage immediately (works offline)
-        saveLocalProgress(newOpenedDays);
+          // Always save to localStorage immediately (works offline)
+          saveLocalProgress(newOpenedDays);
+
+          return newOpenedDays;
+        });
 
         // Save to Supabase if authenticated (non-blocking for instant modal)
         if (!isDemoMode() && friendId) {
@@ -235,25 +242,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           </div>
         </div>
 
-        {/* Dots indicator */}
-        <div className="flex justify-center gap-2 mb-2">
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((day) => (
-            <div
-              key={day}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                openedDays.has(day)
-                  ? "bg-accent shadow-[0_0_8px_rgba(251,191,36,0.6)] scale-110"
-                  : "bg-muted"
-              }`}
-              aria-label={`Day ${day} ${
-                openedDays.has(day) ? "opened" : "not opened"
-              }`}
-            />
-          ))}
-        </div>
-
         {/* Progress text */}
-        <p className="text-sm font-medium mt-1">
+        <p className="text-sm font-medium">
           <span className="text-green-600 dark:text-green-500">
             {openedDays.size}
           </span>
