@@ -236,8 +236,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
-              style={{ width: `${(openedDays.size / 12) * 100}%` }}
-              aria-label={`${openedDays.size} of 12 windows opened`}
+              style={{ width: `${(openedDays.size / (contents.length || 1)) * 100}%` }}
+              aria-label={`${openedDays.size} of ${contents.length} windows opened`}
             />
           </div>
         </div>
@@ -248,7 +248,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             {openedDays.size}
           </span>
           <span className="text-muted-foreground">
-            {" "}of 12 opened
+            {" "}of {contents.length} opened
           </span>
         </p>
 
