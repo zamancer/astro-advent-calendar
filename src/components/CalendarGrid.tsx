@@ -8,7 +8,7 @@ import ContentModal from "./ContentModal";
 import type { CalendarContent } from "../types/calendar";
 import { isDemoMode } from "../lib/featureFlags";
 import { getCurrentFriend } from "../lib/auth";
-import { getFriendWindowOpens, recordWindowOpen } from "../lib/database";
+import { getFriendWindowOpens, recordWindowOpen, isPostgrestError } from "../lib/database";
 import {
   getLocalProgress,
   saveLocalProgress,
@@ -134,68 +134,82 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     return cleanup;
   }, [friendId]);
 
-  const handleOpenWindow = async (day: number) => {
+  const handleOpenWindow = (day: number) => {
     const content = contents.find((c) => c.day === day);
     if (content) {
-      setSelectedContent(content);
-      setIsModalOpen(true);
-
+      // Update progress BEFORE opening modal for better sync
       // Only record if not already opened
       if (!openedDays.has(day)) {
-        // Update UI immediately for better UX
-        const newOpenedDays = new Set([...openedDays, day]);
-        setOpenedDays(newOpenedDays);
+        // Use functional update to avoid race conditions with rapid clicks
+        setOpenedDays((prev) => {
+          if (prev.has(day)) {
+            return prev; // Already opened, no update needed
+          }
+          const newOpenedDays = new Set(prev);
+          newOpenedDays.add(day);
 
-        // Always save to localStorage immediately (works offline)
-        saveLocalProgress(newOpenedDays);
+          // Always save to localStorage immediately (works offline)
+          saveLocalProgress(newOpenedDays);
 
-        // Save to Supabase if authenticated
-        if (!isDemoMode() && friendId) {
+          return newOpenedDays;
+        });
+
+        // Snapshot friendId before async operation to avoid issues if state changes
+        const currentFriendId = friendId;
+
+        // Save to Supabase if authenticated (non-blocking for instant modal)
+        if (!isDemoMode() && currentFriendId) {
           setSyncStatus('syncing');
 
-          try {
-            const { error } = await recordWindowOpen({
-              friend_id: friendId,
-              window_number: day,
-            });
+          // Fire and forget - don't block modal opening
+          recordWindowOpen({
+            friend_id: currentFriendId,
+            window_number: day,
+          })
+            .then(({ error }) => {
+              if (error) {
+                console.error('Failed to record window open:', error);
 
-            if (error) {
-              console.error('Failed to record window open:', error);
+                // Check if it's a duplicate error (already saved)
+                // Use type guard to safely access error.code
+                const isDuplicate =
+                  (isPostgrestError(error) &&
+                    (error.code === 'PGRST116' || error.code === '23505')) ||
+                  error.message?.includes('duplicate') ||
+                  error.message?.includes('unique');
 
-              // Check if it's a duplicate error (already saved)
-              const isDuplicate =
-                error.code === 'PGRST116' ||
-                error.code === '23505' ||
-                error.message?.includes('duplicate') ||
-                error.message?.includes('unique');
-
-              if (!isDuplicate) {
-                // Queue for later sync
-                queueWindowOpen({
-                  friend_id: friendId,
-                  window_number: day,
-                });
-                setSyncStatus('offline');
+                if (!isDuplicate) {
+                  // Queue for later sync
+                  queueWindowOpen({
+                    friend_id: currentFriendId,
+                    window_number: day,
+                  });
+                  setSyncStatus('offline');
+                } else {
+                  // Already saved, all good
+                  setSyncStatus('synced');
+                }
               } else {
-                // Already saved, all good
+                // Successfully saved to cloud
                 setSyncStatus('synced');
               }
-            } else {
-              // Successfully saved to cloud
-              setSyncStatus('synced');
-            }
-          } catch (error) {
-            console.error('Failed to record window open:', error);
+            })
+            .catch((error) => {
+              console.error('Failed to record window open:', error);
 
-            // Queue for later sync
-            queueWindowOpen({
-              friend_id: friendId,
-              window_number: day,
+              // Queue for later sync
+              queueWindowOpen({
+                friend_id: currentFriendId,
+                window_number: day,
+              });
+              setSyncStatus('offline');
             });
-            setSyncStatus('offline');
-          }
         }
       }
+
+      // Open modal immediately after progress update (don't wait for DB)
+      setSelectedContent(content);
+      setIsModalOpen(true);
     }
   };
 
@@ -216,24 +230,29 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     <>
       {/* Progress indicator */}
       <div className="mb-8 text-center">
-        <p className="text-muted-foreground text-sm uppercase tracking-wider mb-2">
+        <p className="text-muted-foreground text-sm uppercase tracking-wider mb-3">
           Progress
         </p>
-        <div className="flex justify-center gap-2">
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((day) => (
+
+        {/* Progress bar */}
+        <div className="max-w-md mx-auto mb-3">
+          <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div
-              key={day}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                openedDays.has(day) ? "bg-accent" : "bg-muted"
-              }`}
-              aria-label={`Day ${day} ${
-                openedDays.has(day) ? "opened" : "not opened"
-              }`}
+              className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
+              style={{ width: `${Math.min(100, (openedDays.size / (contents.length || 1)) * 100)}%` }}
+              aria-label={`${openedDays.size} of ${contents.length} windows opened`}
             />
-          ))}
+          </div>
         </div>
-        <p className="text-sm text-muted-foreground mt-2">
-          {openedDays.size} of 12 opened
+
+        {/* Progress text */}
+        <p className="text-sm font-medium">
+          <span className="text-green-600 dark:text-green-500">
+            {openedDays.size}
+          </span>
+          <span className="text-muted-foreground">
+            {" "}of {contents.length} opened
+          </span>
         </p>
 
         {/* Sync status indicator (only in authenticated mode) */}
