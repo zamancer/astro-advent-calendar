@@ -13,6 +13,7 @@
  */
 
 import type { FriendCalendarConfig } from "../../types/calendar";
+import { friendConfig as mikeConfig } from "./example-mike";
 
 // ============================================
 // IMPORT FRIEND CONFIGURATIONS
@@ -38,6 +39,7 @@ export const friendConfigs = new Map<string, FriendCalendarConfig>([
   // Example:
   // ['friend-id-uuid-here', sarahConfig],
   // ['another-friend-id', johnConfig],
+  ['550e8400-e29b-41d4-a716-446655440002', mikeConfig]
 ]);
 
 // ============================================

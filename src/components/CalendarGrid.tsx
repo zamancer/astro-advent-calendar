@@ -20,6 +20,7 @@ import {
   isOnline,
   type SyncStatus,
 } from "../lib/offlineSync";
+import { getFriendConfig } from "../config/friends";
 
 interface CalendarGridProps {
   contents: CalendarContent[];
@@ -34,6 +35,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   const [loading, setLoading] = useState(true);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('synced');
   const [isOnlineState, setIsOnlineState] = useState(true);
+  // Active contents - either friend-specific or default
+  const [activeContents, setActiveContents] = useState<CalendarContent[]>(contents);
 
   // Load opened days from localStorage and Supabase
   useEffect(() => {
@@ -51,6 +54,12 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           const friend = await getCurrentFriend();
           if (friend) {
             setFriendId(friend.id);
+
+            // Check for friend-specific calendar configuration
+            const friendConfig = getFriendConfig(friend.id);
+            if (friendConfig) {
+              setActiveContents(friendConfig.contents);
+            }
 
             // Load server progress
             const { data: windowOpens, error } = await getFriendWindowOpens(friend.id);
@@ -135,7 +144,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   }, [friendId]);
 
   const handleOpenWindow = (day: number) => {
-    const content = contents.find((c) => c.day === day);
+    const content = activeContents.find((c) => c.day === day);
     if (content) {
       // Update progress BEFORE opening modal for better sync
       // Only record if not already opened
@@ -239,8 +248,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
-              style={{ width: `${Math.min(100, (openedDays.size / (contents.length || 1)) * 100)}%` }}
-              aria-label={`${openedDays.size} of ${contents.length} windows opened`}
+              style={{ width: `${Math.min(100, (openedDays.size / (activeContents.length || 1)) * 100)}%` }}
+              aria-label={`${openedDays.size} of ${activeContents.length} windows opened`}
             />
           </div>
         </div>
@@ -251,7 +260,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             {openedDays.size}
           </span>
           <span className="text-muted-foreground">
-            {" "}of {contents.length} opened
+            {" "}of {activeContents.length} opened
           </span>
         </p>
 
@@ -287,7 +296,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
       {/* Calendar grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {contents.map((content) => (
+        {activeContents.map((content) => (
           <CalendarWindow
             key={content.day}
             day={content.day}

@@ -9,11 +9,11 @@ interface PhotoContentProps {
 export default function PhotoContent({ content }: PhotoContentProps) {
   return (
     <div className="space-y-4">
-      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+      <div className="relative rounded-lg overflow-hidden bg-muted">
         <img
           src={content.imageUrl || "/placeholder.svg"}
           alt={content.alt}
-          className="w-full h-full object-cover"
+          className="w-full max-h-[60vh] object-contain"
           onError={(e) => {
             e.currentTarget.src = "/placeholder.svg";
           }}
