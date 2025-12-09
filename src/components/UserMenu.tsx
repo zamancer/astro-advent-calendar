@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { isDemoMode } from "../lib/featureFlags";
 import { getCurrentUser, getCurrentFriend, signOut } from "../lib/auth";
 import type { Friend } from "../types/database";
@@ -7,10 +7,12 @@ export default function UserMenu() {
   const [friend, setFriend] = useState<Friend | null>(null);
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     async function checkAuth() {
-      // In demo mode, skip authentication
       if (isDemoMode()) {
         setLoading(false);
         return;
@@ -41,6 +43,36 @@ export default function UserMenu() {
     checkAuth();
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isOpen]);
+
+  // Handle keyboard navigation
+  function handleKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Escape") {
+      setIsOpen(false);
+      buttonRef.current?.focus();
+    }
+  }
+
+  function handleButtonKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setIsOpen(!isOpen);
+    }
+  }
+
   async function handleLogout() {
     const result = await signOut();
     if (result.success) {
@@ -57,12 +89,21 @@ export default function UserMenu() {
 
   const displayName = friend?.name || email || "User";
   const displayEmail = email;
+  const menuId = "user-menu-dropdown";
 
   return (
-    <div className="relative group">
-      <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all">
+    <div className="relative" ref={menuRef} onKeyDown={handleKeyDown}>
+      <button
+        ref={buttonRef}
+        onClick={() => setIsOpen(!isOpen)}
+        onKeyDown={handleButtonKeyDown}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        aria-controls={menuId}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
+      >
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold">
+        <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold">
           {displayName.charAt(0).toUpperCase()}
         </div>
 
@@ -78,14 +119,22 @@ export default function UserMenu() {
       </button>
 
       {/* Dropdown */}
-      <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-gray-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-        <button
-          onClick={handleLogout}
-          className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+      {isOpen && (
+        <div
+          id={menuId}
+          role="menu"
+          aria-label="User menu"
+          className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-gray-800 shadow-xl z-50"
         >
-          Sign out
-        </button>
-      </div>
+          <button
+            role="menuitem"
+            onClick={handleLogout}
+            className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Sign out
+          </button>
+        </div>
+      )}
     </div>
   );
 }
