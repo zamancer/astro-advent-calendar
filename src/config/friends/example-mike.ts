@@ -9,12 +9,13 @@
  */
 
 import type { FriendCalendarConfig } from "../../types/calendar";
-// Uncomment when using Supabase Storage:
-// import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from '../../lib/storage';
+
+const FRIEND_ID = "550e8400-e29b-41d4-a716-446655440002";
 
 export const friendConfig: FriendCalendarConfig = {
   // Friend information
-  friendId: "550e8400-e29b-41d4-a716-446655440002",
+  friendId: FRIEND_ID,
   friendName: "Mike Chen",
 
   // Calendar customization
@@ -32,8 +33,7 @@ export const friendConfig: FriendCalendarConfig = {
       title: "We Finally Beat That Boss!",
       message:
         "After 47 attempts (but who's counting?), we finally defeated that impossible boss. Best gaming moment of the year! 🎮",
-      imageUrl:
-        "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&auto=format&fit=crop",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 1, "jpg") || "",
     },
 
     // Day 2: Spotify - Concert anthem

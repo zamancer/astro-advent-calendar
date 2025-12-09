@@ -8,7 +8,11 @@ import ContentModal from "./ContentModal";
 import type { CalendarContent } from "../types/calendar";
 import { isDemoMode } from "../lib/featureFlags";
 import { getCurrentFriend } from "../lib/auth";
-import { getFriendWindowOpens, recordWindowOpen, isPostgrestError } from "../lib/database";
+import {
+  getFriendWindowOpens,
+  recordWindowOpen,
+  isPostgrestError,
+} from "../lib/database";
 import {
   getLocalProgress,
   saveLocalProgress,
@@ -20,6 +24,7 @@ import {
   isOnline,
   type SyncStatus,
 } from "../lib/offlineSync";
+import { getFriendConfig } from "../config/friends";
 
 interface CalendarGridProps {
   contents: CalendarContent[];
@@ -32,8 +37,11 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [friendId, setFriendId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>('synced');
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>("synced");
   const [isOnlineState, setIsOnlineState] = useState(true);
+  // Active contents - either friend-specific or default
+  const [activeContents, setActiveContents] =
+    useState<CalendarContent[]>(contents);
 
   // Load opened days from localStorage and Supabase
   useEffect(() => {
@@ -52,17 +60,38 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           if (friend) {
             setFriendId(friend.id);
 
+            // Check for friend-specific calendar configuration
+            const friendConfig = getFriendConfig(friend.id);
+            if (
+              friendConfig &&
+              friendConfig.contents &&
+              friendConfig.contents.length > 0
+            ) {
+              setActiveContents(friendConfig.contents);
+            } else if (friendConfig) {
+              console.warn(
+                `Friend config for ${friend.id} has invalid contents, using defaults`
+              );
+            }
+
             // Load server progress
-            const { data: windowOpens, error } = await getFriendWindowOpens(friend.id);
+            const { data: windowOpens, error } = await getFriendWindowOpens(
+              friend.id
+            );
 
             if (error) {
-              console.error('Failed to load server progress:', error);
-              setSyncStatus('error');
+              console.error("Failed to load server progress:", error);
+              setSyncStatus("error");
             } else {
-              const serverProgress = (windowOpens || []).map((wo) => wo.window_number);
+              const serverProgress = (windowOpens || []).map(
+                (wo) => wo.window_number
+              );
 
               // Merge local and server progress
-              const mergedProgress = mergeProgress(localProgress, serverProgress);
+              const mergedProgress = mergeProgress(
+                localProgress,
+                serverProgress
+              );
               setOpenedDays(mergedProgress);
 
               // Save merged progress locally
@@ -70,22 +99,22 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
               // Check if we have pending syncs and trigger sync
               if (hasPendingSync()) {
-                setSyncStatus('syncing');
+                setSyncStatus("syncing");
                 const result = await syncQueue();
                 if (result.failed > 0) {
-                  console.error('Some items failed to sync:', result.errors);
-                  setSyncStatus('offline');
+                  console.error("Some items failed to sync:", result.errors);
+                  setSyncStatus("offline");
                 } else {
-                  setSyncStatus('synced');
+                  setSyncStatus("synced");
                 }
               } else {
-                setSyncStatus('synced');
+                setSyncStatus("synced");
               }
             }
           }
         } catch (error) {
-          console.error('Failed to load progress:', error);
-          setSyncStatus('error');
+          console.error("Failed to load progress:", error);
+          setSyncStatus("error");
         } finally {
           setLoading(false);
         }
@@ -111,23 +140,23 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
         // Auto-sync pending items
         if (hasPendingSync() && friendId) {
-          setSyncStatus('syncing');
+          setSyncStatus("syncing");
           try {
             const result = await syncQueue();
             if (result.synced > 0) {
               // Successfully synced items
             }
-            setSyncStatus(result.failed > 0 ? 'offline' : 'synced');
+            setSyncStatus(result.failed > 0 ? "offline" : "synced");
           } catch (error) {
-            console.error('Auto-sync failed:', error);
-            setSyncStatus('error');
+            console.error("Auto-sync failed:", error);
+            setSyncStatus("error");
           }
         }
       },
       () => {
         // Connection lost
         setIsOnlineState(false);
-        setSyncStatus('offline');
+        setSyncStatus("offline");
       }
     );
 
@@ -135,7 +164,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   }, [friendId]);
 
   const handleOpenWindow = (day: number) => {
-    const content = contents.find((c) => c.day === day);
+    const content = activeContents.find((c) => c.day === day);
     if (content) {
       // Update progress BEFORE opening modal for better sync
       // Only record if not already opened
@@ -159,7 +188,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
         // Save to Supabase if authenticated (non-blocking for instant modal)
         if (!isDemoMode() && currentFriendId) {
-          setSyncStatus('syncing');
+          setSyncStatus("syncing");
 
           // Fire and forget - don't block modal opening
           recordWindowOpen({
@@ -168,15 +197,15 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           })
             .then(({ error }) => {
               if (error) {
-                console.error('Failed to record window open:', error);
+                console.error("Failed to record window open:", error);
 
                 // Check if it's a duplicate error (already saved)
                 // Use type guard to safely access error.code
                 const isDuplicate =
                   (isPostgrestError(error) &&
-                    (error.code === 'PGRST116' || error.code === '23505')) ||
-                  error.message?.includes('duplicate') ||
-                  error.message?.includes('unique');
+                    (error.code === "PGRST116" || error.code === "23505")) ||
+                  error.message?.includes("duplicate") ||
+                  error.message?.includes("unique");
 
                 if (!isDuplicate) {
                   // Queue for later sync
@@ -184,25 +213,25 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
                     friend_id: currentFriendId,
                     window_number: day,
                   });
-                  setSyncStatus('offline');
+                  setSyncStatus("offline");
                 } else {
                   // Already saved, all good
-                  setSyncStatus('synced');
+                  setSyncStatus("synced");
                 }
               } else {
                 // Successfully saved to cloud
-                setSyncStatus('synced');
+                setSyncStatus("synced");
               }
             })
             .catch((error) => {
-              console.error('Failed to record window open:', error);
+              console.error("Failed to record window open:", error);
 
               // Queue for later sync
               queueWindowOpen({
                 friend_id: currentFriendId,
                 window_number: day,
               });
-              setSyncStatus('offline');
+              setSyncStatus("offline");
             });
         }
       }
@@ -238,9 +267,14 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
         <div className="max-w-md mx-auto mb-3">
           <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
-              style={{ width: `${Math.min(100, (openedDays.size / (contents.length || 1)) * 100)}%` }}
-              aria-label={`${openedDays.size} of ${contents.length} windows opened`}
+              className="h-full bg-linear-to-r from-green-500 to-green-600 transition-all duration-500 ease-out"
+              style={{
+                width: `${Math.min(
+                  100,
+                  (openedDays.size / (activeContents.length || 1)) * 100
+                )}%`,
+              }}
+              aria-label={`${openedDays.size} of ${activeContents.length} windows opened`}
             />
           </div>
         </div>
@@ -251,7 +285,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             {openedDays.size}
           </span>
           <span className="text-muted-foreground">
-            {" "}of {contents.length} opened
+            {" "}
+            of {activeContents.length} opened
           </span>
         </p>
 
@@ -260,26 +295,26 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           <div className="mt-3 flex items-center justify-center gap-2">
             <div
               className={`w-2 h-2 rounded-full transition-colors ${
-                syncStatus === 'synced'
-                  ? 'bg-green-500'
-                  : syncStatus === 'syncing'
-                  ? 'bg-blue-500 animate-pulse'
-                  : syncStatus === 'offline'
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
+                syncStatus === "synced"
+                  ? "bg-green-500"
+                  : syncStatus === "syncing"
+                  ? "bg-blue-500 animate-pulse"
+                  : syncStatus === "offline"
+                  ? "bg-yellow-500"
+                  : "bg-red-500"
               }`}
               aria-label={`Sync status: ${syncStatus}`}
             />
             <p className="text-xs text-muted-foreground">
-              {syncStatus === 'synced'
-                ? 'All changes saved'
-                : syncStatus === 'syncing'
-                ? 'Syncing...'
-                : syncStatus === 'offline'
+              {syncStatus === "synced"
+                ? "All changes saved"
+                : syncStatus === "syncing"
+                ? "Syncing..."
+                : syncStatus === "offline"
                 ? isOnlineState
-                  ? 'Pending sync'
-                  : 'Offline - will sync when online'
-                : 'Sync error'}
+                  ? "Pending sync"
+                  : "Offline - will sync when online"
+                : "Sync error"}
             </p>
           </div>
         )}
@@ -287,7 +322,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
       {/* Calendar grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {contents.map((content) => (
+        {activeContents.map((content) => (
           <CalendarWindow
             key={content.day}
             day={content.day}

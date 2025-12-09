@@ -14,11 +14,11 @@ export default function MessageContent({ content }: MessageContentProps) {
       </h3>
 
       {content.imageUrl && (
-        <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+        <div className="relative rounded-lg overflow-hidden bg-muted">
           <img
             src={content.imageUrl || "/placeholder.svg"}
             alt={content.title}
-            className="w-full h-full object-cover"
+            className="w-full max-h-[60vh] object-contain"
             onError={(e) => {
               e.currentTarget.src = "/placeholder.svg";
             }}
