@@ -5,6 +5,7 @@ export type ContentType = "photo" | "spotify" | "text" | "message";
 export interface BaseContent {
   type: ContentType;
   day: number;
+  unlockDate: Date; // When this window becomes available
 }
 
 export interface PhotoContent extends BaseContent {

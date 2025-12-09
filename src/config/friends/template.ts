@@ -74,6 +74,12 @@ export const friendConfig: FriendCalendarConfig = {
       type: "photo",
       day: 1,
       /**
+       * Unlock date - When this window becomes available
+       * Format: new Date('YYYY-MM-DDTHH:MM:SS')
+       * Windows unlock Dec 12-23 (one per day at midnight)
+       */
+      unlockDate: new Date('2025-12-12T00:00:00'),
+      /**
        * Image URL - Can be:
        * - Supabase Storage URL: Use getFriendImageUrl() helper
        * - External URL: https://example.com/image.jpg
@@ -96,6 +102,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 2,
+      unlockDate: new Date('2025-12-13T00:00:00'),
       /**
        * Spotify embed URL
        * Get it from: Spotify → Share → Embed → Copy embed URL
@@ -118,6 +125,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 3,
+      unlockDate: new Date('2025-12-14T00:00:00'),
       /**
        * Your heartfelt message
        * Can be multiple lines
@@ -135,6 +143,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 4,
+      unlockDate: new Date('2025-12-15T00:00:00'),
       /**
        * Message title/heading
        */
@@ -154,10 +163,12 @@ export const friendConfig: FriendCalendarConfig = {
     // ----------------------------------------
     // Copy and customize the examples above to create your remaining 8 windows
     // Make sure each has a unique day number (5, 6, 7, 8, 9, 10, 11, 12)
+    // Unlock dates: Dec 16-23 (one per day)
 
     {
       type: "photo",
       day: 5,
+      unlockDate: new Date('2025-12-16T00:00:00'),
       imageUrl: "/images/example-5.jpg",
       caption: "Your memory here...",
       alt: "Description for accessibility",
@@ -166,6 +177,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 6,
+      unlockDate: new Date('2025-12-17T00:00:00'),
       message: "Your message here...",
       author: "You",
     },
@@ -173,6 +185,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 7,
+      unlockDate: new Date('2025-12-18T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/...",
       title: "Song Title",
       description: "Why this song is special...",
@@ -181,6 +194,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 8,
+      unlockDate: new Date('2025-12-19T00:00:00'),
       title: "Memory Title",
       message: "Your message here...",
       imageUrl: "/images/example-8.jpg",
@@ -189,6 +203,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 9,
+      unlockDate: new Date('2025-12-20T00:00:00'),
       imageUrl: "/images/example-9.jpg",
       caption: "Your memory here...",
       alt: "Description for accessibility",
@@ -197,6 +212,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 10,
+      unlockDate: new Date('2025-12-21T00:00:00'),
       message: "Your message here...",
       author: "You",
     },
@@ -204,6 +220,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 11,
+      unlockDate: new Date('2025-12-22T00:00:00'),
       title: "Memory Title",
       message: "Your message here...",
     },
@@ -211,6 +228,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 12,
+      unlockDate: new Date('2025-12-23T00:00:00'),
       imageUrl: "/images/example-12.jpg",
       caption: "Your final message here... 🎁",
       alt: "Description for accessibility",

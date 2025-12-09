@@ -28,6 +28,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 1,
+      unlockDate: new Date('2025-12-12T00:00:00'),
       imageUrl:
         "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop",
       caption: "Remember our first coffee date at Starbucks? You spilled your latte! ☕😄",
@@ -38,6 +39,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 2,
+      unlockDate: new Date('2025-12-13T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/0bYg9bo50gSsH3LtXe2SQn",
       title: "All I Want for Christmas",
       description:
@@ -48,6 +50,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 3,
+      unlockDate: new Date('2025-12-14T00:00:00'),
       message:
         "Thank you for being an amazing friend this year. Your positivity and kindness inspire me every day. I'm so grateful we met! 💙",
       author: "Your Best Friend",
@@ -57,6 +60,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 4,
+      unlockDate: new Date('2025-12-15T00:00:00'),
       title: "Epic Movie Marathon",
       message:
         "Remember when we binged all 3 Lord of the Rings movies in one day? That was legendary! We need to do it again this year. 🍿",
@@ -68,6 +72,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 5,
+      unlockDate: new Date('2025-12-16T00:00:00'),
       imageUrl:
         "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
       caption:
@@ -79,6 +84,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 6,
+      unlockDate: new Date('2025-12-17T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
       title: "Study Session Vibes",
       description: "Our go-to song during those late-night study sessions!",
@@ -88,6 +94,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 7,
+      unlockDate: new Date('2025-12-18T00:00:00'),
       message:
         "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
       author: "Your Cheerleader",
@@ -97,6 +104,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 8,
+      unlockDate: new Date('2025-12-19T00:00:00'),
       title: "The Great Cookie Disaster",
       message:
         "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
@@ -108,6 +116,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 9,
+      unlockDate: new Date('2025-12-20T00:00:00'),
       imageUrl:
         "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
       caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
@@ -118,6 +127,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 10,
+      unlockDate: new Date('2025-12-21T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
       title: "Birthday Bash Anthem",
       description: "This song made your birthday party absolutely epic!",
@@ -127,6 +137,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 11,
+      unlockDate: new Date('2025-12-22T00:00:00'),
       message:
         "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
       author: "Your Adventure Buddy",
@@ -136,6 +147,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 12,
+      unlockDate: new Date('2025-12-23T00:00:00'),
       title: "Merry Christmas, Sarah! 🎄🎁",
       message:
         "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",

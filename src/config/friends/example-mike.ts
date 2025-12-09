@@ -30,6 +30,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 1,
+      unlockDate: new Date('2025-12-12T00:00:00'),
       title: "We Finally Beat That Boss!",
       message:
         "After 47 attempts (but who's counting?), we finally defeated that impossible boss. Best gaming moment of the year! 🎮",
@@ -40,6 +41,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 2,
+      unlockDate: new Date('2025-12-13T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/7qiZfU4dY1lWllzX7mPBI",
       title: "Rock Concert Vibes",
       description: "This song was INSANE live! Best concert we've been to.",
@@ -49,6 +51,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 3,
+      unlockDate: new Date('2025-12-14T00:00:00'),
       message:
         "Thanks for always being down for spontaneous adventures, late-night food runs, and random gaming sessions. You're a real one! 🙌",
       author: "Your Gaming Partner",
@@ -58,6 +61,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 4,
+      unlockDate: new Date('2025-12-15T00:00:00'),
       imageUrl:
         "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&auto=format&fit=crop",
       caption: "Remember when we tried to finish that 5-pound burger challenge? We failed gloriously. 🍔",
@@ -68,6 +72,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 5,
+      unlockDate: new Date('2025-12-16T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/60nZcImufyMA1MKQY3dcCH",
       title: "Road Trip Essential",
       description:
@@ -78,6 +83,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 6,
+      unlockDate: new Date('2025-12-17T00:00:00'),
       title: "The Game We'll Never Forget",
       message:
         "That overtime buzzer-beater! We went absolutely crazy in the stands. I think I lost my voice for three days. Worth it! 🏀",
@@ -89,6 +95,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 7,
+      unlockDate: new Date('2025-12-18T00:00:00'),
       message:
         "Thanks for being my gym buddy this year. We've come a long way from struggling with the bar to hitting PRs! Let's keep crushing it! 💪",
       author: "Your Gains Partner",
@@ -98,6 +105,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 8,
+      unlockDate: new Date('2025-12-19T00:00:00'),
       imageUrl:
         "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&auto=format&fit=crop",
       caption:
@@ -109,6 +117,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "spotify",
       day: 9,
+      unlockDate: new Date('2025-12-20T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/2mR9WSrxfoc4FVQxdOcqx4",
       title: "House Party Starter",
       description: "This song always gets the party going!",
@@ -118,6 +127,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "message",
       day: 10,
+      unlockDate: new Date('2025-12-21T00:00:00'),
       title: "Learning Guitar Together",
       message:
         "Who knew we'd actually stick with guitar lessons? We sound terrible, but we're improving! Next year, we're starting a band. 🎸",
@@ -129,6 +139,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 11,
+      unlockDate: new Date('2025-12-22T00:00:00'),
       imageUrl:
         "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&auto=format&fit=crop",
       caption:
@@ -140,6 +151,7 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "text",
       day: 12,
+      unlockDate: new Date('2025-12-23T00:00:00'),
       message:
         "Here's to another year of epic adventures, terrible decisions, and unforgettable memories! You're an awesome friend, Mike. Merry Christmas! 🎄🎁",
       author: "Your Best Bro",

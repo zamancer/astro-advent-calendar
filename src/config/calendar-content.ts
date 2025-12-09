@@ -9,6 +9,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "photo",
       day: 1,
+      unlockDate: new Date('2025-12-12T00:00:00'),
       imageUrl: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop",
       caption: "Remember our first coffee date this winter? ☕",
       alt: "Friends at coffee shop",
@@ -16,6 +17,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "spotify",
       day: 2,
+      unlockDate: new Date('2025-12-13T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/0bYg9bo50gSsH3LtXe2SQn",
       title: "Our Song",
       description: "This always reminds me of you!",
@@ -23,6 +25,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "text",
       day: 3,
+      unlockDate: new Date('2025-12-14T00:00:00'),
       message:
         "Thank you for always being there when I needed someone to talk to. Your friendship means the world to me. 💙",
       author: "Your Friend",
@@ -30,6 +33,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "message",
       day: 4,
+      unlockDate: new Date('2025-12-15T00:00:00'),
       title: "Movie Night",
       message:
         "Can't wait for our annual holiday movie marathon! Hot cocoa and terrible Christmas movies are the best combo.",
@@ -38,6 +42,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "photo",
       day: 5,
+      unlockDate: new Date('2025-12-16T00:00:00'),
       imageUrl: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=800&auto=format&fit=crop",
       caption: "That epic ski trip we took! Best adventure ever! 🎿",
       alt: "Ski trip memories",
@@ -45,6 +50,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "text",
       day: 6,
+      unlockDate: new Date('2025-12-17T00:00:00'),
       message:
         "Life is better with friends like you. Here's to many more memories together! 🎄",
       author: "Me",
@@ -52,6 +58,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "spotify",
       day: 7,
+      unlockDate: new Date('2025-12-18T00:00:00'),
       embedUrl: "https://open.spotify.com/embed/track/7vQbuQcyTflfCIOu3Uzzya",
       title: "Holiday Vibes",
       description: "Our go-to Christmas playlist starter!",
@@ -59,6 +66,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "message",
       day: 8,
+      unlockDate: new Date('2025-12-19T00:00:00'),
       title: "Baking Disaster",
       message:
         "Remember when we tried to bake cookies and set off the smoke alarm? 😂 Good times!",
@@ -67,6 +75,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "photo",
       day: 9,
+      unlockDate: new Date('2025-12-20T00:00:00'),
       imageUrl: "https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=800&auto=format&fit=crop",
       caption: "The night we went to see the Christmas lights downtown ✨",
       alt: "Christmas lights downtown",
@@ -74,6 +83,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "text",
       day: 10,
+      unlockDate: new Date('2025-12-21T00:00:00'),
       message:
         "Grateful for every laugh, every conversation, and every moment we've shared. You're the best! 🌟",
       author: "Your Bestie",
@@ -81,6 +91,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "message",
       day: 11,
+      unlockDate: new Date('2025-12-22T00:00:00'),
       title: "New Year Plans",
       message:
         "Let's make next year even more amazing! So many adventures await us. 🎉",
@@ -89,6 +100,7 @@ export const calendarConfig: CalendarConfig = {
     {
       type: "photo",
       day: 12,
+      unlockDate: new Date('2025-12-23T00:00:00'),
       imageUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
       caption: "To friendship, love, and endless memories. Merry Christmas! 🎁",
       alt: "Friends celebrating together",

@@ -25,6 +25,11 @@ import {
   type SyncStatus,
 } from "../lib/offlineSync";
 import { getFriendConfig } from "../config/friends";
+import {
+  isWindowUnlocked,
+  shouldBypassUnlockCheck,
+  getUnlockedCount,
+} from "../lib/calendar";
 
 interface CalendarGridProps {
   contents: CalendarContent[];
@@ -166,6 +171,13 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
   const handleOpenWindow = (day: number) => {
     const content = activeContents.find((c) => c.day === day);
     if (content) {
+      // Check if window is unlocked
+      const unlocked = shouldBypassUnlockCheck() || isWindowUnlocked(content.unlockDate);
+      if (!unlocked) {
+        console.warn(`Window ${day} is locked until ${content.unlockDate}`);
+        return; // Don't open locked windows
+      }
+
       // Update progress BEFORE opening modal for better sync
       // Only record if not already opened
       if (!openedDays.has(day)) {
@@ -279,16 +291,28 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           </div>
         </div>
 
-        {/* Progress text */}
-        <p className="text-sm font-medium">
-          <span className="text-green-600 dark:text-green-500">
-            {openedDays.size}
-          </span>
-          <span className="text-muted-foreground">
-            {" "}
-            of {activeContents.length} opened
-          </span>
-        </p>
+        {/* Progress text - show available and opened counts */}
+        <div className="flex justify-center gap-4 text-sm font-medium">
+          <p>
+            <span className="text-blue-600 dark:text-blue-500">
+              {getUnlockedCount(activeContents)}
+            </span>
+            <span className="text-muted-foreground">
+              {" "}
+              of {activeContents.length} available
+            </span>
+          </p>
+          <span className="text-muted-foreground">•</span>
+          <p>
+            <span className="text-green-600 dark:text-green-500">
+              {openedDays.size}
+            </span>
+            <span className="text-muted-foreground">
+              {" "}
+              opened
+            </span>
+          </p>
+        </div>
 
         {/* Sync status indicator (only in authenticated mode) */}
         {!isDemoMode() && (
@@ -322,15 +346,19 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
 
       {/* Calendar grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {activeContents.map((content) => (
-          <CalendarWindow
-            key={content.day}
-            day={content.day}
-            content={content}
-            isOpened={openedDays.has(content.day)}
-            onOpen={handleOpenWindow}
-          />
-        ))}
+        {activeContents.map((content) => {
+          const isUnlocked = shouldBypassUnlockCheck() || isWindowUnlocked(content.unlockDate);
+          return (
+            <CalendarWindow
+              key={content.day}
+              day={content.day}
+              content={content}
+              isOpened={openedDays.has(content.day)}
+              isUnlocked={isUnlocked}
+              onOpen={handleOpenWindow}
+            />
+          );
+        })}
       </div>
 
       {/* Content modal */}
