@@ -1,6 +1,6 @@
 // TypeScript interfaces for calendar content types
 
-export type ContentType = "photo" | "spotify" | "text" | "message";
+export type ContentType = "photo" | "spotify" | "text" | "message" | "youtube";
 
 export interface BaseContent {
   type: ContentType;
@@ -34,11 +34,22 @@ export interface MessageContent extends BaseContent {
   imageUrl?: string;
 }
 
+export interface YouTubeContent extends BaseContent {
+  type: "youtube";
+  /** YouTube video ID (e.g., "dQw4w9WgXcQ" from https://www.youtube.com/watch?v=dQw4w9WgXcQ) */
+  videoId: string;
+  /** Title displayed above the video */
+  title: string;
+  /** Optional description below the title */
+  description?: string;
+}
+
 export type CalendarContent =
   | PhotoContent
   | SpotifyContent
   | TextContent
-  | MessageContent;
+  | MessageContent
+  | YouTubeContent;
 
 export interface CalendarConfig {
   title: string;

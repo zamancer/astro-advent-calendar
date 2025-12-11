@@ -11,11 +11,12 @@
  * 4. Customize title, subtitle, and greeting
  * 5. Add exactly 12 windows (one for each day) with your personalized content
  * 6. Ensure each window has a unique day number (1-12)
- * 7. Choose content types: 'photo', 'spotify', 'text', or 'message'
+ * 7. Choose content types: 'photo', 'spotify', 'text', 'message', or 'youtube'
  *
  * CONTENT TYPE EXAMPLES:
  * - photo: Share a photo with a caption
  * - spotify: Embed a song or playlist
+ * - youtube: Embed a YouTube video
  * - text: Write a heartfelt message
  * - message: Combine a title, message, and optional image
  */
@@ -170,12 +171,26 @@ export const friendConfig: FriendCalendarConfig = {
       author: "You",
     },
 
+    // ----------------------------------------
+    // Window 7: YOUTUBE EXAMPLE
+    // ----------------------------------------
     {
-      type: "spotify",
+      type: "youtube",
       day: 7,
-      embedUrl: "https://open.spotify.com/embed/track/...",
-      title: "Song Title",
-      description: "Why this song is special...",
+      /**
+       * YouTube video ID
+       * Get it from the video URL: https://www.youtube.com/watch?v=VIDEO_ID
+       * Example: For https://www.youtube.com/watch?v=dQw4w9WgXcQ, the ID is "dQw4w9WgXcQ"
+       */
+      videoId: "dQw4w9WgXcQ",
+      /**
+       * Title displayed above the video
+       */
+      title: "Our Favorite Video",
+      /**
+       * Optional description
+       */
+      description: "Remember when we watched this together?",
     },
 
     {
@@ -226,6 +241,7 @@ export const friendConfig: FriendCalendarConfig = {
  * ✅ All required fields are filled
  * ✅ Image URLs are valid and accessible
  * ✅ Spotify embed URLs are correct format
+ * ✅ YouTube video IDs are valid (11 characters from the URL)
  * ✅ Messages are meaningful and personalized
  *
  * TIPS:
@@ -234,4 +250,5 @@ export const friendConfig: FriendCalendarConfig = {
  * - Add emojis to make messages more fun
  * - Test all image URLs before deploying
  * - Keep messages concise but heartfelt
+ * - For YouTube, use only the video ID (e.g., "dQw4w9WgXcQ"), not the full URL
  */
