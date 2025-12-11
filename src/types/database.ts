@@ -28,6 +28,8 @@ export interface FriendWindowOpen {
   friend_id: string;
   window_number: number;
   opened_at: string;
+  /** Seconds elapsed since the window unlocked (local midnight) when opened */
+  seconds_after_unlock: number | null;
 }
 
 // ============================================
@@ -49,6 +51,8 @@ export interface FriendInsert {
 export interface FriendWindowOpenInsert {
   friend_id: string;
   window_number: number;
+  /** Seconds elapsed since the window unlocked (local midnight) when opened */
+  seconds_after_unlock?: number;
 }
 
 // ============================================
