@@ -165,11 +165,11 @@ GROUP BY f.id, f.name;
 
 ## Contest Instructions (Calendar Page)
 
-Users need to understand how the contest works. Add an instructions section/modal accessible from the main calendar page.
+Users need to understand how the contest works. Add an instructions section accessible from the main calendar page.
 
 ### Content to Display
 
-We won't reveal the exact price, but will announce there will be more than one single winner.
+We won't reveal the exact prize, but will announce there will be more than one single winner.
 
 ```text
 🏆 Advent Calendar Contest
@@ -189,16 +189,80 @@ TIPS:
 • Be quick to earn speed bonuses!
 • Consistency matters - the streak bonus is significant
 
-Contest will close on Dec 24. Prizes delivered via email Dec 25.
+Contest closes Dec 24 at 11:59 PM (Mexico City time). Prizes delivered via email Dec 25.
 ```
 
-### UI Options
+### UI Decision: Collapsible Banner
 
-**Option A: Collapsible section** on calendar page (always visible but compact)
+A **collapsible banner** at the top of the calendar page:
 
-**Option B: Info icon/button** that opens a modal with full rules
+- **Collapsed state**: Compact bar with trophy icon and "Contest Rules" text, clear expand indicator (chevron/arrow)
+- **Expanded state**: Full instructions content shown above
+- **Behavior**: Starts collapsed, user can toggle open/closed
+- **Persistence**: Optional - remember user's preference in localStorage
 
-**Option C: Dedicated tab/section** alongside leaderboard widget
+No special onboarding or first-visit treatment needed.
+
+---
+
+## Automated Winner Selection
+
+### Contest End Time
+
+**Dec 24, 2025 at 11:59 PM CST (Mexico City time)**
+
+- Timezone: `America/Mexico_City` (UTC-6)
+- ISO timestamp: `2025-12-25T05:59:00Z`
+
+### How It Works
+
+The winner selection is **computed automatically** based on the leaderboard view at contest end:
+
+1. **Before deadline**: Leaderboard shows "live" standings, contest is active
+2. **After deadline**: Leaderboard shows "final" standings, winners are locked in
+3. **No manual intervention needed**: The database view calculates rankings in real-time
+
+### Implementation Approach
+
+**Option A: Client-side check (Simpler)**
+
+- App checks current time against contest end timestamp
+- If past deadline: display "Contest Ended" state, show final winners
+- Leaderboard query remains the same (it's always accurate)
+
+**Option B: Database flag (More robust)**
+
+- Add `contest_ended` flag or `contest_end_time` to a settings table
+- Query checks this flag to determine display mode
+- Allows manual override if needed
+
+**Recommended: Option A** for simplicity, since:
+
+- Small friend group (2-5 people)
+- No need for manual overrides
+- Leaderboard data is always accurate regardless of end time
+
+### Constants to Add
+
+```typescript
+// src/lib/contest.ts
+export const CONTEST_END_TIME = new Date("2025-12-25T05:59:00Z"); // Dec 24, 11:59 PM Mexico City
+
+export function isContestEnded(): boolean {
+  return new Date() > CONTEST_END_TIME;
+}
+
+export function getTimeUntilContestEnd(): number {
+  return Math.max(0, CONTEST_END_TIME.getTime() - Date.now());
+}
+```
+
+### UI States
+
+| State      | Condition       | Display                                               |
+| ---------- | --------------- | ----------------------------------------------------- |
+| **Active** | Before deadline | "Contest ends Dec 24 at 11:59 PM" + live leaderboard  |
+| **Ended**  | After deadline  | "Contest Complete!" + final standings + winner badges |
 
 ---
 
@@ -211,14 +275,15 @@ Contest will close on Dec 24. Prizes delivered via email Dec 25.
 | 1.1  | Create `contest_leaderboard` database view with ranking logic | `supabase/migrations/`  |
 | 1.2  | Add TypeScript types for leaderboard data                     | `src/types/database.ts` |
 | 1.3  | Create `getContestLeaderboard()` query function               | `src/lib/database.ts`   |
+| 1.4  | Create contest utilities (end time, status checks)            | `src/lib/contest.ts`    |
 
 ### Phase 2: Contest Instructions
 
-| Step | Description                                                 | Files                                         |
-| ---- | ----------------------------------------------------------- | --------------------------------------------- |
-| 2.1  | Create ContestInstructions component (modal or collapsible) | `src/components/ContestInstructions.tsx`      |
-| 2.2  | Add instructions trigger to calendar page                   | `src/pages/index.astro` or calendar component |
-| 2.3  | Style with Tailwind (match existing theme)                  | Component file                                |
+| Step | Description                                             | Files                                    |
+| ---- | ------------------------------------------------------- | ---------------------------------------- |
+| 2.1  | Create ContestInstructions collapsible banner component | `src/components/ContestInstructions.tsx` |
+| 2.2  | Add banner to calendar page (above calendar grid)       | `src/pages/index.astro`                  |
+| 2.3  | Style collapsed/expanded states with Tailwind           | Component file                           |
 
 ### Phase 3: Leaderboard Components
 
@@ -263,10 +328,11 @@ Contest will close on Dec 24. Prizes delivered via email Dec 25.
 ### New Files
 
 - `supabase/migrations/YYYYMMDD_contest_leaderboard.sql`
-- `src/components/ContestInstructions.tsx`
-- `src/components/LeaderboardDisplay.tsx`
-- `src/components/LeaderboardWidget.tsx`
-- `src/components/WinnerAnnouncement.tsx`
+- `src/lib/contest.ts` - Contest end time, status utilities
+- `src/components/ContestInstructions.tsx` - Collapsible banner
+- `src/components/LeaderboardDisplay.tsx` - Full leaderboard view
+- `src/components/LeaderboardWidget.tsx` - Compact widget for calendar page
+- `src/components/WinnerAnnouncement.tsx` - Post-contest winner display
 - `src/pages/leaderboard.astro`
 
 ### Modified Files
