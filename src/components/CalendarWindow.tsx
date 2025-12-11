@@ -29,28 +29,24 @@ export default function CalendarWindow({
     }
   };
 
-  // Determine the state for styling
-  const isLocked = !isUnlocked;
-  const canInteract = isUnlocked;
-
   return (
     <button
       onClick={handleClick}
-      onMouseEnter={() => canInteract && setIsHovered(true)}
+      onMouseEnter={() => isUnlocked && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      disabled={isLocked}
+      disabled={!isUnlocked}
       className={`
         relative aspect-square rounded-lg overflow-hidden
         transition-all duration-300 ease-out
-        ${canInteract && isHovered ? "scale-105 shadow-2xl" : "shadow-lg"}
+        ${isUnlocked && isHovered ? "scale-105 shadow-2xl" : "shadow-lg"}
         ${isOpened ? "ring-2 ring-accent" : ""}
-        ${isLocked ? "opacity-60 cursor-not-allowed grayscale-30" : ""}
+        ${!isUnlocked ? "opacity-60 cursor-not-allowed grayscale-30" : ""}
         ${isUnlocked && !isOpened ? "ring-1 ring-accent/30" : ""}
         focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background
         disabled:cursor-not-allowed
       `}
       aria-label={`Window ${day}${
-        isLocked ? " (locked until " + formatUnlockDate(day) + ")" : ""
+        !isUnlocked ? " (locked until " + formatUnlockDate(day) + ")" : ""
       }${isOpened ? " (opened)" : ""}`}
     >
       {/* Background with gradient */}
@@ -59,13 +55,15 @@ export default function CalendarWindow({
         absolute inset-0 bg-linear-to-br from-card to-card-dark
         transition-opacity duration-300
         ${isOpened ? "opacity-70" : "opacity-100"}
-        ${isLocked ? "opacity-80" : ""}
+        ${!isUnlocked ? "opacity-80" : ""}
       `}
       />
 
       {/* Decorative pattern overlay */}
       <div
-        className={`absolute inset-0 ${isLocked ? "opacity-5" : "opacity-10"}`}
+        className={`absolute inset-0 ${
+          !isUnlocked ? "opacity-5" : "opacity-10"
+        }`}
       >
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <pattern
@@ -92,7 +90,7 @@ export default function CalendarWindow({
       <div className="relative h-full flex flex-col items-center justify-center p-4">
         <span
           className={`text-5xl md:text-6xl font-serif font-bold mb-2 ${
-            isLocked ? "text-muted-foreground" : "text-foreground"
+            !isUnlocked ? "text-muted-foreground" : "text-foreground"
           }`}
         >
           {day}
@@ -106,7 +104,7 @@ export default function CalendarWindow({
         )}
 
         {/* Locked state - show lock icon and unlock date */}
-        {isLocked && (
+        {!isUnlocked && (
           <div className="flex flex-col items-center gap-1">
             <svg
               className="w-5 h-5 text-muted-foreground"
@@ -138,7 +136,7 @@ export default function CalendarWindow({
       </div>
 
       {/* Shine effect on hover (only for unlocked, unopened windows) */}
-      {canInteract && isHovered && !isOpened && (
+      {isUnlocked && isHovered && !isOpened && (
         <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/10 to-transparent animate-shimmer" />
       )}
     </button>

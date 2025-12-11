@@ -189,19 +189,15 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     // Update progress BEFORE opening modal for better sync
     // Only record if not already opened
     if (!openedDays.has(day)) {
-      // Use functional update to avoid race conditions with rapid clicks
-      setOpenedDays((prev) => {
-        if (prev.has(day)) {
-          return prev; // Already opened, no update needed
-        }
-        const newOpenedDays = new Set(prev);
-        newOpenedDays.add(day);
+      // Create new set with the opened day
+      const newOpenedDays = new Set(openedDays);
+      newOpenedDays.add(day);
 
-        // Always save to localStorage immediately (works offline)
-        saveLocalProgress(newOpenedDays);
+      // Update state
+      setOpenedDays(newOpenedDays);
 
-        return newOpenedDays;
-      });
+      // Save to localStorage immediately (works offline)
+      saveLocalProgress(newOpenedDays);
 
       // Snapshot friendId before async operation to avoid issues if state changes
       const currentFriendId = friendId;
