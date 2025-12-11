@@ -8,13 +8,10 @@ export default function ThemeToggle() {
   useEffect(() => {
     setMounted(true);
 
-    // Get initial theme from localStorage or system preference
+    // Get initial theme from localStorage or default to dark
     const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
 
-    const initialTheme = storedTheme || systemTheme;
+    const initialTheme = storedTheme || "dark";
     setTheme(initialTheme);
 
     // Apply theme to document

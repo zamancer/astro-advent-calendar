@@ -1,201 +1,181 @@
 ---
 import { AdminDashboard } from '../components/AdminDashboard';
-import ThemeToggle from '../components/ThemeToggle';
+// import ThemeToggle from '../components/ThemeToggle';
 import { isDemoMode } from '../lib/featureFlags';
-import "../styles/global.css";
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const demoMode = isDemoMode();
 const pageTitle = 'Admin Dashboard - Advent Calendar';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Admin Dashboard for Advent Calendar" />
-    <title>{pageTitle}</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Theme initialization script - runs before page load to prevent flash -->
-    <script is:inline>
-      (function() {
-        const storedTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const theme = storedTheme || systemTheme;
-
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      })();
-    </script>
-  </head>
-  <body class="bg-background text-foreground">
-    <!-- Loading State -->
-    <div id="loading-screen" class="flex min-h-screen items-center justify-center">
-      <div class="text-center">
-        <div class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-        <p class="text-muted-foreground">Verifying admin access...</p>
-      </div>
+<BaseLayout
+  title={pageTitle}
+  description="Admin Dashboard for Advent Calendar"
+  bodyClass="bg-background text-foreground"
+>
+  <!-- Loading State -->
+  <div id="loading-screen" class="flex min-h-screen items-center justify-center">
+    <div class="text-center">
+      <div class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      <p class="text-muted-foreground">Verifying admin access...</p>
     </div>
+  </div>
 
-    <!-- Unauthorized Access -->
-    <div id="unauthorized-screen" class="hidden">
-      <div class="flex min-h-screen items-center justify-center p-6">
-        <div class="w-full max-w-md rounded-lg border border-destructive bg-destructive/10 p-8 text-center">
-          <div class="mb-4 flex justify-center">
-            <svg
-              class="h-16 w-16 text-destructive"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              ></path>
-            </svg>
-          </div>
-          <h1 class="text-2xl font-bold text-destructive">Access Denied</h1>
-          <p class="mt-2 text-muted-foreground">
-            You don't have permission to access the admin dashboard.
-          </p>
-          <div class="mt-6 flex flex-col gap-2">
-            <a
-              href="/"
-              class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-            >
-              Go to Calendar
-            </a>
-            <a
-              href="/login"
-              class="rounded-md border px-4 py-2 text-sm font-medium hover:bg-accent"
-            >
-              Login as Admin
-            </a>
-          </div>
+  <!-- Unauthorized Access -->
+  <div id="unauthorized-screen" class="hidden">
+    <div class="flex min-h-screen items-center justify-center p-6">
+      <div class="w-full max-w-md rounded-lg border border-destructive bg-destructive/10 p-8 text-center">
+        <div class="mb-4 flex justify-center">
+          <svg
+            class="h-16 w-16 text-destructive"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            ></path>
+          </svg>
         </div>
-      </div>
-    </div>
-
-    <!-- Admin Dashboard (client-side render) -->
-    <div id="admin-dashboard" class="hidden">
-      <!-- Header with Theme Toggle and Logout -->
-      <div class="border-b bg-card">
-        <div class="mx-auto flex max-w-7xl items-center justify-between p-4">
-          <a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground">
-            ← Back to Calendar
+        <h1 class="text-2xl font-bold text-destructive">Access Denied</h1>
+        <p class="mt-2 text-muted-foreground">
+          You don't have permission to access the admin dashboard.
+        </p>
+        <div class="mt-6 flex flex-col gap-2">
+          <a
+            href="/"
+            class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Go to Calendar
           </a>
-          <div class="flex items-center gap-4">
-            <div id="user-menu" class="flex items-center gap-3"></div>
-            <ThemeToggle client:load />
-          </div>
+          <a
+            href="/login"
+            class="rounded-md border px-4 py-2 text-sm font-medium hover:bg-accent"
+          >
+            Login as Admin
+          </a>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Dashboard Component -->
-      <AdminDashboard client:load isDemo={demoMode} />
+  <!-- Admin Dashboard (client-side render) -->
+  <div id="admin-dashboard" class="hidden">
+    <!-- Header with Theme Toggle and Logout -->
+    <div class="border-b bg-card">
+      <div class="mx-auto flex max-w-7xl items-center justify-between p-4">
+        <a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground">
+          ← Back to Calendar
+        </a>
+        <div class="flex items-center gap-4">
+          <div id="user-menu" class="flex items-center gap-3"></div>
+          <!-- Temporarily hidden while fixing light theme -->
+          <!-- <ThemeToggle client:load /> -->
+        </div>
+      </div>
     </div>
 
-    <script>
-      import { isAuthenticated, getCurrentUser, signOut } from '../lib/auth';
-      import { isCurrentUserAdmin } from '../lib/auth';
-      import { isDemoMode } from '../lib/featureFlags';
+    <!-- Dashboard Component -->
+    <AdminDashboard client:load isDemo={demoMode} />
+  </div>
 
-      const loadingScreen = document.getElementById('loading-screen');
-      const unauthorizedScreen = document.getElementById('unauthorized-screen');
-      const dashboardScreen = document.getElementById('admin-dashboard');
-      const userMenu = document.getElementById('user-menu');
+  <script>
+    import { isAuthenticated, getCurrentUser, signOut } from '../lib/auth';
+    import { isCurrentUserAdmin } from '../lib/auth';
+    import { isDemoMode } from '../lib/featureFlags';
 
-      async function checkAdminAccess() {
-        const demoMode = isDemoMode();
+    const loadingScreen = document.getElementById('loading-screen');
+    const unauthorizedScreen = document.getElementById('unauthorized-screen');
+    const dashboardScreen = document.getElementById('admin-dashboard');
+    const userMenu = document.getElementById('user-menu');
 
-        // In demo mode, skip auth check
-        if (demoMode) {
-          showDashboard({
-            email: 'demo@example.com',
-            user_metadata: { name: 'Demo Admin' },
-          });
-          return;
-        }
+    async function checkAdminAccess() {
+      const demoMode = isDemoMode();
 
-        // Check if authenticated
-        const authenticated = await isAuthenticated();
-        if (!authenticated) {
-          window.location.href = '/login?redirect=/admin';
-          return;
-        }
-
-        // Check if user is admin
-        const isAdmin = await isCurrentUserAdmin();
-        if (!isAdmin) {
-          showUnauthorized();
-          return;
-        }
-
-        // Show dashboard
-        const user = await getCurrentUser();
-        showDashboard(user);
+      // In demo mode, skip auth check
+      if (demoMode) {
+        showDashboard({
+          email: 'demo@example.com',
+          user_metadata: { name: 'Demo Admin' },
+        });
+        return;
       }
 
-      function showDashboard(user: { email?: string; user_metadata?: { name?: string } } | null) {
-        if (loadingScreen) loadingScreen.classList.add('hidden');
-        if (unauthorizedScreen) unauthorizedScreen.classList.add('hidden');
-        if (dashboardScreen) dashboardScreen.classList.remove('hidden');
+      // Check if authenticated
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        window.location.href = '/login?redirect=/admin';
+        return;
+      }
 
-        // Render user menu
-        if (userMenu && user) {
-          const name = user.user_metadata?.name || user.email || 'Admin';
-          const initial = name.charAt(0).toUpperCase();
+      // Check if user is admin
+      const isAdmin = await isCurrentUserAdmin();
+      if (!isAdmin) {
+        showUnauthorized();
+        return;
+      }
 
-          userMenu.innerHTML = `
-            <div class="flex items-center gap-2">
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                ${initial}
-              </div>
-              <div class="text-sm">
-                <div class="font-medium">${name}</div>
-                <div class="text-xs text-muted-foreground">${user.email || ''}</div>
-              </div>
+      // Show dashboard
+      const user = await getCurrentUser();
+      showDashboard(user);
+    }
+
+    function showDashboard(user: { email?: string; user_metadata?: { name?: string } } | null) {
+      if (loadingScreen) loadingScreen.classList.add('hidden');
+      if (unauthorizedScreen) unauthorizedScreen.classList.add('hidden');
+      if (dashboardScreen) dashboardScreen.classList.remove('hidden');
+
+      // Render user menu
+      if (userMenu && user) {
+        const name = user.user_metadata?.name || user.email || 'Admin';
+        const initial = name.charAt(0).toUpperCase();
+
+        userMenu.innerHTML = `
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+              ${initial}
             </div>
-            <button
-              id="logout-button"
-              class="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-accent"
-            >
-              Logout
-            </button>
-          `;
+            <div class="text-sm">
+              <div class="font-medium">${name}</div>
+              <div class="text-xs text-muted-foreground">${user.email || ''}</div>
+            </div>
+          </div>
+          <button
+            id="logout-button"
+            class="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-accent"
+          >
+            Logout
+          </button>
+        `;
 
-          // Add logout handler
-          const logoutButton = document.getElementById('logout-button');
-          if (logoutButton) {
-            logoutButton.addEventListener('click', handleLogout);
-          }
+        // Add logout handler
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) {
+          logoutButton.addEventListener('click', handleLogout);
         }
       }
+    }
 
-      function showUnauthorized() {
-        if (loadingScreen) loadingScreen.classList.add('hidden');
-        if (dashboardScreen) dashboardScreen.classList.add('hidden');
-        if (unauthorizedScreen) unauthorizedScreen.classList.remove('hidden');
+    function showUnauthorized() {
+      if (loadingScreen) loadingScreen.classList.add('hidden');
+      if (dashboardScreen) dashboardScreen.classList.add('hidden');
+      if (unauthorizedScreen) unauthorizedScreen.classList.remove('hidden');
+    }
+
+    async function handleLogout() {
+      const result = await signOut();
+      if (result.success) {
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed:', result.error);
+        alert('Failed to logout. Please try again.');
       }
+    }
 
-      async function handleLogout() {
-        const result = await signOut();
-        if (result.success) {
-          window.location.href = '/login';
-        } else {
-          console.error('Logout failed:', result.error);
-          alert('Failed to logout. Please try again.');
-        }
-      }
-
-      // Check admin access on page load
-      checkAdminAccess().catch(console.error);
-    </script>
-  </body>
-</html>
+    // Check admin access on page load
+    checkAdminAccess().catch(console.error);
+  </script>
+</BaseLayout>
