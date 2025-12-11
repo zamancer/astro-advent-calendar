@@ -25,6 +25,14 @@ import {
   type SyncStatus,
 } from "../lib/offlineSync";
 import { getFriendConfig } from "../config/friends";
+import {
+  isWindowUnlockedByDay,
+  shouldBypassUnlockCheck,
+  getUnlockedCountFromContent,
+  isDateSimulationActive,
+  getSimulatedDateDisplay,
+  getSecondsAfterUnlock,
+} from "../lib/calendar";
 
 interface CalendarGridProps {
   contents: CalendarContent[];
@@ -163,83 +171,100 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     return cleanup;
   }, [friendId]);
 
+  // Helper to check if a window is unlocked
+  const isUnlocked = (day: number): boolean => {
+    return shouldBypassUnlockCheck() || isWindowUnlockedByDay(day);
+  };
+
   const handleOpenWindow = (day: number) => {
     const content = activeContents.find((c) => c.day === day);
-    if (content) {
-      // Update progress BEFORE opening modal for better sync
-      // Only record if not already opened
-      if (!openedDays.has(day)) {
-        // Use functional update to avoid race conditions with rapid clicks
-        setOpenedDays((prev) => {
-          if (prev.has(day)) {
-            return prev; // Already opened, no update needed
-          }
-          const newOpenedDays = new Set(prev);
-          newOpenedDays.add(day);
+    if (!content) return;
 
-          // Always save to localStorage immediately (works offline)
-          saveLocalProgress(newOpenedDays);
+    // Check if window is unlocked
+    if (!isUnlocked(day)) {
+      console.warn(`Window ${day} is locked`);
+      return;
+    }
 
-          return newOpenedDays;
-        });
+    // Update progress BEFORE opening modal for better sync
+    // Only record if not already opened
+    if (!openedDays.has(day)) {
+      // Use functional update to avoid race conditions with rapid clicks
+      setOpenedDays((prev) => {
+        if (prev.has(day)) {
+          return prev; // Already opened, no update needed
+        }
+        const newOpenedDays = new Set(prev);
+        newOpenedDays.add(day);
 
-        // Snapshot friendId before async operation to avoid issues if state changes
-        const currentFriendId = friendId;
+        // Always save to localStorage immediately (works offline)
+        saveLocalProgress(newOpenedDays);
 
-        // Save to Supabase if authenticated (non-blocking for instant modal)
-        if (!isDemoMode() && currentFriendId) {
-          setSyncStatus("syncing");
+        return newOpenedDays;
+      });
 
-          // Fire and forget - don't block modal opening
-          recordWindowOpen({
-            friend_id: currentFriendId,
-            window_number: day,
-          })
-            .then(({ error }) => {
-              if (error) {
-                console.error("Failed to record window open:", error);
+      // Snapshot friendId before async operation to avoid issues if state changes
+      const currentFriendId = friendId;
 
-                // Check if it's a duplicate error (already saved)
-                // Use type guard to safely access error.code
-                const isDuplicate =
-                  (isPostgrestError(error) &&
-                    (error.code === "PGRST116" || error.code === "23505")) ||
-                  error.message?.includes("duplicate") ||
-                  error.message?.includes("unique");
+      // Save to Supabase if authenticated (non-blocking for instant modal)
+      if (!isDemoMode() && currentFriendId) {
+        setSyncStatus("syncing");
 
-                if (!isDuplicate) {
-                  // Queue for later sync
-                  queueWindowOpen({
-                    friend_id: currentFriendId,
-                    window_number: day,
-                  });
-                  setSyncStatus("offline");
-                } else {
-                  // Already saved, all good
-                  setSyncStatus("synced");
-                }
-              } else {
-                // Successfully saved to cloud
-                setSyncStatus("synced");
-              }
-            })
-            .catch((error) => {
+        // Calculate seconds after unlock for fair timezone-normalized ranking
+        const secondsAfterUnlock = getSecondsAfterUnlock(day);
+
+        // Fire and forget - don't block modal opening
+        recordWindowOpen({
+          friend_id: currentFriendId,
+          window_number: day,
+          seconds_after_unlock: secondsAfterUnlock,
+        })
+          .then(({ error }) => {
+            if (error) {
               console.error("Failed to record window open:", error);
 
-              // Queue for later sync
-              queueWindowOpen({
-                friend_id: currentFriendId,
-                window_number: day,
-              });
-              setSyncStatus("offline");
-            });
-        }
-      }
+              // Check if it's a duplicate error (already saved)
+              // Use type guard to safely access error.code
+              const isDuplicate =
+                (isPostgrestError(error) &&
+                  (error.code === "PGRST116" || error.code === "23505")) ||
+                error.message?.includes("duplicate") ||
+                error.message?.includes("unique");
 
-      // Open modal immediately after progress update (don't wait for DB)
-      setSelectedContent(content);
-      setIsModalOpen(true);
+              if (!isDuplicate) {
+                // Queue for later sync
+                queueWindowOpen({
+                  friend_id: currentFriendId,
+                  window_number: day,
+                  seconds_after_unlock: secondsAfterUnlock,
+                });
+                setSyncStatus("offline");
+              } else {
+                // Already saved, all good
+                setSyncStatus("synced");
+              }
+            } else {
+              // Successfully saved to cloud
+              setSyncStatus("synced");
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to record window open:", error);
+
+            // Queue for later sync
+            queueWindowOpen({
+              friend_id: currentFriendId,
+              window_number: day,
+              seconds_after_unlock: secondsAfterUnlock,
+            });
+            setSyncStatus("offline");
+          });
+      }
     }
+
+    // Open modal immediately after progress update (don't wait for DB)
+    setSelectedContent(content);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -255,15 +280,45 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     );
   }
 
+  // Calculate unlocked count for progress display
+  const unlockedCount = shouldBypassUnlockCheck()
+    ? activeContents.length
+    : getUnlockedCountFromContent(activeContents);
+
   return (
     <>
+      {/* Date simulation indicator (dev only) */}
+      {isDateSimulationActive() && (
+        <div className="mb-4 mx-auto max-w-md">
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-500/10 border border-amber-500/30 px-4 py-2">
+            <svg
+              className="w-4 h-4 text-amber-600 dark:text-amber-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span className="text-sm font-medium text-amber-700 dark:text-amber-300">
+              Simulating: {getSimulatedDateDisplay()}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Progress indicator */}
       <div className="mb-8 text-center">
         <p className="text-muted-foreground text-sm uppercase tracking-wider mb-3">
           Progress
         </p>
 
-        {/* Progress bar */}
+        {/* Progress bar - shows opened out of available (unlocked) */}
         <div className="max-w-md mx-auto mb-3">
           <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div
@@ -271,24 +326,33 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
               style={{
                 width: `${Math.min(
                   100,
-                  (openedDays.size / (activeContents.length || 1)) * 100
+                  (openedDays.size / (unlockedCount || 1)) * 100
                 )}%`,
               }}
-              aria-label={`${openedDays.size} of ${activeContents.length} windows opened`}
+              aria-label={`${openedDays.size} of ${unlockedCount} available windows opened`}
             />
           </div>
         </div>
 
         {/* Progress text */}
-        <p className="text-sm font-medium">
-          <span className="text-green-600 dark:text-green-500">
-            {openedDays.size}
-          </span>
-          <span className="text-muted-foreground">
-            {" "}
-            of {activeContents.length} opened
-          </span>
-        </p>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-medium">
+            <span className="text-green-600 dark:text-green-500">
+              {openedDays.size}
+            </span>
+            <span className="text-muted-foreground">
+              {" "}
+              of {unlockedCount} available opened
+            </span>
+          </p>
+          {unlockedCount < activeContents.length && (
+            <p className="text-xs text-muted-foreground">
+              {activeContents.length - unlockedCount} more window
+              {activeContents.length - unlockedCount !== 1 ? "s" : ""} unlock
+              soon
+            </p>
+          )}
+        </div>
 
         {/* Sync status indicator (only in authenticated mode) */}
         {!isDemoMode() && (
@@ -328,6 +392,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             day={content.day}
             content={content}
             isOpened={openedDays.has(content.day)}
+            isUnlocked={isUnlocked(content.day)}
             onOpen={handleOpenWindow}
           />
         ))}

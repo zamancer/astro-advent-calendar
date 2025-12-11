@@ -3,13 +3,13 @@
  * Handles offline progress tracking with automatic sync when connection is restored
  */
 
-import { recordWindowOpen, isPostgrestError } from './database';
-import type { FriendWindowOpenInsert } from '../types/database';
+import { recordWindowOpen, isPostgrestError } from "./database";
+import type { FriendWindowOpenInsert } from "../types/database";
 
-const SYNC_QUEUE_KEY = 'advent-sync-queue';
-const LOCAL_PROGRESS_KEY = 'advent-opened-days';
+const SYNC_QUEUE_KEY = "advent-sync-queue";
+const LOCAL_PROGRESS_KEY = "advent-opened-days";
 
-export type SyncStatus = 'synced' | 'syncing' | 'offline' | 'error';
+export type SyncStatus = "synced" | "syncing" | "offline" | "error";
 
 interface QueuedWindowOpen extends FriendWindowOpenInsert {
   timestamp: number;
@@ -23,7 +23,7 @@ function getSyncQueue(): QueuedWindowOpen[] {
     const queue = localStorage.getItem(SYNC_QUEUE_KEY);
     return queue ? JSON.parse(queue) : [];
   } catch (error) {
-    console.error('Failed to read sync queue:', error);
+    console.error("Failed to read sync queue:", error);
     return [];
   }
 }
@@ -35,7 +35,7 @@ function setSyncQueue(queue: QueuedWindowOpen[]): void {
   try {
     localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(queue));
   } catch (error) {
-    console.error('Failed to save sync queue:', error);
+    console.error("Failed to save sync queue:", error);
   }
 }
 
@@ -60,7 +60,7 @@ export function getLocalProgress(): Set<number> {
     const saved = localStorage.getItem(LOCAL_PROGRESS_KEY);
     return saved ? new Set(JSON.parse(saved)) : new Set();
   } catch (error) {
-    console.error('Failed to read local progress:', error);
+    console.error("Failed to read local progress:", error);
     return new Set();
   }
 }
@@ -72,7 +72,7 @@ export function saveLocalProgress(openedDays: Set<number>): void {
   try {
     localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify([...openedDays]));
   } catch (error) {
-    console.error('Failed to save local progress:', error);
+    console.error("Failed to save local progress:", error);
   }
 }
 
@@ -80,7 +80,11 @@ export function saveLocalProgress(openedDays: Set<number>): void {
  * Sync the queue with Supabase
  * Returns the number of items successfully synced
  */
-export async function syncQueue(): Promise<{ synced: number; failed: number; errors: Error[] }> {
+export async function syncQueue(): Promise<{
+  synced: number;
+  failed: number;
+  errors: Error[];
+}> {
   const queue = getSyncQueue();
   if (queue.length === 0) {
     return { synced: 0, failed: 0, errors: [] };
@@ -100,6 +104,7 @@ export async function syncQueue(): Promise<{ synced: number; failed: number; err
       const { error } = await recordWindowOpen({
         friend_id: item.friend_id,
         window_number: item.window_number,
+        seconds_after_unlock: item.seconds_after_unlock,
       });
 
       if (error) {
@@ -108,9 +113,9 @@ export async function syncQueue(): Promise<{ synced: number; failed: number; err
         // Use type guard to safely access error.code
         const isDuplicate =
           (isPostgrestError(error) &&
-            (error.code === 'PGRST116' || error.code === '23505')) ||
-          error.message?.includes('duplicate') ||
-          error.message?.includes('unique');
+            (error.code === "PGRST116" || error.code === "23505")) ||
+          error.message?.includes("duplicate") ||
+          error.message?.includes("unique");
 
         if (isDuplicate) {
           // Already synced, don't re-queue
@@ -169,7 +174,10 @@ export function clearSyncQueue(): void {
  * Merge local progress with server progress
  * Returns the combined set of opened days
  */
-export function mergeProgress(localProgress: Set<number>, serverProgress: number[]): Set<number> {
+export function mergeProgress(
+  localProgress: Set<number>,
+  serverProgress: number[]
+): Set<number> {
   const merged = new Set(localProgress);
   serverProgress.forEach((day) => merged.add(day));
   return merged;
@@ -190,13 +198,13 @@ export function createConnectionMonitor(
     onOffline();
   };
 
-  window.addEventListener('online', handleOnline);
-  window.addEventListener('offline', handleOffline);
+  window.addEventListener("online", handleOnline);
+  window.addEventListener("offline", handleOffline);
 
   // Return cleanup function
   return () => {
-    window.removeEventListener('online', handleOnline);
-    window.removeEventListener('offline', handleOffline);
+    window.removeEventListener("online", handleOnline);
+    window.removeEventListener("offline", handleOffline);
   };
 }
 
