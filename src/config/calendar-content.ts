@@ -7,11 +7,11 @@ export const calendarConfig: CalendarConfig = {
   subtitle: "12 days of special moments we shared together",
   contents: [
     {
-      type: "photo",
+      type: "youtube",
       day: 1,
-      imageUrl: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop",
-      caption: "Remember our first coffee date this winter? ☕",
-      alt: "Friends at coffee shop",
+      videoId: "dQw4w9WgXcQ",
+      title: "A Holiday Classic",
+      description: "Starting the countdown with a timeless favorite!",
     },
     {
       type: "spotify",
