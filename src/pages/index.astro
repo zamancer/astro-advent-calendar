@@ -5,76 +5,55 @@ import Snowfall from '../components/Snowfall';
 // import ThemeToggle from '../components/ThemeToggle';
 import UserMenu from '../components/UserMenu';
 import { calendarConfig } from '../config/calendar-content';
-import "../styles/global.css";
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const { title, subtitle, contents } = calendarConfig;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title} - Advent Calendar</title>
-    <meta name="description" content={subtitle} />
+<BaseLayout
+  title={`${title} - Advent Calendar`}
+  description={subtitle}
+  bodyClass="min-h-screen bg-background text-foreground"
+>
+  <!-- Snowfall effect -->
+  <Snowfall client:load enabled={true} />
 
-    <!-- Theme initialization script - runs before page load to prevent flash -->
-    <script is:inline>
-      (function() {
-        const storedTheme = localStorage.getItem('theme');
-        const theme = storedTheme || 'dark';
+  <!-- Theme toggle (top left) -->
+  <!-- Temporarily hidden while fixing light theme -->
+  <!-- <div class="fixed top-4 left-4 z-50">
+    <ThemeToggle client:load />
+  </div> -->
 
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      })();
-    </script>
+  <!-- User menu (top right) -->
+  <div class="fixed top-4 right-4 z-50">
+    <UserMenu client:load />
+  </div>
 
-    </head>
-  <body class="min-h-screen bg-background text-foreground">
-    <!-- Snowfall effect -->
-    <Snowfall client:load enabled={true} />
+  <!-- Main content -->
+  <div class="relative z-10">
+    <!-- Header -->
+    <header class="py-12 md:py-16 text-center px-4">
+      <h1 class="text-4xl md:text-6xl font-serif font-bold text-foreground mb-4 text-balance">
+        {title}
+      </h1>
+      <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+        {subtitle}
+      </p>
 
-    <!-- Theme toggle (top left) -->
-    <!-- Temporarily hidden while fixing light theme -->
-    <!-- <div class="fixed top-4 left-4 z-50">
-      <ThemeToggle client:load />
-    </div> -->
+      <!-- Decorative element -->
+      <div class="flex justify-center mt-6">
+        <div class="w-24 h-1 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full"></div>
+      </div>
+    </header>
 
-    <!-- User menu (top right) -->
-    <div class="fixed top-4 right-4 z-50">
-      <UserMenu client:load />
-    </div>
+    <!-- Calendar -->
+    <main class="container mx-auto px-4 pb-16 max-w-6xl">
+      <CalendarGrid client:load contents={contents} />
+    </main>
 
-    <!-- Main content -->
-    <div class="relative z-10">
-      <!-- Header -->
-      <header class="py-12 md:py-16 text-center px-4">
-        <h1 class="text-4xl md:text-6xl font-serif font-bold text-foreground mb-4 text-balance">
-          {title}
-        </h1>
-        <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          {subtitle}
-        </p>
-        
-        <!-- Decorative element -->
-        <div class="flex justify-center mt-6">
-          <div class="w-24 h-1 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full"></div>
-        </div>
-      </header>
-
-      <!-- Calendar -->
-      <main class="container mx-auto px-4 pb-16 max-w-6xl">
-        <CalendarGrid client:load contents={contents} />
-      </main>
-
-      <!-- Footer -->
-      <footer class="py-8 text-center text-sm text-muted-foreground">
-        <p>Made with ❤️ for the holidays</p>
-      </footer>
-    </div>
-  </body>
-</html>
+    <!-- Footer -->
+    <footer class="py-8 text-center text-sm text-muted-foreground">
+      <p>Made with ❤️ for the holidays</p>
+    </footer>
+  </div>
+</BaseLayout>
