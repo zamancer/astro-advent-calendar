@@ -139,6 +139,27 @@ export interface AdminWindowPopularity {
 }
 
 // ============================================
+// CONTEST LEADERBOARD TYPES
+// ============================================
+
+/**
+ * Contest leaderboard entry (from contest_leaderboard view)
+ */
+export interface ContestLeaderboardEntry {
+  friend_id: string;
+  name: string;
+  email: string;
+  windows_opened: number;
+  base_points: number;
+  streak_bonus: number;
+  total_points: number;
+  total_reaction_time: number;
+  first_place_count: number;
+  last_window_opened_at: string | null;
+  rank: number;
+}
+
+// ============================================
 // DATABASE RESPONSE TYPES
 // ============================================
 

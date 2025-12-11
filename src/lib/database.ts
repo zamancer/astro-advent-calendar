@@ -17,6 +17,7 @@ import type {
   AdminFriendProgress,
   AdminStatistics,
   AdminWindowPopularity,
+  ContestLeaderboardEntry,
 } from '../types/database';
 
 // Database error type: can be either a regular Error (when Supabase isn't configured)
@@ -407,6 +408,28 @@ export async function getAdminWindowPopularity(): Promise<{ data: AdminWindowPop
     .from('admin_window_popularity')
     .select('*')
     .order('window_number', { ascending: true });
+
+  return { data, error };
+}
+
+// ============================================
+// CONTEST OPERATIONS
+// ============================================
+
+/**
+ * Get contest leaderboard with rankings and points
+ * Uses the contest_leaderboard database view
+ * Results are pre-sorted by rank (with tiebreakers applied)
+ */
+export async function getContestLeaderboard(): Promise<{ data: ContestLeaderboardEntry[] | null; error: Error | null }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { data: null, error: new Error('Supabase is not configured') };
+  }
+
+  const { data, error } = await supabase
+    .from('contest_leaderboard')
+    .select('*')
+    .order('rank', { ascending: true });
 
   return { data, error };
 }
