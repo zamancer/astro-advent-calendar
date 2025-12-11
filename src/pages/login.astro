@@ -11,6 +11,20 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Login - Advent Calendar</title>
+
+    <!-- Theme initialization script - runs before page load to prevent flash -->
+    <script is:inline>
+      (function() {
+        const storedTheme = localStorage.getItem('theme');
+        const theme = storedTheme || 'dark';
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="fixed top-4 right-4 z-50">
