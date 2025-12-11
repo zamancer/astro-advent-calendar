@@ -8,6 +8,7 @@ import PhotoContent from "./content/PhotoContent";
 import SpotifyContent from "./content/SpotifyContent";
 import TextContent from "./content/TextContent";
 import MessageContent from "./content/MessageContent";
+import YouTubeContent from "./content/YouTubeContent";
 
 interface ContentModalProps {
   content: CalendarContent | null;
@@ -86,6 +87,7 @@ export default function ContentModal({
           {content.type === "spotify" && <SpotifyContent content={content} />}
           {content.type === "text" && <TextContent content={content} />}
           {content.type === "message" && <MessageContent content={content} />}
+          {content.type === "youtube" && <YouTubeContent content={content} />}
         </div>
       </div>
     </div>
