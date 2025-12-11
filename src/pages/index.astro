@@ -2,7 +2,7 @@
 // Main calendar page
 import CalendarGrid from '../components/CalendarGrid';
 import Snowfall from '../components/Snowfall';
-import ThemeToggle from '../components/ThemeToggle';
+// import ThemeToggle from '../components/ThemeToggle';
 import UserMenu from '../components/UserMenu';
 import { calendarConfig } from '../config/calendar-content';
 import "../styles/global.css";
@@ -39,9 +39,10 @@ const { title, subtitle, contents } = calendarConfig;
     <Snowfall client:load enabled={true} />
 
     <!-- Theme toggle (top left) -->
-    <div class="fixed top-4 left-4 z-50">
+    <!-- Temporarily hidden while fixing light theme -->
+    <!-- <div class="fixed top-4 left-4 z-50">
       <ThemeToggle client:load />
-    </div>
+    </div> -->
 
     <!-- User menu (top right) -->
     <div class="fixed top-4 right-4 z-50">

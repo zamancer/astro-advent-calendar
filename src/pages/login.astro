@@ -1,6 +1,6 @@
 ---
 import LoginForm from '../components/LoginForm';
-import ThemeToggle from '../components/ThemeToggle';
+// import ThemeToggle from '../components/ThemeToggle';
 import '../styles/global.css';
 ---
 
@@ -27,9 +27,10 @@ import '../styles/global.css';
     </script>
   </head>
   <body>
-    <div class="fixed top-4 right-4 z-50">
+    <!-- Temporarily hidden while fixing light theme -->
+    <!-- <div class="fixed top-4 right-4 z-50">
       <ThemeToggle client:load />
-    </div>
+    </div> -->
     <LoginForm client:load />
   </body>
 </html>
