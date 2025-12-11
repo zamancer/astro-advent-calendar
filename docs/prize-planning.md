@@ -12,7 +12,7 @@ A friendly competition among 2-5 friends with Amazon gift card prizes for the to
 | 2nd   | $25 Amazon gift card |
 | 3rd   | $10 Amazon gift card |
 
-_Adjust amounts as desired. Total: $85_
+> **Note:** Adjust amounts as desired. Total: $85
 
 ---
 
@@ -126,19 +126,19 @@ GROUP BY f.id, f.name;
 
 ### UI Placement Options
 
-**Option A: Dedicated leaderboard page**
+#### Option A: Dedicated leaderboard page
 
 - `/leaderboard` route
 - Link from main calendar page
 - Full standings and breakdown
 
-**Option B: Inline on calendar page**
+#### Option B: Inline on calendar page
 
 - Compact leaderboard widget
 - Shows top 3 with current points
 - "View full leaderboard" link
 
-**Option C: Both** (Recommended)
+#### Option C: Both (Recommended)
 
 - Widget on calendar for quick glance
 - Full page for detailed breakdown
@@ -169,11 +169,13 @@ Users need to understand how the contest works. Add an instructions section/moda
 
 ### Content to Display
 
-```
+We won't reveal the exact price, but will announce there will be more than one single winner.
+
+```text
 🏆 Advent Calendar Contest
 
-WIN AMAZON GIFT CARDS!
-1st Place: $50 | 2nd Place: $25 | 3rd Place: $10
+WIN A SPECIAL PRIZE!
+1st Place, 2nd Place, and 3rd Place will get a gift!
 
 HOW TO EARN POINTS:
 • Open a window: 10 points
@@ -187,7 +189,7 @@ TIPS:
 • Be quick to earn speed bonuses!
 • Consistency matters - the streak bonus is significant
 
-Winners announced Dec 24. Prizes delivered via email Dec 25.
+Contest will close on Dec 24. Prizes delivered via email Dec 25.
 ```
 
 ### UI Options
@@ -307,19 +309,19 @@ The app will **announce winners** but **not store or display gift card codes**. 
 
 Add a simple winner announcement banner/modal:
 
-```
+```text
 🎉 Contest Complete!
 
-1st Place: [Name] - $50 Amazon Gift Card
-2nd Place: [Name] - $25 Amazon Gift Card
-3rd Place: [Name] - $10 Amazon Gift Card
+1st Place: [Name]
+2nd Place: [Name]
+3rd Place: [Name]
 
-Winners: Check your email on Dec 25 for your prize code!
+Winners: Check your email on Dec 25 for your prize details!
 ```
 
 ### Email Template (for your external system)
 
-```
+```email
 Subject: 🎄 You won the Advent Calendar Contest!
 
 Hi [Name],
