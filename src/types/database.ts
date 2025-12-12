@@ -154,6 +154,8 @@ export interface ContestLeaderboardEntry {
   total_points: number;
   total_reaction_time: number;
   first_place_count: number;
+  /** Timestamp when window 12 was opened (null if not completed) */
+  completed_at: string | null;
   last_window_opened_at: string | null;
   rank: number;
 }

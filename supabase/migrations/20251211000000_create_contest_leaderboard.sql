@@ -27,7 +27,7 @@ friend_points AS (
   SELECT
     f.id as friend_id,
     f.name,
-    COUNT(ro.id) as windows_opened,
+    COUNT(DISTINCT ro.window_number) as windows_opened,
     -- Base points (10 per window) + speed bonuses
     COALESCE(SUM(
       10 + -- base points
@@ -38,13 +38,15 @@ friend_points AS (
         ELSE 0
       END
     ), 0) as base_points,
-    -- Streak bonus: 20 points if all 12 windows opened
-    CASE WHEN COUNT(ro.id) = 12 THEN 20 ELSE 0 END as streak_bonus,
+    -- Streak bonus: 20 points if all 12 unique windows opened
+    CASE WHEN COUNT(DISTINCT ro.window_number) = 12 THEN 20 ELSE 0 END as streak_bonus,
     -- Tiebreaker 1: Total reaction time (lower is better)
     COALESCE(SUM(ro.seconds_after_unlock), 0) as total_reaction_time,
     -- Tiebreaker 2: Number of 1st place finishes
     COALESCE(SUM(CASE WHEN ro.speed_rank = 1 THEN 1 ELSE 0 END), 0) as first_place_count,
-    -- Tiebreaker 3: Earliest final window open
+    -- Tiebreaker 3: When contest was completed (window 12 opened), NULL if not completed
+    MAX(CASE WHEN ro.window_number = 12 THEN ro.opened_at END) as completed_at,
+    -- For display: most recent window open
     MAX(ro.opened_at) as last_window_opened_at
   FROM friends f
   LEFT JOIN ranked_opens ro ON f.id = ro.friend_id
@@ -60,6 +62,7 @@ SELECT
   (base_points + streak_bonus) as total_points,
   total_reaction_time,
   first_place_count,
+  completed_at,
   last_window_opened_at,
   -- Calculate final rank with tiebreakers
   RANK() OVER (
@@ -67,7 +70,7 @@ SELECT
       (base_points + streak_bonus) DESC,  -- Primary: highest points
       total_reaction_time ASC,             -- Tiebreaker 1: lowest reaction time
       first_place_count DESC,              -- Tiebreaker 2: most 1st places
-      last_window_opened_at ASC            -- Tiebreaker 3: earliest final window
+      completed_at ASC NULLS LAST          -- Tiebreaker 3: earliest completion (non-finishers last)
   ) as rank
 FROM friend_points
 ORDER BY rank ASC;
