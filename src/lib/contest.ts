@@ -11,7 +11,7 @@
  * Contest end time: December 24, 2025 at 11:59 PM Mexico City time (CST/UTC-6)
  * ISO timestamp: 2025-12-25T05:59:00Z
  */
-export const CONTEST_END_TIME = new Date('2025-12-25T05:59:00Z');
+export const CONTEST_END_TIME = new Date("2025-12-25T05:59:00Z");
 
 /**
  * Number of windows in the advent calendar contest
@@ -72,16 +72,21 @@ export function getTimeRemainingBreakdown(): {
 /**
  * Format contest end time for display
  * @param locale - Optional locale for formatting (defaults to 'en-US')
+ * @param timeZone - Optional timezone for formatting (defaults to 'America/Mexico_City')
  * @returns formatted date string
  */
-export function formatContestEndTime(locale: string = 'en-US'): string {
+export function formatContestEndTime(
+  locale: string = "en-US",
+  timeZone: string = "America/Mexico_City"
+): string {
   return CONTEST_END_TIME.toLocaleString(locale, {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZoneName: 'short',
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone,
+    timeZoneName: "short",
   });
 }
 
@@ -98,9 +103,9 @@ export const BASE_POINTS = 10;
  * Bonus points for speed ranking
  */
 export const SPEED_BONUS = {
-  FIRST: 5,   // 1st place
-  SECOND: 3,  // 2nd place
-  THIRD: 1,   // 3rd place
+  FIRST: 5, // 1st place
+  SECOND: 3, // 2nd place
+  THIRD: 1, // 3rd place
 } as const;
 
 /**
@@ -113,7 +118,9 @@ export const STREAK_BONUS = 20;
  * @returns maximum points achievable (all 1st places + perfect streak)
  */
 export function getMaximumPoints(): number {
-  return (BASE_POINTS + SPEED_BONUS.FIRST) * TOTAL_CONTEST_WINDOWS + STREAK_BONUS;
+  return (
+    (BASE_POINTS + SPEED_BONUS.FIRST) * TOTAL_CONTEST_WINDOWS + STREAK_BONUS
+  );
 }
 
 /**
