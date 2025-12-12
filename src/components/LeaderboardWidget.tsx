@@ -3,23 +3,37 @@ import { getContestLeaderboard } from "../lib/database";
 import { isContestEnded } from "../lib/contest";
 import { isDemoMode } from "../lib/featureFlags";
 import type { ContestLeaderboardEntry } from "../types/database";
-
-interface LeaderboardWidgetProps {
-  /** Optional: highlight a specific friend by ID */
-  highlightFriendId?: string;
-}
+import type { LeaderboardProps } from "../types/leaderboard";
 
 /** Compact rank display */
 function RankIcon({ rank }: { rank: number }) {
-  if (rank === 1) return <span title="1st place">🥇</span>;
-  if (rank === 2) return <span title="2nd place">🥈</span>;
-  if (rank === 3) return <span title="3rd place">🥉</span>;
+  if (rank === 1) {
+    return (
+      <span role="img" aria-label="1st place">
+        🥇
+      </span>
+    );
+  }
+  if (rank === 2) {
+    return (
+      <span role="img" aria-label="2nd place">
+        🥈
+      </span>
+    );
+  }
+  if (rank === 3) {
+    return (
+      <span role="img" aria-label="3rd place">
+        🥉
+      </span>
+    );
+  }
   return <span className="text-gray-400 dark:text-gray-500">{rank}</span>;
 }
 
 export default function LeaderboardWidget({
   highlightFriendId,
-}: LeaderboardWidgetProps) {
+}: LeaderboardProps) {
   const [leaderboard, setLeaderboard] = useState<ContestLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -119,7 +133,7 @@ export default function LeaderboardWidget({
   return (
     <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-amber-200 dark:border-amber-900/50">
       {/* Header */}
-      <div className="px-4 py-3 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10 border-b border-amber-200 dark:border-amber-900/30">
+      <div className="px-4 py-3 bg-linear-to-r from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10 border-b border-amber-200 dark:border-amber-900/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg">🏆</span>
@@ -155,7 +169,7 @@ export default function LeaderboardWidget({
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-lg flex-shrink-0">
+                  <span className="text-lg shrink-0">
                     <RankIcon rank={entry.rank} />
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white truncate">
@@ -167,7 +181,7 @@ export default function LeaderboardWidget({
                     )}
                   </span>
                 </div>
-                <span className="font-bold text-amber-600 dark:text-amber-400 flex-shrink-0 ml-2">
+                <span className="font-bold text-amber-600 dark:text-amber-400 shrink-0 ml-2">
                   {entry.total_points}
                   <span className="text-xs font-normal text-gray-400 dark:text-gray-500 ml-1">
                     pts

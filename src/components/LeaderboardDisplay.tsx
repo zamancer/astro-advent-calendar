@@ -3,11 +3,7 @@ import { getContestLeaderboard } from "../lib/database";
 import { isContestEnded, TOTAL_CONTEST_WINDOWS } from "../lib/contest";
 import { isDemoMode } from "../lib/featureFlags";
 import type { ContestLeaderboardEntry } from "../types/database";
-
-interface LeaderboardDisplayProps {
-  /** Optional: highlight a specific friend by ID */
-  highlightFriendId?: string;
-}
+import type { LeaderboardProps } from "../types/leaderboard";
 
 /** Medal/rank display for top 3 positions */
 function RankBadge({ rank }: { rank: number }) {
@@ -41,8 +37,11 @@ function RankBadge({ rank }: { rank: number }) {
 
 /** Points breakdown tooltip/detail */
 function PointsBreakdown({ entry }: { entry: ContestLeaderboardEntry }) {
-  const speedBonus =
-    entry.total_points - entry.base_points - entry.streak_bonus;
+  // Clamp speed bonus to zero to avoid negative display
+  const speedBonus = Math.max(
+    0,
+    entry.total_points - entry.base_points - entry.streak_bonus
+  );
 
   return (
     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -55,7 +54,7 @@ function PointsBreakdown({ entry }: { entry: ContestLeaderboardEntry }) {
 
 export default function LeaderboardDisplay({
   highlightFriendId,
-}: LeaderboardDisplayProps) {
+}: LeaderboardProps) {
   const [leaderboard, setLeaderboard] = useState<ContestLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -128,7 +127,10 @@ export default function LeaderboardDisplay({
 
   if (error) {
     return (
-      <div className="text-center py-8 text-red-500 dark:text-red-400">
+      <div
+        className="text-center py-8 text-red-500 dark:text-red-400"
+        role="alert"
+      >
         {error}
       </div>
     );
@@ -260,11 +262,7 @@ export default function LeaderboardDisplay({
 
       {/* Legend */}
       <div className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p>
-          Points = Base (
-          {leaderboard[0]?.base_points ? "10 per window" : "10/window"}) + Speed
-          Bonuses + Streak Bonus
-        </p>
+        <p>Points = Base (10/window) + Speed Bonuses + Streak Bonus</p>
       </div>
     </div>
   );
