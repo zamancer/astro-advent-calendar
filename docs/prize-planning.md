@@ -277,13 +277,13 @@ export function getTimeUntilContestEnd(): number {
 | 1.3  | ✅ Create `getContestLeaderboard()` query function                | `src/lib/database.ts`   |
 | 1.4  | ✅ Create contest utilities (end time, status checks)             | `src/lib/contest.ts`    |
 
-### Phase 2: Contest Instructions
+### Phase 2: Contest Instructions ✅
 
-| Step | Description                                             | Files                                    |
-| ---- | ------------------------------------------------------- | ---------------------------------------- |
-| 2.1  | Create ContestInstructions collapsible banner component | `src/components/ContestInstructions.tsx` |
-| 2.2  | Add banner to calendar page (above calendar grid)       | `src/pages/index.astro`                  |
-| 2.3  | Style collapsed/expanded states with Tailwind           | Component file                           |
+| Step | Description                                                       | Files                                    |
+| ---- | ----------------------------------------------------------------- | ---------------------------------------- |
+| 2.1  | ✅ Create ContestInstructions collapsible banner component        | `src/components/ContestInstructions.tsx` |
+| 2.2  | ✅ Add banner to calendar page (above calendar grid)              | `src/pages/index.astro`                  |
+| 2.3  | ✅ Style collapsed/expanded states with Tailwind                  | Component file                           |
 
 ### Phase 3: Leaderboard Components
 

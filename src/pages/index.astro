@@ -1,6 +1,7 @@
 ---
 // Main calendar page
 import CalendarGrid from '../components/CalendarGrid';
+import ContestInstructions from '../components/ContestInstructions';
 import Snowfall from '../components/Snowfall';
 // import ThemeToggle from '../components/ThemeToggle';
 import UserMenu from '../components/UserMenu';
@@ -42,12 +43,15 @@ const { title, subtitle, contents } = calendarConfig;
 
       <!-- Decorative element -->
       <div class="flex justify-center mt-6">
-        <div class="w-24 h-1 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full"></div>
+        <div class="w-24 h-1 bg-linear-to-r from-transparent via-accent to-transparent rounded-full"></div>
       </div>
     </header>
 
     <!-- Calendar -->
     <main class="container mx-auto px-4 pb-16 max-w-6xl">
+      <!-- Contest Instructions Banner -->
+      <ContestInstructions client:load />
+
       <CalendarGrid client:load contents={contents} />
     </main>
 
