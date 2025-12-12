@@ -268,14 +268,14 @@ export function getTimeUntilContestEnd(): number {
 
 ## Implementation Timeline
 
-### Phase 1: Database & Backend
+### Phase 1: Database & Backend ✅
 
-| Step | Description                                                   | Files                   |
-| ---- | ------------------------------------------------------------- | ----------------------- |
-| 1.1  | Create `contest_leaderboard` database view with ranking logic | `supabase/migrations/`  |
-| 1.2  | Add TypeScript types for leaderboard data                     | `src/types/database.ts` |
-| 1.3  | Create `getContestLeaderboard()` query function               | `src/lib/database.ts`   |
-| 1.4  | Create contest utilities (end time, status checks)            | `src/lib/contest.ts`    |
+| Step | Description                                                       | Files                   |
+| ---- | ----------------------------------------------------------------- | ----------------------- |
+| 1.1  | ✅ Create `contest_leaderboard` database view with ranking logic  | `supabase/migrations/`  |
+| 1.2  | ✅ Add TypeScript types for leaderboard data                      | `src/types/database.ts` |
+| 1.3  | ✅ Create `getContestLeaderboard()` query function                | `src/lib/database.ts`   |
+| 1.4  | ✅ Create contest utilities (end time, status checks)             | `src/lib/contest.ts`    |
 
 ### Phase 2: Contest Instructions
 
