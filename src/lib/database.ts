@@ -421,7 +421,7 @@ export async function getAdminWindowPopularity(): Promise<{ data: AdminWindowPop
  * Uses the contest_leaderboard database view
  * Results are pre-sorted by rank (with tiebreakers applied)
  */
-export async function getContestLeaderboard(): Promise<{ data: ContestLeaderboardEntry[] | null; error: Error | null }> {
+export async function getContestLeaderboard(): Promise<{ data: ContestLeaderboardEntry[] | null; error: DatabaseError }> {
   if (!isSupabaseConfigured || !supabase) {
     return { data: null, error: new Error('Supabase is not configured') };
   }
