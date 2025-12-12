@@ -27,7 +27,6 @@ friend_points AS (
   SELECT
     f.id as friend_id,
     f.name,
-    f.email,
     COUNT(ro.id) as windows_opened,
     -- Base points (10 per window) + speed bonuses
     COALESCE(SUM(
@@ -50,12 +49,11 @@ friend_points AS (
   FROM friends f
   LEFT JOIN ranked_opens ro ON f.id = ro.friend_id
   WHERE f.is_admin = false
-  GROUP BY f.id, f.name, f.email
+  GROUP BY f.id, f.name
 )
 SELECT
   friend_id,
   name,
-  email,
   windows_opened,
   base_points,
   streak_bonus,

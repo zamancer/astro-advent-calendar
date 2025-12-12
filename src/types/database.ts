@@ -148,7 +148,6 @@ export interface AdminWindowPopularity {
 export interface ContestLeaderboardEntry {
   friend_id: string;
   name: string;
-  email: string;
   windows_opened: number;
   base_points: number;
   streak_bonus: number;
