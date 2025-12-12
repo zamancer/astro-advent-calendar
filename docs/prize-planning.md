@@ -285,13 +285,13 @@ export function getTimeUntilContestEnd(): number {
 | 2.2  | ✅ Add banner to calendar page (above calendar grid)              | `src/pages/index.astro`                  |
 | 2.3  | ✅ Style collapsed/expanded states with Tailwind                  | Component file                           |
 
-### Phase 3: Leaderboard Components
+### Phase 3: Leaderboard Components ✅
 
-| Step | Description                                      | Files                                   |
-| ---- | ------------------------------------------------ | --------------------------------------- |
-| 3.1  | Create LeaderboardDisplay component              | `src/components/LeaderboardDisplay.tsx` |
-| 3.2  | Add compact leaderboard widget for calendar page | `src/components/LeaderboardWidget.tsx`  |
-| 3.3  | Create dedicated `/leaderboard` page             | `src/pages/leaderboard.astro`           |
+| Step | Description                                            | Files                                   |
+| ---- | ------------------------------------------------------ | --------------------------------------- |
+| 3.1  | ✅ Create LeaderboardDisplay component                 | `src/components/LeaderboardDisplay.tsx` |
+| 3.2  | ✅ Add compact leaderboard widget for calendar page    | `src/components/LeaderboardWidget.tsx`  |
+| 3.3  | ✅ Create dedicated `/leaderboard` page                | `src/pages/leaderboard.astro`           |
 
 ### Phase 4: Integration & Real-time
 

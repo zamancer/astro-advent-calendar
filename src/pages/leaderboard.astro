@@ -1,0 +1,73 @@
+---
+// Contest Leaderboard page
+import LeaderboardDisplay from "../components/LeaderboardDisplay";
+import Snowfall from "../components/Snowfall";
+import UserMenu from "../components/UserMenu";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Contest Leaderboard - Advent Calendar"
+  description="See who's winning the Advent Calendar Contest!"
+  bodyClass="min-h-screen bg-background text-foreground"
+>
+  <!-- Snowfall effect -->
+  <Snowfall client:load enabled={true} />
+
+  <!-- User menu (top right) -->
+  <div class="fixed top-4 right-4 z-50">
+    <UserMenu client:load />
+  </div>
+
+  <!-- Main content -->
+  <div class="relative z-10">
+    <!-- Header -->
+    <header class="py-12 md:py-16 text-center px-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-6 transition-colors"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Calendar
+      </a>
+
+      <h1
+        class="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4"
+      >
+        Contest Leaderboard
+      </h1>
+      <p class="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+        Track the competition and see who's leading the Advent Calendar Contest!
+      </p>
+
+      <!-- Decorative element -->
+      <div class="flex justify-center mt-6">
+        <div
+          class="w-24 h-1 bg-linear-to-r from-transparent via-amber-500 to-transparent rounded-full"
+        >
+        </div>
+      </div>
+    </header>
+
+    <!-- Leaderboard -->
+    <main class="container mx-auto px-4 pb-16 max-w-3xl">
+      <LeaderboardDisplay client:load />
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-sm text-muted-foreground">
+      <p>Made with ❤️ for the holidays</p>
+    </footer>
+  </div>
+</BaseLayout>

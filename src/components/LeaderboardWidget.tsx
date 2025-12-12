@@ -1,0 +1,206 @@
+import { useState, useEffect } from "react";
+import { getContestLeaderboard } from "../lib/database";
+import { isContestEnded } from "../lib/contest";
+import { isDemoMode } from "../lib/featureFlags";
+import type { ContestLeaderboardEntry } from "../types/database";
+
+interface LeaderboardWidgetProps {
+  /** Optional: highlight a specific friend by ID */
+  highlightFriendId?: string;
+}
+
+/** Compact rank display */
+function RankIcon({ rank }: { rank: number }) {
+  if (rank === 1) return <span title="1st place">🥇</span>;
+  if (rank === 2) return <span title="2nd place">🥈</span>;
+  if (rank === 3) return <span title="3rd place">🥉</span>;
+  return <span className="text-gray-400 dark:text-gray-500">{rank}</span>;
+}
+
+export default function LeaderboardWidget({
+  highlightFriendId,
+}: LeaderboardWidgetProps) {
+  const [leaderboard, setLeaderboard] = useState<ContestLeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const contestEnded = isContestEnded();
+
+  useEffect(() => {
+    async function fetchLeaderboard() {
+      if (isDemoMode()) {
+        // Demo mode: show sample data
+        setLeaderboard([
+          {
+            friend_id: "demo-1",
+            name: "Demo Player 1",
+            windows_opened: 5,
+            base_points: 50,
+            streak_bonus: 0,
+            total_points: 65,
+            total_reaction_time: 1200,
+            first_place_count: 3,
+            completed_at: null,
+            last_window_opened_at: new Date().toISOString(),
+            rank: 1,
+          },
+          {
+            friend_id: "demo-2",
+            name: "Demo Player 2",
+            windows_opened: 4,
+            base_points: 40,
+            streak_bonus: 0,
+            total_points: 48,
+            total_reaction_time: 2400,
+            first_place_count: 1,
+            completed_at: null,
+            last_window_opened_at: new Date().toISOString(),
+            rank: 2,
+          },
+          {
+            friend_id: "demo-3",
+            name: "Demo Player 3",
+            windows_opened: 3,
+            base_points: 30,
+            streak_bonus: 0,
+            total_points: 35,
+            total_reaction_time: 3600,
+            first_place_count: 0,
+            completed_at: null,
+            last_window_opened_at: new Date().toISOString(),
+            rank: 3,
+          },
+        ]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error: dbError } = await getContestLeaderboard();
+
+        if (dbError) {
+          console.error("Error fetching leaderboard:", dbError);
+          setError("Failed to load");
+          return;
+        }
+
+        // Only show top 3 for widget
+        setLeaderboard((data || []).slice(0, 3));
+      } catch (err) {
+        console.error("Unexpected error:", err);
+        setError("Error");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchLeaderboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-4">
+        <div className="flex items-center justify-center py-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-amber-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-4">
+        <div className="text-center text-sm text-red-500 dark:text-red-400">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-amber-200 dark:border-amber-900/50">
+      {/* Header */}
+      <div className="px-4 py-3 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10 border-b border-amber-200 dark:border-amber-900/30">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🏆</span>
+            <span className="font-semibold text-gray-900 dark:text-white">
+              Leaderboard
+            </span>
+          </div>
+          {contestEnded && (
+            <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-full">
+              Final
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Top 3 list */}
+      <div className="divide-y divide-gray-100 dark:divide-gray-700">
+        {leaderboard.length === 0 ? (
+          <div className="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            No participants yet
+          </div>
+        ) : (
+          leaderboard.map((entry) => {
+            const isHighlighted = entry.friend_id === highlightFriendId;
+
+            return (
+              <div
+                key={entry.friend_id}
+                className={`flex items-center justify-between px-4 py-2.5 ${
+                  isHighlighted
+                    ? "bg-blue-50 dark:bg-blue-900/20"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-lg flex-shrink-0">
+                    <RankIcon rank={entry.rank} />
+                  </span>
+                  <span className="font-medium text-gray-900 dark:text-white truncate">
+                    {entry.name}
+                    {isHighlighted && (
+                      <span className="ml-1 text-xs text-blue-600 dark:text-blue-400">
+                        (You)
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <span className="font-bold text-amber-600 dark:text-amber-400 flex-shrink-0 ml-2">
+                  {entry.total_points}
+                  <span className="text-xs font-normal text-gray-400 dark:text-gray-500 ml-1">
+                    pts
+                  </span>
+                </span>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* View full leaderboard link */}
+      <div className="px-4 py-2.5 bg-gray-50 dark:bg-gray-700/30 border-t border-gray-100 dark:border-gray-700">
+        <a
+          href="/leaderboard"
+          className="flex items-center justify-center gap-1 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium transition-colors"
+        >
+          View full leaderboard
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  );
+}
