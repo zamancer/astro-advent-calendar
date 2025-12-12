@@ -2,6 +2,7 @@
 // Main calendar page
 import CalendarGrid from '../components/CalendarGrid';
 import ContestInstructions from '../components/ContestInstructions';
+import Footer from '../components/Footer.astro';
 import Snowfall from '../components/Snowfall';
 // import ThemeToggle from '../components/ThemeToggle';
 import UserMenu from '../components/UserMenu';
@@ -55,9 +56,6 @@ const { title, subtitle, contents } = calendarConfig;
       <CalendarGrid client:load contents={contents} />
     </main>
 
-    <!-- Footer -->
-    <footer class="py-8 text-center text-sm text-muted-foreground">
-      <p>Made with ❤️ for the holidays</p>
-    </footer>
+    <Footer />
   </div>
 </BaseLayout>
