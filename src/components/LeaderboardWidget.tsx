@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { isContestEnded, getDemoLeaderboardData } from "../lib/contest";
+import { isContestEnded } from "../lib/contest";
 import { getContestLeaderboard } from "../lib/database";
 import { isDemoMode } from "../lib/featureFlags";
+import { getDemoLeaderboardWidgetData } from "../lib/placeholders";
 import { supabase } from "../lib/supabase";
 import type { ContestLeaderboardEntry } from "../types/database";
 import type { LeaderboardProps } from "../types/leaderboard";
@@ -42,9 +43,12 @@ export default function LeaderboardWidget({
 
   const fetchLeaderboard = useCallback(async (isInitialLoad = false) => {
     if (isDemoMode()) {
-      // Demo mode: show sample data (top 3 only for widget)
-      setLeaderboard(getDemoLeaderboardData().slice(0, 3));
-      if (isInitialLoad) setLoading(false);
+      // Demo mode: show sample data
+      setLeaderboard(getDemoLeaderboardWidgetData());
+      setError(null);
+      if (isInitialLoad) {
+        setLoading(false);
+      }
       return;
     }
 
@@ -53,17 +57,24 @@ export default function LeaderboardWidget({
 
       if (dbError) {
         console.error("Error fetching leaderboard:", dbError);
-        if (isInitialLoad) setError("Failed to load");
+        if (isInitialLoad) {
+          setError("Failed to load");
+        }
         return;
       }
 
       // Only show top 3 for widget
       setLeaderboard((data || []).slice(0, 3));
+      setError(null);
     } catch (err) {
       console.error("Unexpected error:", err);
-      if (isInitialLoad) setError("Error");
+      if (isInitialLoad) {
+        setError("Error");
+      }
     } finally {
-      if (isInitialLoad) setLoading(false);
+      if (isInitialLoad) {
+        setLoading(false);
+      }
     }
   }, []);
 

@@ -1,11 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import {
-  isContestEnded,
-  TOTAL_CONTEST_WINDOWS,
-  getDemoLeaderboardData,
-} from "../lib/contest";
+import { isContestEnded, TOTAL_CONTEST_WINDOWS } from "../lib/contest";
 import { getContestLeaderboard } from "../lib/database";
 import { isDemoMode } from "../lib/featureFlags";
+import { getDemoLeaderboardDisplayData } from "../lib/placeholders";
 import { supabase } from "../lib/supabase";
 import type { ContestLeaderboardEntry } from "../types/database";
 import type { LeaderboardProps } from "../types/leaderboard";
@@ -68,8 +65,11 @@ export default function LeaderboardDisplay({
   const fetchLeaderboard = useCallback(async (isInitialLoad = false) => {
     if (isDemoMode()) {
       // Demo mode: show sample data
-      setLeaderboard(getDemoLeaderboardData());
-      if (isInitialLoad) setLoading(false);
+      setLeaderboard(getDemoLeaderboardDisplayData());
+      setError(null);
+      if (isInitialLoad) {
+        setLoading(false);
+      }
       return;
     }
 
@@ -78,16 +78,23 @@ export default function LeaderboardDisplay({
 
       if (dbError) {
         console.error("Error fetching leaderboard:", dbError);
-        if (isInitialLoad) setError("Failed to load leaderboard");
+        if (isInitialLoad) {
+          setError("Failed to load leaderboard");
+        }
         return;
       }
 
       setLeaderboard(data || []);
+      setError(null);
     } catch (err) {
       console.error("Unexpected error:", err);
-      if (isInitialLoad) setError("An unexpected error occurred");
+      if (isInitialLoad) {
+        setError("An unexpected error occurred");
+      }
     } finally {
-      if (isInitialLoad) setLoading(false);
+      if (isInitialLoad) {
+        setLoading(false);
+      }
     }
   }, []);
 
