@@ -1,3 +1,5 @@
+import type { ContestLeaderboardEntry } from "../types/database";
+
 /**
  * Contest Utilities
  * Constants and helper functions for the Advent Calendar contest
@@ -134,8 +136,6 @@ export function getPerfectAttendancePoints(): number {
 // ============================================
 // DEMO DATA
 // ============================================
-
-import type { ContestLeaderboardEntry } from "../types/database";
 
 /**
  * Demo leaderboard data for display when Supabase is not configured
