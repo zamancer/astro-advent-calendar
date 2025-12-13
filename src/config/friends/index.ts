@@ -14,6 +14,13 @@
 
 import type { FriendCalendarConfig } from "../../types/calendar";
 import { friendConfig as mikeConfig } from "./example-mike";
+import { friendConfig as dulesConfig } from "./dules";
+import { friendConfig as corConfig } from "./cor";
+import { friendConfig as luciaConfig } from "./lucia";
+import { friendConfig as ximConfig } from "./xim";
+import { friendConfig as drargonConfig } from "./drargon";
+import { friendConfig as ginataConfig } from "./ginata";
+import { friendConfig as xamsConfig } from "./xams";
 
 // ============================================
 // IMPORT FRIEND CONFIGURATIONS
@@ -39,7 +46,14 @@ export const friendConfigs = new Map<string, FriendCalendarConfig>([
   // Example:
   // ['friend-id-uuid-here', sarahConfig],
   // ['another-friend-id', johnConfig],
-  ['550e8400-e29b-41d4-a716-446655440002', mikeConfig]
+  ['550e8400-e29b-41d4-a716-446655440002', mikeConfig],
+  ['88d67ed9-ddc4-4f4f-b9e0-331fff991012', dulesConfig],
+  ['a8c8c14c-c426-41a7-9e11-27ff56ad8511', corConfig],
+  ['3255ad59-ab52-471f-b557-aad86ad5cd22', luciaConfig],
+  ['e60a3bf2-4fd4-489f-a204-20ff4ec038c4', ximConfig],
+  ['a9abbabf-4f18-480f-8dbb-5f4a02409ca3', drargonConfig],
+  ['75e7a00d-273f-44ee-ae66-0da90f9520d1', ginataConfig],
+  ['297da6f1-e25b-4c12-961e-d8d244e12579', xamsConfig],
 ]);
 
 // ============================================
