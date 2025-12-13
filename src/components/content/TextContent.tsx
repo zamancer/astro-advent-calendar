@@ -26,7 +26,7 @@ export default function TextContent({ content }: TextContentProps) {
 
       {/* Decorative element */}
       <div className="flex justify-center pt-4">
-        <div className="w-16 h-1 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full" />
+        <div className="w-16 h-1 bg-linear-to-r from-transparent via-accent to-transparent rounded-full" />
       </div>
     </div>
   );

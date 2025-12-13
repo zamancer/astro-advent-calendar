@@ -311,7 +311,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
       {/* Progress indicator */}
       <div className="mb-8 text-center">
         <p className="text-muted-foreground text-sm uppercase tracking-wider mb-3">
-          Progress
+          Progreso
         </p>
 
         {/* Progress bar - shows opened out of available (unlocked) */}
@@ -325,7 +325,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
                   (openedDays.size / (unlockedCount || 1)) * 100
                 )}%`,
               }}
-              aria-label={`${openedDays.size} of ${unlockedCount} available windows opened`}
+              aria-label={`${openedDays.size} de ${unlockedCount} ventanitas abiertas`}
             />
           </div>
         </div>
@@ -338,14 +338,12 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             </span>
             <span className="text-muted-foreground">
               {" "}
-              of {unlockedCount} available opened
+              de {unlockedCount} disponibles abiertas
             </span>
           </p>
           {unlockedCount < activeContents.length && (
             <p className="text-xs text-muted-foreground">
-              {activeContents.length - unlockedCount} more window
-              {activeContents.length - unlockedCount !== 1 ? "s" : ""} unlock
-              soon
+              {activeContents.length - unlockedCount} ventanitas más se abrirán pronto
             </p>
           )}
         </div>
@@ -367,14 +365,15 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
             />
             <p className="text-xs text-muted-foreground">
               {syncStatus === "synced"
-                ? "All changes saved"
+                ? "Guardado"
                 : syncStatus === "syncing"
-                ? "Syncing..."
+                ? "Sincronizando..."
                 : syncStatus === "offline"
                 ? isOnlineState
-                  ? "Pending sync"
-                  : "Offline - will sync when online"
-                : "Sync error"}
+                  ? "Sin conexión - se sincronizará cuando esté en línea"
+                  : "Desconectado - se sincronizará cuando esté en línea"
+                : "Error de sincronización"
+                }
             </p>
           </div>
         )}

@@ -135,7 +135,7 @@ export default function LeaderboardWidget({
           <div className="flex items-center gap-2">
             <span className="text-lg">🏆</span>
             <span className="font-semibold text-gray-900 dark:text-white">
-              Leaderboard
+              Tabla de Posiciones
             </span>
           </div>
           {contestEnded && (
@@ -150,7 +150,7 @@ export default function LeaderboardWidget({
       <div className="divide-y divide-gray-100 dark:divide-gray-700">
         {leaderboard.length === 0 ? (
           <div className="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            No participants yet
+            No hay participantes aún.
           </div>
         ) : (
           leaderboard.map((entry) => {
@@ -173,7 +173,7 @@ export default function LeaderboardWidget({
                     {entry.name}
                     {isHighlighted && (
                       <span className="ml-1 text-xs text-blue-600 dark:text-blue-400">
-                        (You)
+                        (Tú)
                       </span>
                     )}
                   </span>
@@ -196,7 +196,7 @@ export default function LeaderboardWidget({
           href="/leaderboard"
           className="flex items-center justify-center gap-1 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium transition-colors"
         >
-          View full leaderboard
+          Ver tabla completa
           <svg
             className="w-4 h-4"
             fill="none"

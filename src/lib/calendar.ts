@@ -124,11 +124,11 @@ export function getTimeUntilUnlock(unlockDate: Date): string {
  * Formats the unlock date for display
  *
  * @param windowNumber - The window number (1-12)
- * @returns Formatted date string like "Dec 12"
+ * @returns Formatted date in Spanish string like "15 Dic"
  */
 export function formatUnlockDate(windowNumber: number): string {
   const unlockDate = createUnlockDate(windowNumber);
-  return unlockDate.toLocaleDateString("en-US", {
+  return unlockDate.toLocaleDateString("es-MX", {
     month: "short",
     day: "numeric",
   });

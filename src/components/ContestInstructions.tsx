@@ -49,10 +49,10 @@ export default function ContestInstructions() {
               🏆
             </span>
             <span className="font-semibold text-gray-900 dark:text-white">
-              Advent Calendar Contest
+              Concurso de Adviento
             </span>
             <span className="hidden sm:inline text-sm text-amber-600 dark:text-amber-400 font-medium">
-              Win a Prize!
+              Instrucciones
             </span>
           </div>
 
@@ -84,30 +84,30 @@ export default function ContestInstructions() {
             {/* Prize announcement */}
             <div className="mb-4 text-center">
               <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
-                WIN A SPECIAL PRIZE!
+                ¡GANA UN PREMIO ESPECIAL!
               </p>
               <p className="text-gray-700 dark:text-gray-300">
-                1st Place, 2nd Place, and 3rd Place will get a gift!
+                El 1ro, 2do y 3er lugar recibirán un regalo.
               </p>
             </div>
 
             {/* How to earn points */}
             <div className="mb-4">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                How to Earn Points:
+                ¿Cómo ganar puntos?
               </h3>
               <ul className="space-y-1 text-gray-700 dark:text-gray-300">
                 <li className="flex items-start gap-2">
                   <span className="text-green-500 mt-0.5">•</span>
                   <span>
-                    Open a window:{" "}
-                    <span className="font-medium">{BASE_POINTS} points</span>
+                    Abrir una ventanita:{" "}
+                    <span className="font-medium">{BASE_POINTS} puntos</span>
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 mt-0.5">•</span>
                   <span>
-                    First to open:{" "}
+                    Primero en abrir:{" "}
                     <span className="font-medium">
                       +{SPEED_BONUS.FIRST} bonus
                     </span>
@@ -116,7 +116,7 @@ export default function ContestInstructions() {
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
                   <span>
-                    Second to open:{" "}
+                    Segundo en abrir:{" "}
                     <span className="font-medium">
                       +{SPEED_BONUS.SECOND} bonus
                     </span>
@@ -127,7 +127,7 @@ export default function ContestInstructions() {
                     •
                   </span>
                   <span>
-                    Third to open:{" "}
+                    Tercero en abrir:{" "}
                     <span className="font-medium">
                       +{SPEED_BONUS.THIRD} bonus
                     </span>
@@ -136,7 +136,7 @@ export default function ContestInstructions() {
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 mt-0.5">•</span>
                   <span>
-                    Open all {TOTAL_CONTEST_WINDOWS} windows:{" "}
+                    Abrir todas las {TOTAL_CONTEST_WINDOWS} ventanitas:{" "}
                     <span className="font-medium">+{STREAK_BONUS} bonus</span>
                   </span>
                 </li>
@@ -151,16 +151,18 @@ export default function ContestInstructions() {
               <ul className="space-y-1 text-gray-700 dark:text-gray-300 text-sm">
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-0.5">💡</span>
-                  <span>Windows unlock at midnight (your local time)</span>
+                  <span>
+                    Las ventanitas se abren a la medianoche (tiempo local)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-0.5">⚡</span>
-                  <span>Be quick to earn speed bonuses!</span>
+                  <span>¡Apúrate para sacar el bono de velocidad!</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-0.5">📅</span>
                   <span>
-                    Consistency matters - the streak bonus is significant
+                    La consistencia importa - el bono por racha es considerable.
                   </span>
                 </li>
               </ul>
@@ -169,11 +171,11 @@ export default function ContestInstructions() {
             {/* Contest deadline */}
             <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
               <p>
-                Contest closes{" "}
-                <span className="font-medium">Dec 24 at 11:59 PM</span> (Mexico
-                City time).
+                El concurso cierra el{" "}
+                <span className="font-medium">Dic 24, 11:59 PM</span> (hora de
+                México).
               </p>
-              <p>Prizes delivered via email Dec 25.</p>
+              <p>Los premios se enviarán por email el 25 de diciembre.</p>
             </div>
           </div>
         )}

@@ -3,8 +3,8 @@
 import type { CalendarConfig } from "../types/calendar";
 
 export const calendarConfig: CalendarConfig = {
-  title: "Our Christmas Memories",
-  subtitle: "12 days of special moments we shared together",
+  title: "Calendario Navideño de Adviento",
+  subtitle: "Son 12 días de recuerdos y bromitas que compartimos juntos",
   contents: [
     {
       type: "youtube",
