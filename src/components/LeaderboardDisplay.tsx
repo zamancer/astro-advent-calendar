@@ -48,8 +48,8 @@ function PointsBreakdown({ entry }: { entry: ContestLeaderboardEntry }) {
   return (
     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
       <span>{entry.base_points} base</span>
-      {speedBonus > 0 && <span> + {speedBonus} speed</span>}
-      {entry.streak_bonus > 0 && <span> + {entry.streak_bonus} streak</span>}
+      {speedBonus > 0 && <span> + {speedBonus} velocidad</span>}
+      {entry.streak_bonus > 0 && <span> + {entry.streak_bonus} racha</span>}
     </div>
   );
 }
@@ -149,7 +149,7 @@ export default function LeaderboardDisplay({
   if (leaderboard.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-        No participants yet. Be the first to open a window!
+        No hay participantes aún. ¡Sé el primero en abrir una ventanita!
       </div>
     );
   }
@@ -161,12 +161,14 @@ export default function LeaderboardDisplay({
         {contestEnded ? (
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full">
             <span className="text-lg">🎉</span>
-            <span className="font-semibold">Contest Complete!</span>
+            <span className="font-semibold">Concurso cerrado</span>
           </div>
         ) : (
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-full">
             <span className="text-lg">🏆</span>
-            <span className="font-semibold">Contest in Progress</span>
+            <span className="font-semibold">
+              Concurso abierto hasta el 24 de Diciembre
+            </span>
           </div>
         )}
       </div>
@@ -175,14 +177,14 @@ export default function LeaderboardDisplay({
       <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
         {/* Header */}
         <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700/50 text-sm font-semibold text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
-          <div className="col-span-1 text-center">Rank</div>
-          <div className="col-span-4 sm:col-span-3">Player</div>
-          <div className="col-span-3 sm:col-span-2 text-center">Points</div>
+          <div className="col-span-1 text-center">Posición</div>
+          <div className="col-span-4 sm:col-span-3">Jugador</div>
+          <div className="col-span-3 sm:col-span-2 text-center">Puntos</div>
           <div className="col-span-4 sm:col-span-3 text-center hidden sm:block">
-            Windows
+            Ventanitas
           </div>
           <div className="col-span-4 sm:col-span-3 text-center hidden sm:block">
-            1st Places
+            Primeros
           </div>
         </div>
 
@@ -213,7 +215,7 @@ export default function LeaderboardDisplay({
                   {entry.name}
                   {isHighlighted && (
                     <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">
-                      (You)
+                      (Tú)
                     </span>
                   )}
                 </div>
@@ -272,7 +274,10 @@ export default function LeaderboardDisplay({
 
       {/* Legend */}
       <div className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p>Points = Base (10/window) + Speed Bonuses + Streak Bonus</p>
+        <p>
+          Puntos = Base (10 por ventanita) + Bonus de velocidad + Bonus por
+          racha
+        </p>
       </div>
     </div>
   );

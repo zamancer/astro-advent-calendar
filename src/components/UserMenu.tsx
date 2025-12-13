@@ -78,7 +78,7 @@ export default function UserMenu() {
     if (result.success) {
       window.location.href = "/login";
     } else {
-      alert("Failed to sign out: " + result.error);
+      alert("Error al intentar salir: " + result.error);
     }
   }
 
@@ -131,7 +131,7 @@ export default function UserMenu() {
             onClick={handleLogout}
             className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
           >
-            Sign out
+            Salir
           </button>
         </div>
       )}
