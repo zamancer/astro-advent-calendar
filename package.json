@@ -9,7 +9,8 @@
     "astro": "astro",
     "lint": "eslint . --ext .ts,.tsx,.astro",
     "lint:fix": "eslint . --ext .ts,.tsx,.astro --fix",
-    "upload-images": "node -r dotenv/config scripts/upload-images.js"
+    "upload-images": "node -r dotenv/config scripts/upload-images.js",
+    "invite": "node -r dotenv/config scripts/generate-invite-link.js"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
