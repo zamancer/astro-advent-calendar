@@ -19,22 +19,22 @@ export default function LoginForm() {
       if (error === "auth_failed") {
         setMessage({
           type: "error",
-          text: "Authentication failed. Please try logging in again.",
+          text: "Fallo de autenticación. Por favor, intenta de nuevo.",
         });
       } else if (error === "config") {
         setMessage({
           type: "error",
-          text: "Authentication is not properly configured. Please contact support.",
+          text: "Error de configuración. Contacta al administrador.",
         });
       } else if (error === "auth") {
         setMessage({
           type: "error",
-          text: "Authentication error. Please try again.",
+          text: "Error de autenticación. Por favor, intenta de nuevo.",
         });
       } else if (error === "session") {
         setMessage({
           type: "error",
-          text: "No valid session found. Please request a new magic link.",
+          text: "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
         });
       }
 
