@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import {
+  isContestEnded,
+  TOTAL_CONTEST_WINDOWS,
+  getDemoLeaderboardData,
+} from "../lib/contest";
 import { getContestLeaderboard } from "../lib/database";
-import { isContestEnded, TOTAL_CONTEST_WINDOWS } from "../lib/contest";
 import { isDemoMode } from "../lib/featureFlags";
 import { supabase } from "../lib/supabase";
 import type { ContestLeaderboardEntry } from "../types/database";
@@ -64,34 +68,7 @@ export default function LeaderboardDisplay({
   const fetchLeaderboard = useCallback(async (isInitialLoad = false) => {
     if (isDemoMode()) {
       // Demo mode: show sample data
-      setLeaderboard([
-        {
-          friend_id: "demo-1",
-          name: "Demo Player 1",
-          windows_opened: 5,
-          base_points: 50,
-          streak_bonus: 0,
-          total_points: 65,
-          total_reaction_time: 1200,
-          first_place_count: 3,
-          completed_at: null,
-          last_window_opened_at: new Date().toISOString(),
-          rank: 1,
-        },
-        {
-          friend_id: "demo-2",
-          name: "Demo Player 2",
-          windows_opened: 4,
-          base_points: 40,
-          streak_bonus: 0,
-          total_points: 48,
-          total_reaction_time: 2400,
-          first_place_count: 1,
-          completed_at: null,
-          last_window_opened_at: new Date().toISOString(),
-          rank: 2,
-        },
-      ]);
+      setLeaderboard(getDemoLeaderboardData());
       if (isInitialLoad) setLoading(false);
       return;
     }

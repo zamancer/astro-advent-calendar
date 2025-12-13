@@ -130,3 +130,59 @@ export function getMaximumPoints(): number {
 export function getPerfectAttendancePoints(): number {
   return BASE_POINTS * TOTAL_CONTEST_WINDOWS + STREAK_BONUS;
 }
+
+// ============================================
+// DEMO DATA
+// ============================================
+
+import type { ContestLeaderboardEntry } from "../types/database";
+
+/**
+ * Demo leaderboard data for display when Supabase is not configured
+ * Centralized here to avoid duplication across components
+ */
+export function getDemoLeaderboardData(): ContestLeaderboardEntry[] {
+  const now = new Date().toISOString();
+
+  return [
+    {
+      friend_id: "demo-1",
+      name: "Demo Player 1",
+      windows_opened: 5,
+      base_points: 50,
+      streak_bonus: 0,
+      total_points: 65,
+      total_reaction_time: 1200,
+      first_place_count: 3,
+      completed_at: null,
+      last_window_opened_at: now,
+      rank: 1,
+    },
+    {
+      friend_id: "demo-2",
+      name: "Demo Player 2",
+      windows_opened: 4,
+      base_points: 40,
+      streak_bonus: 0,
+      total_points: 48,
+      total_reaction_time: 2400,
+      first_place_count: 1,
+      completed_at: null,
+      last_window_opened_at: now,
+      rank: 2,
+    },
+    {
+      friend_id: "demo-3",
+      name: "Demo Player 3",
+      windows_opened: 3,
+      base_points: 30,
+      streak_bonus: 0,
+      total_points: 35,
+      total_reaction_time: 3600,
+      first_place_count: 0,
+      completed_at: null,
+      last_window_opened_at: now,
+      rank: 3,
+    },
+  ];
+}
