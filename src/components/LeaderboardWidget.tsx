@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
-import { getContestLeaderboard } from "../lib/database";
+import { useState, useEffect, useCallback } from "react";
 import { isContestEnded } from "../lib/contest";
+import { getContestLeaderboard } from "../lib/database";
 import { isDemoMode } from "../lib/featureFlags";
+import { getDemoLeaderboardWidgetData } from "../lib/placeholders";
+import { supabase } from "../lib/supabase";
 import type { ContestLeaderboardEntry } from "../types/database";
 import type { LeaderboardProps } from "../types/leaderboard";
 
@@ -39,76 +41,71 @@ export default function LeaderboardWidget({
   const [error, setError] = useState<string | null>(null);
   const contestEnded = isContestEnded();
 
-  useEffect(() => {
-    async function fetchLeaderboard() {
-      if (isDemoMode()) {
-        // Demo mode: show sample data
-        setLeaderboard([
-          {
-            friend_id: "demo-1",
-            name: "Demo Player 1",
-            windows_opened: 5,
-            base_points: 50,
-            streak_bonus: 0,
-            total_points: 65,
-            total_reaction_time: 1200,
-            first_place_count: 3,
-            completed_at: null,
-            last_window_opened_at: new Date().toISOString(),
-            rank: 1,
-          },
-          {
-            friend_id: "demo-2",
-            name: "Demo Player 2",
-            windows_opened: 4,
-            base_points: 40,
-            streak_bonus: 0,
-            total_points: 48,
-            total_reaction_time: 2400,
-            first_place_count: 1,
-            completed_at: null,
-            last_window_opened_at: new Date().toISOString(),
-            rank: 2,
-          },
-          {
-            friend_id: "demo-3",
-            name: "Demo Player 3",
-            windows_opened: 3,
-            base_points: 30,
-            streak_bonus: 0,
-            total_points: 35,
-            total_reaction_time: 3600,
-            first_place_count: 0,
-            completed_at: null,
-            last_window_opened_at: new Date().toISOString(),
-            rank: 3,
-          },
-        ]);
+  const fetchLeaderboard = useCallback(async (isInitialLoad = false) => {
+    if (isDemoMode()) {
+      // Demo mode: show sample data
+      setLeaderboard(getDemoLeaderboardWidgetData());
+      setError(null);
+      if (isInitialLoad) {
         setLoading(false);
+      }
+      return;
+    }
+
+    try {
+      const { data, error: dbError } = await getContestLeaderboard();
+
+      if (dbError) {
+        console.error("Error fetching leaderboard:", dbError);
+        if (isInitialLoad) {
+          setError("Failed to load");
+        }
         return;
       }
 
-      try {
-        const { data, error: dbError } = await getContestLeaderboard();
-
-        if (dbError) {
-          console.error("Error fetching leaderboard:", dbError);
-          setError("Failed to load");
-          return;
-        }
-
-        // Only show top 3 for widget
-        setLeaderboard((data || []).slice(0, 3));
-      } catch (err) {
-        console.error("Unexpected error:", err);
+      // Only show top 3 for widget
+      setLeaderboard((data || []).slice(0, 3));
+      setError(null);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      if (isInitialLoad) {
         setError("Error");
-      } finally {
+      }
+    } finally {
+      if (isInitialLoad) {
         setLoading(false);
       }
     }
-
-    fetchLeaderboard();
   }, []);
+
+  useEffect(() => {
+    // Initial fetch
+    fetchLeaderboard(true);
+
+    // Set up real-time subscription for live updates
+    if (!supabase || isDemoMode()) return;
+
+    const client = supabase;
+    const channel = client
+      .channel("leaderboard-widget-updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "friend_window_opens",
+        },
+        () => {
+          // Refetch leaderboard when window opens change
+          fetchLeaderboard(false);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      client.removeChannel(channel);
+    };
+  }, [fetchLeaderboard]);
 
   if (loading) {
     return (

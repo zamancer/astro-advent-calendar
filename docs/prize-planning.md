@@ -293,13 +293,14 @@ export function getTimeUntilContestEnd(): number {
 | 3.2  | ✅ Add compact leaderboard widget for calendar page    | `src/components/LeaderboardWidget.tsx`  |
 | 3.3  | ✅ Create dedicated `/leaderboard` page                | `src/pages/leaderboard.astro`           |
 
-### Phase 4: Integration & Real-time
+### Phase 4: Integration & Real-time ✅
 
-| Step | Description                                          | Files                   |
-| ---- | ---------------------------------------------------- | ----------------------- |
-| 4.1  | Integrate widget into main calendar page             | `src/pages/index.astro` |
-| 4.2  | Add Supabase real-time subscription for live updates | Leaderboard components  |
-| 4.3  | Link between widget and full leaderboard page        | Components              |
+| Step | Description                                              | Files                                                        |
+| ---- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| 4.1  | ✅ Integrate widget into main calendar page              | `src/pages/index.astro`                                      |
+| 4.2  | ✅ Add Supabase real-time subscription for live updates  | `src/components/LeaderboardWidget.tsx`, `LeaderboardDisplay.tsx` |
+| 4.3  | ✅ Link between widget and full leaderboard page         | Components                                                   |
+| 4.4  | ✅ Add test data SQL file for leaderboard testing        | `supabase/test-leaderboard-data.sql`                         |
 
 ### Phase 5: Polish & Winner Announcement
 
@@ -328,6 +329,7 @@ export function getTimeUntilContestEnd(): number {
 ### New Files
 
 - `supabase/migrations/YYYYMMDD_contest_leaderboard.sql`
+- `supabase/test-leaderboard-data.sql` - Test data for leaderboard testing
 - `src/lib/contest.ts` - Contest end time, status utilities
 - `src/components/ContestInstructions.tsx` - Collapsible banner
 - `src/components/LeaderboardDisplay.tsx` - Full leaderboard view

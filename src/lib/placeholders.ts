@@ -3,7 +3,8 @@
  * Provides placeholder images for demo mode
  */
 
-import type { PlaceholderService, PlaceholderConfig } from '../types/storage';
+import type { PlaceholderService, PlaceholderConfig } from "../types/storage";
+import type { ContestLeaderboardEntry } from "../types/database";
 
 // ============================================
 // CONFIGURATION
@@ -13,7 +14,7 @@ import type { PlaceholderService, PlaceholderConfig } from '../types/storage';
  * Default placeholder configuration
  */
 const DEFAULT_CONFIG: PlaceholderConfig = {
-  service: 'unsplash',
+  service: "unsplash",
   defaultWidth: 800,
   defaultHeight: 600,
 };
@@ -92,16 +93,16 @@ export function createPlaceholderService(
       text?: string
     ): string => {
       switch (fullConfig.service) {
-        case 'unsplash':
+        case "unsplash":
           return unsplashService.getUrl(width, height, text);
 
-        case 'picsum':
+        case "picsum":
           return picsumService.getUrl(width, height, text);
 
-        case 'placeholder':
+        case "placeholder":
           return placeholderService.getUrl(width, height, text);
 
-        case 'custom':
+        case "custom":
           if (fullConfig.baseUrl) {
             return `${fullConfig.baseUrl}/${width}x${height}`;
           }
@@ -117,7 +118,7 @@ export function createPlaceholderService(
      * Get a placeholder for a friend
      */
     getFriendPlaceholder: (friendName: string): string => {
-      const seed = friendName.toLowerCase().replace(/\s+/g, '-');
+      const seed = friendName.toLowerCase().replace(/\s+/g, "-");
       return picsumService.getUrl(
         fullConfig.defaultWidth,
         fullConfig.defaultHeight,
@@ -156,29 +157,29 @@ export const placeholders = createPlaceholderService();
  */
 export const christmasImages = {
   snow: [
-    'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=800&auto=format&fit=crop',
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=800&auto=format&fit=crop",
   ],
   ornaments: [
-    'https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=800&auto=format&fit=crop',
+    "https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=800&auto=format&fit=crop",
   ],
   lights: [
-    'https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1514897575457-c4db467cf78e?w=800&auto=format&fit=crop',
+    "https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1514897575457-c4db467cf78e?w=800&auto=format&fit=crop",
   ],
   gifts: [
-    'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1512909006721-3d6018887383?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1464047736614-af63643285bf?w=800&auto=format&fit=crop',
+    "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1464047736614-af63643285bf?w=800&auto=format&fit=crop",
   ],
   winter: [
-    'https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1478827536114-da961b7f86f2?w=800&auto=format&fit=crop',
+    "https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1478827536114-da961b7f86f2?w=800&auto=format&fit=crop",
   ],
 };
 
@@ -231,4 +232,83 @@ export function getDeterministicPlaceholder(
   const index = hash % allImages.length;
 
   return allImages[index];
+}
+
+// ============================================
+// DEMO LEADERBOARD DATA
+// ============================================
+
+export function getDemoLeaderboardWidgetData(): ContestLeaderboardEntry[] {
+  return [
+    {
+      friend_id: "demo-1",
+      name: "Demo Player 1",
+      windows_opened: 5,
+      base_points: 50,
+      streak_bonus: 0,
+      total_points: 65,
+      total_reaction_time: 1200,
+      first_place_count: 3,
+      completed_at: null,
+      last_window_opened_at: new Date().toISOString(),
+      rank: 1,
+    },
+    {
+      friend_id: "demo-2",
+      name: "Demo Player 2",
+      windows_opened: 4,
+      base_points: 40,
+      streak_bonus: 0,
+      total_points: 48,
+      total_reaction_time: 2400,
+      first_place_count: 1,
+      completed_at: null,
+      last_window_opened_at: new Date().toISOString(),
+      rank: 2,
+    },
+    {
+      friend_id: "demo-3",
+      name: "Demo Player 3",
+      windows_opened: 3,
+      base_points: 30,
+      streak_bonus: 0,
+      total_points: 35,
+      total_reaction_time: 3600,
+      first_place_count: 0,
+      completed_at: null,
+      last_window_opened_at: new Date().toISOString(),
+      rank: 3,
+    },
+  ];
+}
+
+export function getDemoLeaderboardDisplayData(): ContestLeaderboardEntry[] {
+  return [
+    {
+      friend_id: "demo-1",
+      name: "Demo Player 1",
+      windows_opened: 5,
+      base_points: 50,
+      streak_bonus: 0,
+      total_points: 65,
+      total_reaction_time: 1200,
+      first_place_count: 3,
+      completed_at: null,
+      last_window_opened_at: new Date().toISOString(),
+      rank: 1,
+    },
+    {
+      friend_id: "demo-2",
+      name: "Demo Player 2",
+      windows_opened: 4,
+      base_points: 40,
+      streak_bonus: 0,
+      total_points: 48,
+      total_reaction_time: 2400,
+      first_place_count: 1,
+      completed_at: null,
+      last_window_opened_at: new Date().toISOString(),
+      rank: 2,
+    },
+  ];
 }
