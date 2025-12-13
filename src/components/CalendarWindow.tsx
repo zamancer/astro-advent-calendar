@@ -46,8 +46,8 @@ export default function CalendarWindow({
         disabled:cursor-not-allowed
       `}
       aria-label={`Window ${day}${
-        !isUnlocked ? " (locked until " + formatUnlockDate(day) + ")" : ""
-      }${isOpened ? " (opened)" : ""}`}
+        !isUnlocked ? " (bloqueado hasta " + formatUnlockDate(day) + ")" : ""
+      }${isOpened ? " (abierto)" : ""}`}
     >
       {/* Background with gradient */}
       <div
@@ -99,7 +99,7 @@ export default function CalendarWindow({
         {/* Opened state */}
         {isOpened && (
           <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Opened
+            Abierta
           </span>
         )}
 
@@ -130,7 +130,7 @@ export default function CalendarWindow({
         {/* Unlocked but not opened - hover prompt */}
         {isUnlocked && !isOpened && isHovered && (
           <span className="text-xs uppercase tracking-wider text-accent font-medium animate-pulse">
-            Click to open
+            Click para abrir
           </span>
         )}
       </div>
