@@ -33,13 +33,13 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Foto de Diego y Zam jovenes con Mossi",
     },
 
-    // Day 3: Text - Heartfelt message
+    // Day 3: Text - Video Tribuzy
      {
-      type: "spotify",
+      type: "youtube",
       day: 3,
-      embedUrl: "https://open.spotify.com/embed/track/4gFhLQA90CAFuS0Ma8aIiX",
-      title: "Mirror Mirror Everywhere!",
-      description: "Canción de culto para una culta persona.",
+      videoId: "R77aWkvvhPM",
+      title: "Tribuzy - Beast in the Light - Live 2007",
+      description: "Cada cierto tiempo uno se tiene que acordar de esta joyita 💎",
     },
 
     // Day 4: Message - Movie marathon

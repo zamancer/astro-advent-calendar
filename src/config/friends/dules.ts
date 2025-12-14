@@ -33,24 +33,22 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Dules y Cor en el concierto de Blind Guardian",
     },
 
-    // Day 3: Text - Heartfelt message
-     {
-      type: "spotify",
+    // Day 3: Video último concierto juntos en México; Blind Guardian
+    {
+      type: "youtube",
       day: 3,
-      embedUrl: "https://open.spotify.com/embed/track/4gFhLQA90CAFuS0Ma8aIiX",
-      title: "Mirror Mirror Everywhere!",
-      description: "Canción de culto para una culta persona.",
+      videoId: "Pv9wh7RzS8c",
+      title: "Blind Guardian - Mirror Mirror - México 2011",
+      description: "¿Acaso fue nuestro último concierto juntos en México? 🤔 Estuvo muy chévere.",
     },
 
-    // Day 4: Message - Movie marathon
+    // Day 4: Video - Ángeles fuimos de DBZ
     {
-      type: "message",
+      type: "youtube",
       day: 4,
-      title: "Epic Movie Marathon",
-      message:
-        "Remember when we binged all 3 Lord of the Rings movies in one day? That was legendary! We need to do it again this year. 🍿",
-      imageUrl:
-        "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800&auto=format&fit=crop",
+      videoId: "ZZYn2HkCwn4",
+      title: "DBZ - Ángeles fuimos 🎤",
+      description: "Siempre me acuerdo de Dules cuando la vuelvo a escuchar... ¡Abre! 😂",
     },
 
     // Day 5: Photo - Hiking adventure

@@ -33,24 +33,22 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Foto de Diego y Zam jovenes con Mossi",
     },
 
-    // Day 3: Text - Heartfelt message
-     {
-      type: "spotify",
+    // Day 3: Video - La banda de mi carnal Xamster
+      {
+      type: "youtube",
       day: 3,
-      embedUrl: "https://open.spotify.com/embed/track/4gFhLQA90CAFuS0Ma8aIiX",
-      title: "Mirror Mirror Everywhere!",
-      description: "Canción de culto para una culta persona.",
+      videoId: "zQPfO80_O4s",
+      title: "Entrevista - Ideología Vigente 2010",
+      description: "Mi carnal poniendo gente a bailar. ¡Yo estuve ahí! 🎤 (Also, primera cosa que vió Xim de aquel entonces)",
     },
 
-    // Day 4: Message - Movie marathon
-    {
-      type: "message",
+    // Day 4: Video - Nothing good ever happens after 2 AM
+      {
+      type: "youtube",
       day: 4,
-      title: "Epic Movie Marathon",
-      message:
-        "Remember when we binged all 3 Lord of the Rings movies in one day? That was legendary! We need to do it again this year. 🍿",
-      imageUrl:
-        "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800&auto=format&fit=crop",
+      videoId: "EKQT7WjPUIk",
+      title: "HIMYM - Nothing good ever happens after 2 AM",
+      description: "Lección aprendida con mi carnal por allá del 2012 (y sí, esto lo subí pasando 2AM como dice el primer comentario) 🫰",
     },
 
     // Day 5: Photo - Hiking adventure

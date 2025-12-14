@@ -33,24 +33,22 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Foto de Cor frente a un decor",
     },
 
-    // Day 3: Text - Heartfelt message
-     {
-      type: "spotify",
+    // Day 3: Video - guerra de bandas 2008
+    {
+      type: "youtube",
       day: 3,
-      embedUrl: "https://open.spotify.com/embed/track/4gFhLQA90CAFuS0Ma8aIiX",
-      title: "Mirror Mirror Everywhere!",
-      description: "Canción de culto para una culta persona.",
+      videoId: "g9r_8lVWGC0",
+      title: "Guerra de bandas - Circo Volador 2008",
+      description: "¡Cor sale ahí al minuto 0:50 y creo que yo al 1:30! ¡Chéquele! Si no, al menos me gusta acordarme de este CD 🤘",
     },
 
-    // Day 4: Message - Movie marathon
+    // Day 4: Soup Nazi - Uno de los mejores capítulos de Seinfeld
     {
-      type: "message",
+      type: "youtube",
       day: 4,
-      title: "Epic Movie Marathon",
-      message:
-        "Remember when we binged all 3 Lord of the Rings movies in one day? That was legendary! We need to do it again this year. 🍿",
-      imageUrl:
-        "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800&auto=format&fit=crop",
+      videoId: "RqlQYBcsq54",
+      title: "Soup Nazi - Seinfeld",
+      description: "Una de las cosa más chistosas que me enseñó mi amigo Cor. No soup for you! 🍲",
     },
 
     // Day 5: Photo - Hiking adventure

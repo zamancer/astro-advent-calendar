@@ -33,13 +33,13 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Foto de Lucia, amigos, y Zam",
     },
 
-    // Day 3: Text - Heartfelt message
+    // Day 3: Foto Xim Rosita
      {
-      type: "spotify",
+      type: "photo",
       day: 3,
-      embedUrl: "https://open.spotify.com/embed/track/4gFhLQA90CAFuS0Ma8aIiX",
-      title: "Mirror Mirror Everywhere!",
-      description: "Canción de culto para una culta persona.",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 3, "jpg") || "",
+      caption: "Por esas fechas también salió la Xim Hyper Magenta 🩷",
+      alt: "Foto de Lucia, amigos, y Zam",
     },
 
     // Day 4: Message - Movie marathon

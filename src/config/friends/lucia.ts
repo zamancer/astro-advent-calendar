@@ -33,24 +33,22 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Foto de Lucia, amigos, y Zam",
     },
 
-    // Day 3: Text - Heartfelt message
-     {
-      type: "spotify",
+    // Day 3: Video - Kpop Big Bang Fantastic Baby
+    {
+      type: "youtube",
       day: 3,
-      embedUrl: "https://open.spotify.com/embed/track/4gFhLQA90CAFuS0Ma8aIiX",
-      title: "Mirror Mirror Everywhere!",
-      description: "Canción de culto para una culta persona.",
+      videoId: "AAbokV76tkU",
+      title: "BigBang - Fantastic - 2012",
+      description: "Una mañana cualquiera rumbo a CODE con Luu 🕺",
     },
 
-    // Day 4: Message - Movie marathon
+    // Day 4: Foto STU
     {
-      type: "message",
+      type: "photo",
       day: 4,
-      title: "Epic Movie Marathon",
-      message:
-        "Remember when we binged all 3 Lord of the Rings movies in one day? That was legendary! We need to do it again this year. 🍿",
-      imageUrl:
-        "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800&auto=format&fit=crop",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 4, "jpg") || "",
+      caption: "No lo entenderías, bro. Es Simple To Undertand 😂",
+      alt: "Foto del legendario Simple To Undertand",
     },
 
     // Day 5: Photo - Hiking adventure
