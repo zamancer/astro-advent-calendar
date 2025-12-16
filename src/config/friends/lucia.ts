@@ -1,5 +1,5 @@
 import type { FriendCalendarConfig } from "../../types/calendar";
-import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from "../../lib/storage";
 
 const FRIEND_ID = "3255ad59-ab52-471f-b557-aad86ad5cd22";
 
@@ -20,7 +20,7 @@ export const friendConfig: FriendCalendarConfig = {
       type: "photo",
       day: 1,
       imageUrl: getFriendImageUrl(FRIEND_ID, 1, "jpg") || "",
-      caption: "Hace no mucho en un cummpleaños en mi casa 🎉",
+      caption: "Hace no mucho en un cumpleaños en mi casa 🎉",
       alt: "Foto de Lucia, Osw, y Zam",
     },
 
@@ -51,24 +51,24 @@ export const friendConfig: FriendCalendarConfig = {
       alt: "Foto del legendario Simple To Undertand",
     },
 
-    // Day 5: Photo - Hiking adventure
+    // Day 5: Photo - Sunset from Globant Naples
     {
-      type: "photo",
+      type: "message",
       day: 5,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
-      caption:
-        "Our sunrise hike at Mount Rainier! Worth waking up at 4 AM. 🏔️",
-      alt: "Mountain hiking at sunrise",
+      title: "Chill out Globant (Nápoles)",
+      message:
+        "Un día tomé fotos randoms desde el chill de la oficina en Nápoles, cuando ví una puesta de sol chida. Creo que hasta se veía nuestro depa desde ahí. 😌",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 5, "jpeg") || "",
     },
 
-    // Day 6: Spotify - Study playlist
+    // Day 6: Photo - Tiscaregno aviador
     {
-      type: "spotify",
+      type: "photo",
       day: 6,
-      embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
-      title: "Study Session Vibes",
-      description: "Our go-to song during those late-night study sessions!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 6, "png") || "",
+      caption:
+        "¿Y por qué te bajaste del avión de último minuto, Luu? Puees.... ✈️",
+      alt: "Foto del legendario roomie aviador",
     },
 
     // Day 7: Text - Encouragement
@@ -76,58 +76,56 @@ export const friendConfig: FriendCalendarConfig = {
       type: "text",
       day: 7,
       message:
-        "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
-      author: "Your Cheerleader",
+        "I will honor Christmas in my heart, and try to keep it all the year. 📖🎄",
+      author: "Charles Dickens",
     },
 
-    // Day 8: Message - Baking disaster
+    // Day 8: Foto - Coolotes de calidad
     {
-      type: "message",
+      type: "photo",
       day: 8,
-      title: "The Great Cookie Disaster",
-      message:
-        "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
-      imageUrl:
-        "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 8, "JPG") || "",
+      caption: "De cuando teníamos amigos en el trabajo 😎",
+      alt: "Foto del grupo de amigos de CODE",
     },
 
-    // Day 9: Photo - Beach sunset
+    // Day 9: Foto - CODE K-pop
     {
       type: "photo",
       day: 9,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
-      caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
-      alt: "Beach sunset with friends",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 9, "jpg") || "",
+      caption: "De cuando nos sentimos en una boy band en CODE (sale mal) 🎤",
+      alt: "Foto del grupo de amigos de CODE",
     },
 
-    // Day 10: Spotify - Party anthem
+    // Day 10: Youtube - Santo Puerco
     {
-      type: "spotify",
+      type: "youtube",
       day: 10,
-      embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
-      title: "Birthday Bash Anthem",
-      description: "This song made your birthday party absolutely epic!",
+      videoId: "3vl07cB7OYg",
+      title: "Santo Puerco - Cosas Sucias - 2012",
+      description: "Un clásico en toda ocasión. 🐽",
     },
 
-    // Day 11: Text - Looking forward
+    // Day 11: Foto - Juego de mesa pre pandemia
     {
-      type: "text",
+      type: "message",
       day: 11,
+      title: "Último juego pre pandemia",
       message:
-        "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
-      author: "Your Adventure Buddy",
+        "Este jueguito lo conocí en tú depa de la Del Valle, estuvo bien padre. Ya después vino la pandemia y RIP 😢",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 11, "jpeg") || "",
     },
 
     // Day 12: Message - Final message
     {
       type: "message",
       day: 12,
-      title: "Merry Christmas, Sarah! 🎄🎁",
+      title: "¡Feliz Navidad! 🎄🎁",
       message:
-        "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",
+        "Que esta actividad te haya gustado, Luu. Disfruta montones esta navidad, y que disfrutemos mucho el año que viene. ¡Un abrazo fuerte! 🤗",
       imageUrl:
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483373018724-770a096812ff?w=800&auto=format&fit=crop",
     },
   ],
 };
