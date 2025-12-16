@@ -1,5 +1,5 @@
 import type { FriendCalendarConfig } from "../../types/calendar";
-import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from "../../lib/storage";
 
 const FRIEND_ID = "a8c8c14c-c426-41a7-9e11-27ff56ad8511";
 
@@ -39,7 +39,8 @@ export const friendConfig: FriendCalendarConfig = {
       day: 3,
       videoId: "g9r_8lVWGC0",
       title: "Guerra de bandas - Circo Volador 2008",
-      description: "¡Cor sale ahí al minuto 0:50 y creo que yo al 1:30! ¡Chéquele! Si no, al menos me gusta acordarme de este CD 🤘",
+      description:
+        "¡Cor sale ahí al minuto 0:50 y creo que yo al 1:30! ¡Chéquele! Si no, al menos me gusta acordarme de este CD 🤘",
     },
 
     // Day 4: Soup Nazi - Uno de los mejores capítulos de Seinfeld
@@ -48,86 +49,86 @@ export const friendConfig: FriendCalendarConfig = {
       day: 4,
       videoId: "RqlQYBcsq54",
       title: "Soup Nazi - Seinfeld",
-      description: "Una de las cosa más chistosas que me enseñó mi amigo Cor. No soup for you! 🍲",
+      description:
+        "Una de las cosas más chistosas que me enseñó mi amigo Cor. No soup for you! 🍲",
     },
 
-    // Day 5: Photo - Hiking adventure
+    // Day 5: Foto Cor pelón como un monje
     {
       type: "photo",
       day: 5,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
-      caption:
-        "Our sunrise hike at Mount Rainier! Worth waking up at 4 AM. 🏔️",
-      alt: "Mountain hiking at sunrise",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 5, "jpg") || "",
+      caption: "Mi monje favorito para pelear contra el mal 🧘‍♂",
+      alt: "Foto de Cor pelón",
     },
 
     // Day 6: Spotify - Study playlist
     {
       type: "spotify",
       day: 6,
-      embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
-      title: "Study Session Vibes",
-      description: "Our go-to song during those late-night study sessions!",
+      embedUrl: "https://open.spotify.com/embed/track/4JdlbMSByL6z5oqysInM2D",
+      title: "Sonata Arctica - I Can't Dance",
+      description:
+        "Mezcla de Zam y Cor en un cover de Genesis por Sonata Arctica 🎸",
     },
 
     // Day 7: Text - Encouragement
     {
       type: "text",
       day: 7,
-      message:
-        "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
-      author: "Your Cheerleader",
+      message: "Brindi la prufka, brindi la pöf... pöf!",
+      author: "Roktok van Mücher",
     },
 
-    // Day 8: Message - Baking disaster
+    // Day 8: Foto - Remolcando el coche de Cor
     {
       type: "message",
       day: 8,
-      title: "The Great Cookie Disaster",
+      title: "Coche remolcado 🚗",
       message:
-        "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
-      imageUrl:
-        "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
+        "Recuerdo cuando al fin llegamos sanos y salvos a tú casa, Cor, después de mucha diversión al volante 😂",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 8, "jpg") || "",
     },
 
-    // Day 9: Photo - Beach sunset
+    // Day 9: Photo - Foto con Dules y Cor en mi cuarto de casa de mi mamá
     {
       type: "photo",
       day: 9,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
-      caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
-      alt: "Beach sunset with friends",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 9, "jpg") || "",
+      caption:
+        "Viendo esta foto me acordé de cómo era mi cuarto en casa de mi mamá. Bonitos tiempos. 🛏 ",
+      alt: "Foto de Dules y Cor en casa de Zam",
     },
 
-    // Day 10: Spotify - Party anthem
+    // Day 10: Photo - Pythagora Switch
     {
-      type: "spotify",
+      type: "youtube",
       day: 10,
-      embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
-      title: "Birthday Bash Anthem",
-      description: "This song made your birthday party absolutely epic!",
+      videoId: "cU3YmAFCcCA",
+      title: "Pythagora Switch - Sports",
+      description:
+        "¡¿Te acuerdas de esto?! Me encantaba. ¡Hay que verlo juntos pronto!",
     },
 
-    // Day 11: Text - Looking forward
+    // Day 11: Foto - Comiendo papitas
     {
-      type: "text",
+      type: "photo",
       day: 11,
-      message:
-        "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
-      author: "Your Adventure Buddy",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 11, "jpg") || "",
+      caption:
+        "Las papitas del puente inolvidables en las visitas con mi mamá 🍟",
+      alt: "Foto de Gabo, Cor, Dules y Zam en casa de Zam",
     },
 
     // Day 12: Message - Final message
     {
       type: "message",
       day: 12,
-      title: "Merry Christmas, Sarah! 🎄🎁",
+      title: "¡Feliz Navidad! 🎄🎁",
       message:
-        "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",
+        "Que esta actividad te haya gustado, Cor. Disfruta montones esta navidad, y que gocemos mucho el año que viene. ¡Un abrazo fuerte! 🤗",
       imageUrl:
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483373018724-770a096812ff?w=800&auto=format&fit=crop",
     },
   ],
 };
