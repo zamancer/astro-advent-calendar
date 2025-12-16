@@ -1,5 +1,5 @@
 import type { FriendCalendarConfig } from "../../types/calendar";
-import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from "../../lib/storage";
 
 const FRIEND_ID = "75e7a00d-273f-44ee-ae66-0da90f9520d1";
 
@@ -55,20 +55,18 @@ export const friendConfig: FriendCalendarConfig = {
     {
       type: "photo",
       day: 5,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
-      caption:
-        "Our sunrise hike at Mount Rainier! Worth waking up at 4 AM. 🏔️",
-      alt: "Mountain hiking at sunrise",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 5, "jpg") || "",
+      caption: "We've got the power, we are divine! (Y apágale al arroz...) ⚡",
+      alt: "Foto de Dules, Zam, Cor, Gina y Payos en la cocina de Gina",
     },
 
-    // Day 6: Spotify - Study playlist
+    // Day 6: Photo - Hace unos años con Dules y Gina
     {
-      type: "spotify",
+      type: "photo",
       day: 6,
-      embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
-      title: "Study Session Vibes",
-      description: "Our go-to song during those late-night study sessions!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 6, "jpg") || "",
+      caption: "Hace muy poquito en casa de mi mamá, jugando papelitos 🍲",
+      alt: "Foto de Dules, Zam, y Gina en casa de Zam",
     },
 
     // Day 7: Text - Encouragement
@@ -76,58 +74,57 @@ export const friendConfig: FriendCalendarConfig = {
       type: "text",
       day: 7,
       message:
-        "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
-      author: "Your Cheerleader",
+        "I will honor Christmas in my heart, and try to keep it all the year. 📖🎄",
+      author: "Charles Dickens",
     },
 
-    // Day 8: Message - Baking disaster
+    // Day 8: Video - Sonata Arctica - Where X Marks The Spot
     {
-      type: "message",
+      type: "youtube",
       day: 8,
-      title: "The Great Cookie Disaster",
-      message:
-        "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
-      imageUrl:
-        "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
+      videoId: "rSiEXFHIs-Q",
+      title: "Sonata Arctica - X Marks The Spot",
+      description: "¡Uuff! Esperando que nos toque en vivo pronto 🤞",
     },
 
-    // Day 9: Photo - Beach sunset
+    // Day 9: Photo - Rodeo Santa Fe con Dules y Gina
     {
       type: "photo",
       day: 9,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
-      caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
-      alt: "Beach sunset with friends",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 9, "jpg") || "",
+      caption: "De cuando fuimos al Rodeo Santa Fe con Dules 🤠",
+      alt: "Foto de Dules, Zam, y Gina en casa de Zam",
     },
 
-    // Day 10: Spotify - Party anthem
+    // Day 10: Photo - Pre navidad con Gina
     {
-      type: "spotify",
+      type: "photo",
       day: 10,
-      embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
-      title: "Birthday Bash Anthem",
-      description: "This song made your birthday party absolutely epic!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 10, "jpg") || "",
+      caption:
+        "Nuestra pre-navidad en casa de Gina del 2014 (¡ya casi es Navidarks!) 🎄",
+      alt: "Foto de los amigos en casa de Gina en una pre-navidad del 2014",
     },
 
-    // Day 11: Text - Looking forward
+    // Day 11: Photo - Mi foto con Henkka de Sonata... tomada por Gina
     {
-      type: "text",
+      type: "photo",
       day: 11,
-      message:
-        "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
-      author: "Your Adventure Buddy",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 11, "jpeg") || "",
+      caption:
+        "Henkka, y Zam, y Gina... detrás de la cámara. Soy muy fan de esta foto porque siempre me acuerdo de ti. 📸",
+      alt: "Foto de Henkka y Zam tomada por Gina",
     },
 
     // Day 12: Message - Final message
     {
       type: "message",
       day: 12,
-      title: "Merry Christmas, Sarah! 🎄🎁",
+      title: "¡Feliz Navidad! 🎄🎁",
       message:
-        "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",
+        "Que esta actividad te haya gustado, Ginata. Disfruta montones esta navidad, y que disfrutemos mucho el año que viene. ¡Un abrazo fuerte! 🤗",
       imageUrl:
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483373018724-770a096812ff?w=800&auto=format&fit=crop",
     },
   ],
 };
