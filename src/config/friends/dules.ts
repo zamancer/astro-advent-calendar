@@ -1,5 +1,5 @@
 import type { FriendCalendarConfig } from "../../types/calendar";
-import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from "../../lib/storage";
 
 const FRIEND_ID = "88d67ed9-ddc4-4f4f-b9e0-331fff991012";
 
@@ -39,7 +39,8 @@ export const friendConfig: FriendCalendarConfig = {
       day: 3,
       videoId: "Pv9wh7RzS8c",
       title: "Blind Guardian - Mirror Mirror - México 2011",
-      description: "¿Acaso fue nuestro último concierto juntos en México? 🤔 Estuvo muy chévere.",
+      description:
+        "¿Acaso fue nuestro último concierto juntos en México? 🤔 Estuvo muy chévere.",
     },
 
     // Day 4: Video - Ángeles fuimos de DBZ
@@ -48,27 +49,26 @@ export const friendConfig: FriendCalendarConfig = {
       day: 4,
       videoId: "ZZYn2HkCwn4",
       title: "DBZ - Ángeles fuimos 🎤",
-      description: "Siempre me acuerdo de Dules cuando la vuelvo a escuchar... ¡Abre! 😂",
+      description:
+        "Siempre me acuerdo de Dules cuando la vuelvo a escuchar... ¡Abre! 😂",
     },
 
-    // Day 5: Photo - Hiking adventure
+    // Day 5: Foto - Dules y yo de chamacos
     {
       type: "photo",
       day: 5,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
-      caption:
-        "Our sunrise hike at Mount Rainier! Worth waking up at 4 AM. 🏔️",
-      alt: "Mountain hiking at sunrise",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 5, "jpg") || "",
+      caption: "¡Mira nomás! Súper mocosos y todo 👶🐥",
+      alt: "Dules y Zam muy jóvenes",
     },
 
-    // Day 6: Spotify - Study playlist
+    // Day 6: Foto - Despedida Dules San Esiquio
     {
-      type: "spotify",
+      type: "photo",
       day: 6,
-      embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
-      title: "Study Session Vibes",
-      description: "Our go-to song during those late-night study sessions!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 6, "jpg") || "",
+      caption: "De cuando te 'despedimos' en San Esiquio 🤠",
+      alt: "Dules y Zam muy jóvenes",
     },
 
     // Day 7: Text - Encouragement
@@ -76,58 +76,56 @@ export const friendConfig: FriendCalendarConfig = {
       type: "text",
       day: 7,
       message:
-        "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
-      author: "Your Cheerleader",
+        "Friendship is born at that moment when one person says to another, 'What! You too? I thought I was the only one.'",
+      author: "C. S. Lewis",
     },
 
-    // Day 8: Message - Baking disaster
+    // Day 8: Spotify - Katzenjammer
     {
-      type: "message",
+      type: "spotify",
       day: 8,
-      title: "The Great Cookie Disaster",
-      message:
-        "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
-      imageUrl:
-        "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
+      embedUrl: "https://open.spotify.com/embed/track/2OZMnEZs5MTEiTWeba5twb",
+      title: "Katzenjammer - To the Sea",
+      description: "La canción de Muse de la Hyper Ximi 🎸",
     },
 
-    // Day 9: Photo - Beach sunset
+    // Day 9: Photo - Despeinado con Dules
     {
       type: "photo",
       day: 9,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
-      caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 9, "jpg") || "",
+      caption: "Que me peino y que nos sacamos la foto en casa de Gina 🙈",
       alt: "Beach sunset with friends",
     },
 
     // Day 10: Spotify - Party anthem
     {
-      type: "spotify",
+      type: "youtube",
       day: 10,
-      embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
-      title: "Birthday Bash Anthem",
-      description: "This song made your birthday party absolutely epic!",
+      videoId: "MKwXMn9pqbQ",
+      title: "Anna Murphy (Cellar Darling) - Twin Flames",
+      description:
+        "Primera canción que conocí de Anna Murphy después de dejar Eluveitie (y según yo te gustan también) 🎶",
     },
 
-    // Day 11: Text - Looking forward
+    // Day 11: Foto - Con Diego y Dules
     {
-      type: "text",
+      type: "photo",
       day: 11,
-      message:
-        "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
-      author: "Your Adventure Buddy",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 11, "jpg") || "",
+      caption: "Siendo muy felices y jóvenes con Diego 😊",
+      alt: "Fodo de Diego, Dules y Zam",
     },
 
     // Day 12: Message - Final message
     {
       type: "message",
       day: 12,
-      title: "Merry Christmas, Sarah! 🎄🎁",
+      title: "¡Feliz Navidad! 🎄🎁",
       message:
-        "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",
+        "Que esta actividad te haya gustado, Dules. Disfruta montones esta navidad, y que gocemos mucho el año que viene. ¡Un abrazo fuerte! 🤗",
       imageUrl:
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483373018724-770a096812ff?w=800&auto=format&fit=crop",
     },
   ],
 };
