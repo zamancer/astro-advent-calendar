@@ -7,6 +7,7 @@ import LeaderboardWidget from "../components/LeaderboardWidget";
 import Snowfall from "../components/Snowfall";
 // import ThemeToggle from '../components/ThemeToggle';
 import UserMenu from "../components/UserMenu";
+import WinnerAnnouncement from "../components/WinnerAnnouncement";
 import { calendarConfig } from "../config/calendar-content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -60,6 +61,9 @@ const { title, subtitle, contents } = calendarConfig;
     <main class="container mx-auto px-4 pb-16 max-w-7xl">
       <!-- Contest Instructions Banner -->
       <ContestInstructions client:load />
+
+      <!-- Winner Announcement (shows after contest ends) -->
+      <WinnerAnnouncement client:load />
 
       <!-- Calendar Grid -->
       <CalendarGrid client:load contents={contents} />
