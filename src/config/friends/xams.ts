@@ -1,5 +1,5 @@
 import type { FriendCalendarConfig } from "../../types/calendar";
-import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from "../../lib/storage";
 
 const FRIEND_ID = "297da6f1-e25b-4c12-961e-d8d244e12579";
 
@@ -29,46 +29,47 @@ export const friendConfig: FriendCalendarConfig = {
       type: "photo",
       day: 2,
       imageUrl: getFriendImageUrl(FRIEND_ID, 2, "jpeg") || "",
-      caption: "Mi carnal ayudándome con la mudanza y la armadera de muebles 📦",
+      caption:
+        "Mi carnal ayudándome con la mudanza y la armadera de muebles 📦",
       alt: "Foto de Diego y Zam jovenes con Mossi",
     },
 
     // Day 3: Video - La banda de mi carnal Xamster
-      {
+    {
       type: "youtube",
       day: 3,
       videoId: "zQPfO80_O4s",
       title: "Entrevista - Ideología Vigente 2010",
-      description: "Mi carnal poniendo gente a bailar. ¡Yo estuve ahí! 🎤 (Also, primera cosa que vió Xim de aquel entonces)",
+      description:
+        "Mi carnal poniendo gente a bailar. ¡Yo estuve ahí! 🎤 (Also, primera cosa que vió Xim de aquel entonces)",
     },
 
     // Day 4: Video - Nothing good ever happens after 2 AM
-      {
+    {
       type: "youtube",
       day: 4,
       videoId: "EKQT7WjPUIk",
       title: "HIMYM - Nothing good ever happens after 2 AM",
-      description: "Lección aprendida con mi carnal por allá del 2012 (y sí, esto lo subí pasando 2AM como dice el primer comentario) 🫰",
+      description:
+        "Lección aprendida con mi carnal por allá del 2012 (y sí, esto lo subí pasando 2AM como dice el primer comentario) 🫰",
     },
 
-    // Day 5: Photo - Hiking adventure
+    // Day 5: Photo - Pelicula en casa de Mariana
     {
       type: "photo",
       day: 5,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
-      caption:
-        "Our sunrise hike at Mount Rainier! Worth waking up at 4 AM. 🏔️",
-      alt: "Mountain hiking at sunrise",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 5, "jpg") || "",
+      caption: "Dules, Xamster y Zam jugando al cine gore 🎬",
+      alt: "Foto de Dules, Xamster y Zam viendo película en casa de Mariana",
     },
 
-    // Day 6: Spotify - Study playlist
+    // Day 6: Foto - Despedida Dules en el Rodeo Santa Fe
     {
-      type: "spotify",
+      type: "photo",
       day: 6,
-      embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
-      title: "Study Session Vibes",
-      description: "Our go-to song during those late-night study sessions!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 6, "jpg") || "",
+      caption: "Despedida de Dules en el Rodeo Santa Fe 🎉",
+      alt: "Foto de Xamster, Zam, y amigos en la despedida de Dules",
     },
 
     // Day 7: Text - Encouragement
@@ -76,58 +77,57 @@ export const friendConfig: FriendCalendarConfig = {
       type: "text",
       day: 7,
       message:
-        "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
-      author: "Your Cheerleader",
+        "Friendship is born at that moment when one person says to another, 'What! You too? I thought I was the only one.'",
+      author: "C. S. Lewis",
     },
 
-    // Day 8: Message - Baking disaster
+    // Day 8: Picture - Mas orca meme
     {
-      type: "message",
+      type: "photo",
       day: 8,
-      title: "The Great Cookie Disaster",
-      message:
-        "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
-      imageUrl:
-        "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 8, "jpeg") || "",
+      caption:
+        "Mi primer meme en Facebook; siempre me acuerdo que fuiste el primero en reirte. 🐋",
+      alt: "Meme de orca y mas orca",
     },
 
-    // Day 9: Photo - Beach sunset
+    // Day 9: Foto - Cena navideña en casa de Gina
     {
       type: "photo",
       day: 9,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
-      caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
-      alt: "Beach sunset with friends",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 9, "jpeg") || "",
+      caption: "Una de tantas cenas navideñas en casa de Gina 🎄",
+      alt: "Foto de Xamster, Zam, y amigos en la cena navideña en casa de Gina",
     },
 
-    // Day 10: Spotify - Party anthem
+    // Day 10: Photo - Cena navideña con Kary
     {
-      type: "spotify",
+      type: "photo",
       day: 10,
-      embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
-      title: "Birthday Bash Anthem",
-      description: "This song made your birthday party absolutely epic!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 10, "jpg") || "",
+      caption: "La primera cena navideña con Kary (creo) en casa de Gina 🎅",
+      alt: "Foto de Xamster, Kary, y Zam en la cena navideña en casa de Gina",
     },
 
-    // Day 11: Text - Looking forward
+    // Day 11: Foto - La boda de Xamster y Kary
     {
-      type: "text",
+      type: "message",
       day: 11,
+      title: "Boda Oskar y Kary 👰🤵",
       message:
-        "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
-      author: "Your Adventure Buddy",
+        "Me gusta mucho esta foto porque me recuerda de que fui un feliz testigo de un día muy especial de mi hermano. ¡Qué gran recuerdo! 🎉",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 11, "jpeg") || "",
     },
 
     // Day 12: Message - Final message
     {
       type: "message",
       day: 12,
-      title: "Merry Christmas, Sarah! 🎄🎁",
+      title: "¡Feliz Navidad! 🎄🎁",
       message:
-        "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",
+        "Que esta actividad te haya gustado, carnalito. Disfruta montones esta navidad, y que gocemos mucho el año que viene. ¡Un abrazo fuerte! 🤗",
       imageUrl:
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483373018724-770a096812ff?w=800&auto=format&fit=crop",
     },
   ],
 };
