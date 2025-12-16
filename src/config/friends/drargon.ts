@@ -1,5 +1,5 @@
 import type { FriendCalendarConfig } from "../../types/calendar";
-import { getFriendImageUrl } from '../../lib/storage';
+import { getFriendImageUrl } from "../../lib/storage";
 
 const FRIEND_ID = "a9abbabf-4f18-480f-8dbb-5f4a02409ca3";
 
@@ -34,102 +34,96 @@ export const friendConfig: FriendCalendarConfig = {
     },
 
     // Day 3: Text - Video Tribuzy
-     {
+    {
       type: "youtube",
       day: 3,
       videoId: "R77aWkvvhPM",
       title: "Tribuzy - Beast in the Light - Live 2007",
-      description: "Cada cierto tiempo uno se tiene que acordar de esta joyita 💎",
+      description:
+        "Cada cierto tiempo uno se tiene que acordar de esta joyita 💎",
     },
 
-    // Day 4: Message - Movie marathon
+    // Day 4: Foto - Diego muy fuerte
     {
-      type: "message",
+      type: "photo",
       day: 4,
-      title: "Epic Movie Marathon",
-      message:
-        "Remember when we binged all 3 Lord of the Rings movies in one day? That was legendary! We need to do it again this year. 🍿",
-      imageUrl:
-        "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800&auto=format&fit=crop",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 4, "jpeg") || "",
+      caption: "Un dwarf posa con otro dwarf 💪",
+      alt: "Foto de Diego con su versión grande",
     },
 
     // Day 5: Photo - Hiking adventure
     {
-      type: "photo",
+      type: "spotify",
       day: 5,
-      imageUrl:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop",
-      caption:
-        "Our sunrise hike at Mount Rainier! Worth waking up at 4 AM. 🏔️",
-      alt: "Mountain hiking at sunrise",
+      embedUrl: "https://open.spotify.com/embed/track/6olS0TmHmsGr0hXtcBsiVM",
+      title: "Megadeth - A Tout Le Monde",
+      description: "Dos limones (A two lemon!) 🍋🍋",
     },
 
     // Day 6: Spotify - Study playlist
     {
       type: "spotify",
       day: 6,
-      embedUrl: "https://open.spotify.com/embed/track/3qiyyUfYe7CRYLucrPmulD",
-      title: "Study Session Vibes",
-      description: "Our go-to song during those late-night study sessions!",
+      embedUrl: "https://open.spotify.com/embed/track/0eV3PB3T0OxW4feG1DlOjQ",
+      title: "Hammerfall - Hearts on Fire",
+      description: "Hearts on Fire, Hearts on Fire! 🔥",
     },
 
-    // Day 7: Text - Encouragement
+    // Day 7: Mensaje de aliento previo a Navidad
     {
       type: "text",
       day: 7,
       message:
-        "You crushed that presentation at work! I knew you could do it. You're destined for great things, Sarah! 🌟",
-      author: "Your Cheerleader",
+        "¡Ya casi un nuevo año! Que nada te falte, que nada te sobre, y que nos veamos pronto. 🎄✨",
+      author: "Zam",
     },
 
-    // Day 8: Message - Baking disaster
+    // Day 8: Canción Pantera - Cemetery Gates
     {
-      type: "message",
+      type: "spotify",
       day: 8,
-      title: "The Great Cookie Disaster",
-      message:
-        "We may have set off the smoke alarm THREE times, but at least we had fun! Next time, let's follow the recipe. 😂🍪",
-      imageUrl:
-        "https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&auto=format&fit=crop",
+      embedUrl: "https://open.spotify.com/embed/track/4vJr55lngvhSM8WIh9CjQc",
+      title: "Pantera - Cemetery Gates",
+      description: "Never old, always gold. 🪦🚪",
     },
 
-    // Day 9: Photo - Beach sunset
+    // Day 9: Foto - Diego y Zam muy chavos
     {
       type: "photo",
       day: 9,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
-      caption: "Best beach sunset ever! Summer vibes with my favorite person 🌅",
-      alt: "Beach sunset with friends",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 9, "jpg") || "",
+      caption: "Dimebag Darrell y Phil Anselmo 🎤",
+      alt: "Foto de Zam y Diego muy chavos",
     },
 
-    // Day 10: Spotify - Party anthem
+    // Day 10: Foto - Jugando lol en casa de Cor
     {
-      type: "spotify",
+      type: "photo",
       day: 10,
-      embedUrl: "https://open.spotify.com/embed/track/5x89JFflKZW2rgzKYCZLsQ",
-      title: "Birthday Bash Anthem",
-      description: "This song made your birthday party absolutely epic!",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 10, "jpg") || "",
+      caption: "Empezando a jugar LoL en casa de Cor 🎮",
+      alt: "Foto de Dules, Gabo, Zam y Diego jugando LoL en casa de Cor",
     },
 
     // Day 11: Text - Looking forward
     {
-      type: "text",
+      type: "photo",
       day: 11,
-      message:
-        "Can't wait to see what adventures next year brings us! More hiking, more concerts, more memories. Here's to 2025! 🎉",
-      author: "Your Adventure Buddy",
+      imageUrl: getFriendImageUrl(FRIEND_ID, 11, "jpeg") || "",
+      caption: "Concierto de Symphony X en 2019 (creo) 🤘",
+      alt: "Diego, Gina y Zam en concierto de Symphony X",
     },
 
     // Day 12: Message - Final message
     {
       type: "message",
       day: 12,
-      title: "Merry Christmas, Sarah! 🎄🎁",
+      title: "¡Feliz Navidad! 🎄🎁",
       message:
-        "Thank you for being YOU. You're an incredible friend, and I'm so lucky to have you in my life. Here's to many more years of friendship, laughter, and unforgettable moments. Merry Christmas! ❤️",
+        "Que esta actividad te haya gustado, Drargon. Disfruta montones esta navidad, y que disfrutemos mucho el año que viene. ¡Un abrazo fuerte! 🤗",
       imageUrl:
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483373018724-770a096812ff?w=800&auto=format&fit=crop",
     },
   ],
 };
