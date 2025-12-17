@@ -170,7 +170,7 @@ export default function LeaderboardDisplay({
 
       {/* Leaderboard table */}
       <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-x-auto">
-        <div className="min-w-[500px] sm:min-w-0">
+        <div className="min-w-[420px] sm:min-w-0">
           {/* Header */}
           <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700/50 text-sm font-semibold text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
             <div className="col-span-2 sm:col-span-1 text-center">
@@ -231,7 +231,7 @@ export default function LeaderboardDisplay({
                   <span className="text-gray-700 dark:text-gray-300">
                     {entry.windows_opened}
                   </span>
-                  <span className="text-gray-400 dark:text-gray-500 hidden sm:inline">
+                  <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm">
                     /{TOTAL_CONTEST_WINDOWS}
                   </span>
                   {entry.windows_opened === TOTAL_CONTEST_WINDOWS && (
