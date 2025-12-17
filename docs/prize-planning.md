@@ -302,25 +302,25 @@ export function getTimeUntilContestEnd(): number {
 | 4.3  | ✅ Link between widget and full leaderboard page         | Components                                                   |
 | 4.4  | ✅ Add test data SQL file for leaderboard testing        | `supabase/test-leaderboard-data.sql`                         |
 
-### Phase 5: Polish & Winner Announcement
+### Phase 5: Polish & Winner Announcement ✅
 
 | Step | Description                                            | Files                                   |
 | ---- | ------------------------------------------------------ | --------------------------------------- |
-| 5.1  | Add gold/silver/bronze styling for top 3               | Leaderboard components                  |
-| 5.2  | Highlight current user in leaderboard                  | Leaderboard components                  |
-| 5.3  | Add points breakdown tooltip/expandable detail         | LeaderboardDisplay                      |
-| 5.4  | Create winner announcement banner (shows after Dec 24) | `src/components/WinnerAnnouncement.tsx` |
-| 5.5  | Mobile responsiveness pass                             | All new components                      |
+| 5.1  | ✅ Add gold/silver/bronze styling for top 3               | Leaderboard components                  |
+| 5.2  | ✅ Highlight current user in leaderboard                  | Leaderboard components                  |
+| 5.3  | ✅ Add points breakdown tooltip/expandable detail         | LeaderboardDisplay                      |
+| 5.4  | ✅ Create winner announcement banner (shows after Dec 24) | `src/components/WinnerAnnouncement.tsx` |
+| 5.5  | ✅ Mobile responsiveness pass                             | All new components                      |
 
-### Phase 6: Testing & Deployment
+### Phase 6: Testing & Deployment ✅
 
 | Step | Description                              | Files |
 | ---- | ---------------------------------------- | ----- |
-| 6.1  | Test scoring calculations with mock data | -     |
-| 6.2  | Verify real-time updates work correctly  | -     |
-| 6.3  | Test on mobile devices                   | -     |
-| 6.4  | Run `pnpm lint` and `pnpm build`         | -     |
-| 6.5  | Deploy to production                     | -     |
+| 6.1  | ✅ Test scoring calculations with mock data | -     |
+| 6.2  | ✅ Verify real-time updates work correctly  | -     |
+| 6.3  | ✅ Test on mobile devices                   | -     |
+| 6.4  | ✅ Run `pnpm lint` and `pnpm build`         | -     |
+| 6.5  | ✅ Deploy to production                     | -     |
 
 ---
 
