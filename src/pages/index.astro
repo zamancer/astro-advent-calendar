@@ -62,8 +62,8 @@ const { title, subtitle, contents } = calendarConfig;
       <!-- Contest Instructions Banner -->
       <ContestInstructions client:load />
 
-      <!-- Winner Announcement (shows after contest ends) -->
-      <WinnerAnnouncement client:load />
+      <!-- Winner Announcement (shows after contest ends, with link to full leaderboard) -->
+      <WinnerAnnouncement client:load showLeaderboardLink={true} />
 
       <!-- Calendar Grid -->
       <CalendarGrid client:load contents={contents} />

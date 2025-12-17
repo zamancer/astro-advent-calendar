@@ -107,6 +107,11 @@ export default function LeaderboardWidget({
     };
   }, [fetchLeaderboard]);
 
+  // Don't show widget after contest ends (WinnerAnnouncement takes over)
+  if (contestEnded) {
+    return null;
+  }
+
   if (loading) {
     return (
       <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-4">
@@ -131,18 +136,11 @@ export default function LeaderboardWidget({
     <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-amber-200 dark:border-amber-900/50">
       {/* Header */}
       <div className="px-4 py-3 bg-linear-to-r from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10 border-b border-amber-200 dark:border-amber-900/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🏆</span>
-            <span className="font-semibold text-gray-900 dark:text-white">
-              Tabla de Posiciones
-            </span>
-          </div>
-          {contestEnded && (
-            <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-full">
-              Final
-            </span>
-          )}
+        <div className="flex items-center gap-2">
+          <span className="text-lg">🏆</span>
+          <span className="font-semibold text-gray-900 dark:text-white">
+            Tabla de Posiciones
+          </span>
         </div>
       </div>
 

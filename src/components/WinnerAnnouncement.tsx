@@ -11,6 +11,8 @@ interface WinnerAnnounementProps {
   onDismiss?: () => void;
   /** Optional: show even during active contest (for testing) */
   forceShow?: boolean;
+  /** Optional: show link to full leaderboard (for main page) */
+  showLeaderboardLink?: boolean;
 }
 
 /** Medal styling based on rank */
@@ -84,6 +86,7 @@ function WinnerCard({ entry }: { entry: ContestLeaderboardEntry }) {
 export default function WinnerAnnouncement({
   onDismiss,
   forceShow = false,
+  showLeaderboardLink = false,
 }: WinnerAnnounementProps) {
   const [winners, setWinners] = useState<ContestLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -251,6 +254,29 @@ export default function WinnerAnnouncement({
               Ganadores: ¡Revisen su correo el 25 de diciembre para su premio!
             </p>
           </div>
+
+          {/* Link to full leaderboard (only on main page) */}
+          {showLeaderboardLink && (
+            <a
+              href="/leaderboard"
+              className="inline-flex items-center gap-1 mt-3 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium transition-colors"
+            >
+              Ver todas las posiciones
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </a>
+          )}
         </div>
       </div>
     </div>
