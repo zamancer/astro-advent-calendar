@@ -21,6 +21,19 @@ interface ContentModalProps {
 // Minimum swipe distance (in pixels) to trigger navigation
 const SWIPE_THRESHOLD = 50;
 
+// Consolidated touch state for cleaner state management
+interface TouchState {
+  start: number | null;
+  end: number | null;
+  direction: "up" | "down" | null;
+}
+
+const initialTouchState: TouchState = {
+  start: null,
+  end: null,
+  direction: null,
+};
+
 export default function ContentModal({
   content,
   isOpen,
@@ -28,11 +41,7 @@ export default function ContentModal({
   unlockedDays = [],
   onNavigate,
 }: ContentModalProps) {
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [swipeDirection, setSwipeDirection] = useState<"up" | "down" | null>(
-    null
-  );
+  const [touch, setTouch] = useState<TouchState>(initialTouchState);
 
   // Memoize sorted unlocked days to make useCallback effective
   const sortedUnlockedDays = useMemo(
@@ -122,32 +131,37 @@ export default function ContentModal({
 
     // If inside scrollable content, don't track for navigation
     if (touchStartedInScrollable.current) {
-      setTouchStart(null);
-      setTouchEnd(null);
+      setTouch(initialTouchState);
       return;
     }
 
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientY);
-    setSwipeDirection(null);
+    setTouch({
+      start: e.targetTouches[0].clientY,
+      end: null,
+      direction: null,
+    });
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     // Skip if touch started in scrollable area
-    if (touchStartedInScrollable.current || touchStart === null) return;
+    if (touchStartedInScrollable.current || touch.start === null) return;
 
     const currentTouch = e.targetTouches[0].clientY;
-    setTouchEnd(currentTouch);
+    const diff = touch.start - currentTouch;
 
-    // Show visual feedback during swipe
-    const diff = touchStart - currentTouch;
+    // Determine swipe direction for visual feedback
+    let direction: "up" | "down" | null = null;
     if (diff > 20 && nextDay !== null) {
-      setSwipeDirection("up");
+      direction = "up";
     } else if (diff < -20 && prevDay !== null) {
-      setSwipeDirection("down");
-    } else {
-      setSwipeDirection(null);
+      direction = "down";
     }
+
+    setTouch((prev) => ({
+      ...prev,
+      end: currentTouch,
+      direction,
+    }));
   };
 
   const handleTouchEnd = () => {
@@ -157,12 +171,12 @@ export default function ContentModal({
       return;
     }
 
-    if (!touchStart || !touchEnd) {
-      setSwipeDirection(null);
+    if (!touch.start || !touch.end) {
+      setTouch(initialTouchState);
       return;
     }
 
-    const distance = touchStart - touchEnd;
+    const distance = touch.start - touch.end;
     const isSwipeUp = distance > SWIPE_THRESHOLD;
     const isSwipeDown = distance < -SWIPE_THRESHOLD;
 
@@ -173,9 +187,7 @@ export default function ContentModal({
       navigateTo(prevDay);
     }
 
-    setTouchStart(null);
-    setTouchEnd(null);
-    setSwipeDirection(null);
+    setTouch(initialTouchState);
     touchStartedInScrollable.current = false;
   };
 
@@ -195,13 +207,14 @@ export default function ContentModal({
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 
       {/* Swipe indicator (mobile) - shows during active swipe */}
-      {hasNavigation && swipeDirection && (
+      {hasNavigation && touch.direction && (
         <div
           className={`absolute z-20 left-1/2 -translate-x-1/2 px-4 py-2 bg-accent/90 rounded-full text-background text-sm font-medium transition-all ${
-            swipeDirection === "up" ? "bottom-8" : "top-8"
+            touch.direction === "up" ? "bottom-8" : "top-8"
           }`}
+          aria-live="polite"
         >
-          {swipeDirection === "up" ? `Day ${nextDay}` : `Day ${prevDay}`}
+          {touch.direction === "up" ? `Day ${nextDay}` : `Day ${prevDay}`}
         </div>
       )}
 
@@ -220,6 +233,7 @@ export default function ContentModal({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -245,6 +259,7 @@ export default function ContentModal({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -272,6 +287,7 @@ export default function ContentModal({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
