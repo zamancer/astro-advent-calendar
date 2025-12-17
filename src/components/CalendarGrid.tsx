@@ -268,6 +268,73 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     setTimeout(() => setSelectedContent(null), 300);
   };
 
+  // Navigate to adjacent window (for modal navigation)
+  const handleNavigateWindow = (day: number) => {
+    const content = activeContents.find((c) => c.day === day);
+    if (!content || !isUnlocked(day)) return;
+
+    // Update progress if not already opened
+    if (!openedDays.has(day)) {
+      const newOpenedDays = new Set(openedDays);
+      newOpenedDays.add(day);
+      setOpenedDays(newOpenedDays);
+      saveLocalProgress(newOpenedDays);
+
+      // Snapshot friendId before async operation
+      const currentFriendId = friendId;
+
+      // Save to Supabase if authenticated (non-blocking)
+      if (!isDemoMode() && currentFriendId) {
+        setSyncStatus("syncing");
+        const secondsAfterUnlock = getSecondsAfterUnlock(day);
+
+        recordWindowOpen({
+          friend_id: currentFriendId,
+          window_number: day,
+          seconds_after_unlock: secondsAfterUnlock,
+        })
+          .then(({ error }) => {
+            if (error) {
+              const isDuplicate =
+                (isPostgrestError(error) &&
+                  (error.code === "PGRST116" || error.code === "23505")) ||
+                error.message?.includes("duplicate") ||
+                error.message?.includes("unique");
+
+              if (!isDuplicate) {
+                queueWindowOpen({
+                  friend_id: currentFriendId,
+                  window_number: day,
+                  seconds_after_unlock: secondsAfterUnlock,
+                });
+                setSyncStatus("offline");
+              } else {
+                setSyncStatus("synced");
+              }
+            } else {
+              setSyncStatus("synced");
+            }
+          })
+          .catch(() => {
+            queueWindowOpen({
+              friend_id: currentFriendId,
+              window_number: day,
+              seconds_after_unlock: secondsAfterUnlock,
+            });
+            setSyncStatus("offline");
+          });
+      }
+    }
+
+    // Navigate to the new content
+    setSelectedContent(content);
+  };
+
+  // Get list of unlocked days for modal navigation
+  const unlockedDays = activeContents
+    .filter((c) => isUnlocked(c.day))
+    .map((c) => c.day);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -343,7 +410,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
           </p>
           {unlockedCount < activeContents.length && (
             <p className="text-xs text-muted-foreground">
-              {activeContents.length - unlockedCount} ventanitas más se abrirán pronto
+              {activeContents.length - unlockedCount} ventanitas más se abrirán
+              pronto
             </p>
           )}
         </div>
@@ -372,8 +440,7 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
                 ? isOnlineState
                   ? "Sin conexión - se sincronizará cuando esté en línea"
                   : "Desconectado - se sincronizará cuando esté en línea"
-                : "Error de sincronización"
-                }
+                : "Error de sincronización"}
             </p>
           </div>
         )}
@@ -398,6 +465,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
         content={selectedContent}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        unlockedDays={unlockedDays}
+        onNavigate={handleNavigateWindow}
       />
     </>
   );
