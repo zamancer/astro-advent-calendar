@@ -176,6 +176,78 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     return shouldBypassUnlockCheck() || isWindowUnlockedByDay(day);
   };
 
+  // Shared helper to record window progress (local + remote)
+  const recordProgress = (day: number) => {
+    if (openedDays.has(day)) return;
+
+    // Create new set with the opened day
+    const newOpenedDays = new Set(openedDays);
+    newOpenedDays.add(day);
+
+    // Update state
+    setOpenedDays(newOpenedDays);
+
+    // Save to localStorage immediately (works offline)
+    saveLocalProgress(newOpenedDays);
+
+    // Snapshot friendId before async operation to avoid issues if state changes
+    const currentFriendId = friendId;
+
+    // Save to Supabase if authenticated (non-blocking)
+    if (!isDemoMode() && currentFriendId) {
+      setSyncStatus("syncing");
+
+      // Calculate seconds after unlock for fair timezone-normalized ranking
+      const secondsAfterUnlock = getSecondsAfterUnlock(day);
+
+      // Fire and forget - don't block UI
+      recordWindowOpen({
+        friend_id: currentFriendId,
+        window_number: day,
+        seconds_after_unlock: secondsAfterUnlock,
+      })
+        .then(({ error }) => {
+          if (error) {
+            console.error("Failed to record window open:", error);
+
+            // Check if it's a duplicate error (already saved)
+            const isDuplicate =
+              (isPostgrestError(error) &&
+                (error.code === "PGRST116" || error.code === "23505")) ||
+              error.message?.includes("duplicate") ||
+              error.message?.includes("unique");
+
+            if (!isDuplicate) {
+              // Queue for later sync
+              queueWindowOpen({
+                friend_id: currentFriendId,
+                window_number: day,
+                seconds_after_unlock: secondsAfterUnlock,
+              });
+              setSyncStatus("offline");
+            } else {
+              // Already saved, all good
+              setSyncStatus("synced");
+            }
+          } else {
+            // Successfully saved to cloud
+            setSyncStatus("synced");
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to record window open:", error);
+
+          // Queue for later sync
+          queueWindowOpen({
+            friend_id: currentFriendId,
+            window_number: day,
+            seconds_after_unlock: secondsAfterUnlock,
+          });
+          setSyncStatus("offline");
+        });
+    }
+  };
+
   const handleOpenWindow = (day: number) => {
     const content = activeContents.find((c) => c.day === day);
     if (!content) return;
@@ -186,79 +258,10 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
       return;
     }
 
-    // Update progress BEFORE opening modal for better sync
-    // Only record if not already opened
-    if (!openedDays.has(day)) {
-      // Create new set with the opened day
-      const newOpenedDays = new Set(openedDays);
-      newOpenedDays.add(day);
+    // Record progress before opening modal
+    recordProgress(day);
 
-      // Update state
-      setOpenedDays(newOpenedDays);
-
-      // Save to localStorage immediately (works offline)
-      saveLocalProgress(newOpenedDays);
-
-      // Snapshot friendId before async operation to avoid issues if state changes
-      const currentFriendId = friendId;
-
-      // Save to Supabase if authenticated (non-blocking for instant modal)
-      if (!isDemoMode() && currentFriendId) {
-        setSyncStatus("syncing");
-
-        // Calculate seconds after unlock for fair timezone-normalized ranking
-        const secondsAfterUnlock = getSecondsAfterUnlock(day);
-
-        // Fire and forget - don't block modal opening
-        recordWindowOpen({
-          friend_id: currentFriendId,
-          window_number: day,
-          seconds_after_unlock: secondsAfterUnlock,
-        })
-          .then(({ error }) => {
-            if (error) {
-              console.error("Failed to record window open:", error);
-
-              // Check if it's a duplicate error (already saved)
-              // Use type guard to safely access error.code
-              const isDuplicate =
-                (isPostgrestError(error) &&
-                  (error.code === "PGRST116" || error.code === "23505")) ||
-                error.message?.includes("duplicate") ||
-                error.message?.includes("unique");
-
-              if (!isDuplicate) {
-                // Queue for later sync
-                queueWindowOpen({
-                  friend_id: currentFriendId,
-                  window_number: day,
-                  seconds_after_unlock: secondsAfterUnlock,
-                });
-                setSyncStatus("offline");
-              } else {
-                // Already saved, all good
-                setSyncStatus("synced");
-              }
-            } else {
-              // Successfully saved to cloud
-              setSyncStatus("synced");
-            }
-          })
-          .catch((error) => {
-            console.error("Failed to record window open:", error);
-
-            // Queue for later sync
-            queueWindowOpen({
-              friend_id: currentFriendId,
-              window_number: day,
-              seconds_after_unlock: secondsAfterUnlock,
-            });
-            setSyncStatus("offline");
-          });
-      }
-    }
-
-    // Open modal immediately after progress update (don't wait for DB)
+    // Open modal immediately (don't wait for DB)
     setSelectedContent(content);
     setIsModalOpen(true);
   };
@@ -273,58 +276,8 @@ export default function CalendarGrid({ contents }: CalendarGridProps) {
     const content = activeContents.find((c) => c.day === day);
     if (!content || !isUnlocked(day)) return;
 
-    // Update progress if not already opened
-    if (!openedDays.has(day)) {
-      const newOpenedDays = new Set(openedDays);
-      newOpenedDays.add(day);
-      setOpenedDays(newOpenedDays);
-      saveLocalProgress(newOpenedDays);
-
-      // Snapshot friendId before async operation
-      const currentFriendId = friendId;
-
-      // Save to Supabase if authenticated (non-blocking)
-      if (!isDemoMode() && currentFriendId) {
-        setSyncStatus("syncing");
-        const secondsAfterUnlock = getSecondsAfterUnlock(day);
-
-        recordWindowOpen({
-          friend_id: currentFriendId,
-          window_number: day,
-          seconds_after_unlock: secondsAfterUnlock,
-        })
-          .then(({ error }) => {
-            if (error) {
-              const isDuplicate =
-                (isPostgrestError(error) &&
-                  (error.code === "PGRST116" || error.code === "23505")) ||
-                error.message?.includes("duplicate") ||
-                error.message?.includes("unique");
-
-              if (!isDuplicate) {
-                queueWindowOpen({
-                  friend_id: currentFriendId,
-                  window_number: day,
-                  seconds_after_unlock: secondsAfterUnlock,
-                });
-                setSyncStatus("offline");
-              } else {
-                setSyncStatus("synced");
-              }
-            } else {
-              setSyncStatus("synced");
-            }
-          })
-          .catch(() => {
-            queueWindowOpen({
-              friend_id: currentFriendId,
-              window_number: day,
-              seconds_after_unlock: secondsAfterUnlock,
-            });
-            setSyncStatus("offline");
-          });
-      }
-    }
+    // Record progress if not already opened
+    recordProgress(day);
 
     // Navigate to the new content
     setSelectedContent(content);
