@@ -2,7 +2,7 @@
 
 // Modal component to display calendar content
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import type { CalendarContent } from "../types/calendar";
 import PhotoContent from "./content/PhotoContent";
 import SpotifyContent from "./content/SpotifyContent";
@@ -33,10 +33,12 @@ export default function ContentModal({
   const [swipeDirection, setSwipeDirection] = useState<"up" | "down" | null>(
     null
   );
-  const modalRef = useRef<HTMLDivElement>(null);
 
-  // Get sorted unlocked days for navigation
-  const sortedUnlockedDays = [...unlockedDays].sort((a, b) => a - b);
+  // Memoize sorted unlocked days to make useCallback effective
+  const sortedUnlockedDays = useMemo(
+    () => [...unlockedDays].sort((a, b) => a - b),
+    [unlockedDays]
+  );
 
   // Find adjacent unlocked days
   const getAdjacentDays = useCallback(() => {
@@ -256,7 +258,6 @@ export default function ContentModal({
 
       {/* Modal content */}
       <div
-        ref={modalRef}
         className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-card rounded-2xl shadow-2xl animate-scaleIn"
         onClick={(e) => e.stopPropagation()}
       >
