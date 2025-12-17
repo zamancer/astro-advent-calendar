@@ -237,7 +237,9 @@ export default function LeaderboardDisplay({
                   {entry.windows_opened === TOTAL_CONTEST_WINDOWS && (
                     <span
                       className="ml-1 text-green-500"
-                      title="Perfect attendance!"
+                      role="img"
+                      aria-label="Asistencia perfecta"
+                      title="Asistencia perfecta"
                     >
                       ✓
                     </span>
