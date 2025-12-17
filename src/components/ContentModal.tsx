@@ -240,8 +240,8 @@ export default function ContentModal({
         </button>
 
         {/* Day badge */}
-        <div className="absolute top-4 left-4 z-10 px-4 py-2 bg-accent rounded-full">
-          <span className="text-sm font-bold text-background">
+        <div className="absolute top-4 left-4 z-10 px-4 py-2 bg-white/90 dark:bg-white/95 rounded-full shadow-lg">
+          <span className="text-sm font-bold text-gray-900">
             Day {content.day}
           </span>
         </div>
