@@ -6,9 +6,7 @@ import { getDemoLeaderboardWidgetData } from "../lib/placeholders";
 import { supabase } from "../lib/supabase";
 import type { ContestLeaderboardEntry } from "../types/database";
 
-interface WinnerAnnounementProps {
-  /** Optional: callback when the banner is dismissed */
-  onDismiss?: () => void;
+interface WinnerAnnouncementProps {
   /** Optional: show even during active contest (for testing) */
   forceShow?: boolean;
   /** Optional: show link to full leaderboard (for main page) */
@@ -28,7 +26,8 @@ function getMedalStyle(rank: number): {
       return {
         emoji: "🥇",
         label: "1er Lugar",
-        bgClass: "bg-gradient-to-br from-yellow-100 to-amber-200 dark:from-yellow-900/40 dark:to-amber-900/40",
+        bgClass:
+          "bg-gradient-to-br from-yellow-100 to-amber-200 dark:from-yellow-900/40 dark:to-amber-900/40",
         textClass: "text-yellow-800 dark:text-yellow-300",
         borderClass: "border-yellow-400 dark:border-yellow-600",
       };
@@ -36,7 +35,8 @@ function getMedalStyle(rank: number): {
       return {
         emoji: "🥈",
         label: "2do Lugar",
-        bgClass: "bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700/40 dark:to-gray-600/40",
+        bgClass:
+          "bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700/40 dark:to-gray-600/40",
         textClass: "text-gray-700 dark:text-gray-300",
         borderClass: "border-gray-400 dark:border-gray-500",
       };
@@ -44,7 +44,8 @@ function getMedalStyle(rank: number): {
       return {
         emoji: "🥉",
         label: "3er Lugar",
-        bgClass: "bg-gradient-to-br from-orange-100 to-amber-100 dark:from-orange-900/40 dark:to-amber-900/30",
+        bgClass:
+          "bg-gradient-to-br from-orange-100 to-amber-100 dark:from-orange-900/40 dark:to-amber-900/30",
         textClass: "text-orange-800 dark:text-orange-300",
         borderClass: "border-orange-400 dark:border-orange-600",
       };
@@ -59,18 +60,28 @@ function getMedalStyle(rank: number): {
   }
 }
 
+interface WinnerCardProps {
+  entry: ContestLeaderboardEntry;
+}
+
 /** Individual winner card */
-function WinnerCard({ entry }: { entry: ContestLeaderboardEntry }) {
+function WinnerCard({ entry }: WinnerCardProps) {
   const style = getMedalStyle(entry.rank);
 
   return (
     <div
       className={`flex flex-col items-center p-2 sm:p-4 rounded-lg sm:rounded-xl border-2 ${style.bgClass} ${style.borderClass} transition-transform hover:scale-105`}
     >
-      <span className="text-2xl sm:text-4xl mb-1 sm:mb-2" role="img" aria-label={style.label}>
+      <span
+        className="text-2xl sm:text-4xl mb-1 sm:mb-2"
+        role="img"
+        aria-label={style.label}
+      >
         {style.emoji}
       </span>
-      <span className={`text-[10px] sm:text-xs font-semibold uppercase tracking-wide ${style.textClass} mb-0.5 sm:mb-1`}>
+      <span
+        className={`text-[10px] sm:text-xs font-semibold uppercase tracking-wide ${style.textClass} mb-0.5 sm:mb-1`}
+      >
         {style.label}
       </span>
       <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-lg truncate max-w-full px-1">
@@ -84,13 +95,11 @@ function WinnerCard({ entry }: { entry: ContestLeaderboardEntry }) {
 }
 
 export default function WinnerAnnouncement({
-  onDismiss,
   forceShow = false,
   showLeaderboardLink = false,
-}: WinnerAnnounementProps) {
+}: WinnerAnnouncementProps) {
   const [winners, setWinners] = useState<ContestLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dismissed, setDismissed] = useState(false);
   const contestEnded = isContestEnded();
 
   const fetchWinners = useCallback(async () => {
@@ -157,16 +166,11 @@ export default function WinnerAnnouncement({
     return null;
   }
 
-  // Don't show if dismissed
-  if (dismissed) {
-    return null;
-  }
-
   // Loading state
   if (loading) {
     return (
       <div className="w-full mb-8">
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-lg p-8 border border-green-200 dark:border-green-800">
+        <div className="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-lg p-8 border border-green-200 dark:border-green-800">
           <div className="flex items-center justify-center py-4">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
           </div>
@@ -180,35 +184,27 @@ export default function WinnerAnnouncement({
     return null;
   }
 
-  function handleDismiss() {
-    setDismissed(true);
-    onDismiss?.();
-  }
-
   return (
     <div className="w-full mb-8">
-      <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-xl shadow-lg overflow-hidden border border-green-200 dark:border-green-800 relative">
-        {/* Dismiss button */}
-        <button
-          onClick={handleDismiss}
-          className="absolute top-3 right-3 p-1.5 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
-          aria-label="Cerrar anuncio"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
+      <div className="bg-linear-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-xl shadow-lg overflow-hidden border border-green-200 dark:border-green-800">
         {/* Header */}
         <div className="text-center pt-4 sm:pt-6 pb-3 sm:pb-4 px-4">
           <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
-            <span className="text-xl sm:text-3xl" role="img" aria-label="Celebration">
+            <span
+              className="text-xl sm:text-3xl"
+              role="img"
+              aria-label="Celebration"
+            >
               🎉
             </span>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
               ¡Concurso Cerrado!
             </h2>
-            <span className="text-xl sm:text-3xl" role="img" aria-label="Celebration">
+            <span
+              className="text-xl sm:text-3xl"
+              role="img"
+              aria-label="Celebration"
+            >
               🎉
             </span>
           </div>
