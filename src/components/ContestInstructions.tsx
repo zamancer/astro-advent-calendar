@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   BASE_POINTS,
+  isContestEnded,
   SPEED_BONUS,
   STREAK_BONUS,
   TOTAL_CONTEST_WINDOWS,
@@ -10,6 +11,7 @@ const STORAGE_KEY = "contest-instructions-expanded";
 
 export default function ContestInstructions() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const contestEnded = isContestEnded();
 
   // Load saved preference from localStorage on mount
   useEffect(() => {
@@ -18,6 +20,11 @@ export default function ContestInstructions() {
       setIsExpanded(saved === "true");
     }
   }, []);
+
+  // Don't show instructions after contest ends
+  if (contestEnded) {
+    return null;
+  }
 
   function handleToggle() {
     const newValue = !isExpanded;

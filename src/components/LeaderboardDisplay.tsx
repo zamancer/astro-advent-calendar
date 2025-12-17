@@ -156,22 +156,17 @@ export default function LeaderboardDisplay({
 
   return (
     <div className="w-full">
-      {/* Contest status header */}
-      <div className="mb-6 text-center">
-        {contestEnded ? (
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full">
-            <span className="text-lg">🎉</span>
-            <span className="font-semibold">Concurso cerrado</span>
-          </div>
-        ) : (
+      {/* Contest status header (only show when active) */}
+      {!contestEnded && (
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-full">
             <span className="text-lg">🏆</span>
             <span className="font-semibold">
               Concurso abierto hasta el 24 de Diciembre
             </span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Leaderboard table */}
       <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">

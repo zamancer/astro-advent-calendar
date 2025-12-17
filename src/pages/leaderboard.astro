@@ -4,6 +4,7 @@ import Footer from "../components/Footer.astro";
 import LeaderboardDisplay from "../components/LeaderboardDisplay";
 import Snowfall from "../components/Snowfall";
 import UserMenu from "../components/UserMenu";
+import WinnerAnnouncement from "../components/WinnerAnnouncement";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -63,6 +64,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     <!-- Leaderboard -->
     <main class="container mx-auto px-4 pb-16 max-w-3xl">
+      <!-- Winner announcement (shows after contest ends) -->
+      <WinnerAnnouncement client:load />
+
       <LeaderboardDisplay client:load />
     </main>
 
