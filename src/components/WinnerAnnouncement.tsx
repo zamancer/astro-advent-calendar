@@ -4,14 +4,11 @@ import { getContestLeaderboard } from "../lib/database";
 import { isDemoMode } from "../lib/featureFlags";
 import { getDemoLeaderboardWidgetData } from "../lib/placeholders";
 import { supabase } from "../lib/supabase";
+import type {
+  WinnerAnnouncementProps,
+  WinnerCardProps,
+} from "../types/components";
 import type { ContestLeaderboardEntry } from "../types/database";
-
-interface WinnerAnnouncementProps {
-  /** Optional: show even during active contest (for testing) */
-  forceShow?: boolean;
-  /** Optional: show link to full leaderboard (for main page) */
-  showLeaderboardLink?: boolean;
-}
 
 /** Medal styling based on rank */
 function getMedalStyle(rank: number): {
@@ -58,10 +55,6 @@ function getMedalStyle(rank: number): {
         borderClass: "border-gray-300 dark:border-gray-600",
       };
   }
-}
-
-interface WinnerCardProps {
-  entry: ContestLeaderboardEntry;
 }
 
 /** Individual winner card */
@@ -141,7 +134,7 @@ export default function WinnerAnnouncement({
     if (!supabase || isDemoMode()) return;
 
     const client = supabase;
-    const channel = client
+    const channel = supabase
       .channel("winner-announcement-updates")
       .on(
         "postgres_changes",
@@ -255,7 +248,7 @@ export default function WinnerAnnouncement({
           {showLeaderboardLink && (
             <a
               href="/leaderboard"
-              className="inline-flex items-center gap-1 mt-3 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium transition-colors"
+              className="inline-flex items-center gap-1 mt-3 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 focus:outline-hidden focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-amber-400 rounded font-medium transition-colors"
             >
               Ver todas las posiciones
               <svg
