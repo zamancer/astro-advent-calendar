@@ -169,102 +169,100 @@ export default function LeaderboardDisplay({
       )}
 
       {/* Leaderboard table */}
-      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700/50 text-sm font-semibold text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
-          <div className="col-span-1 text-center">Posición</div>
-          <div className="col-span-4 sm:col-span-3">Jugador</div>
-          <div className="col-span-3 sm:col-span-2 text-center">Puntos</div>
-          <div className="col-span-4 sm:col-span-3 text-center hidden sm:block">
-            Ventanitas
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-x-auto">
+        <div className="min-w-[420px] sm:min-w-0">
+          {/* Header */}
+          <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700/50 text-sm font-semibold text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
+            <div className="col-span-2 sm:col-span-1 text-center">
+              <span className="sm:hidden">#</span>
+              <span className="hidden sm:inline">Posición</span>
+            </div>
+            <div className="col-span-4 sm:col-span-3">Jugador</div>
+            <div className="col-span-2 text-center">Puntos</div>
+            <div className="col-span-2 sm:col-span-3 text-center">
+              Ventanitas
+            </div>
+            <div className="col-span-2 sm:col-span-3 text-center">Primeros</div>
           </div>
-          <div className="col-span-4 sm:col-span-3 text-center hidden sm:block">
-            Primeros
-          </div>
-        </div>
 
-        {/* Rows */}
-        {leaderboard.map((entry) => {
-          const isHighlighted = entry.friend_id === highlightFriendId;
-          const isPrizePosition = entry.rank <= 3;
+          {/* Rows */}
+          {leaderboard.map((entry) => {
+            const isHighlighted = entry.friend_id === highlightFriendId;
+            const isPrizePosition = entry.rank <= 3;
 
-          return (
-            <div
-              key={entry.friend_id}
-              className={`grid grid-cols-12 gap-2 px-4 py-3 items-center border-b border-gray-100 dark:border-gray-700 last:border-b-0 transition-colors ${
-                isHighlighted
-                  ? "bg-blue-50 dark:bg-blue-900/20"
-                  : isPrizePosition
-                  ? "bg-amber-50/50 dark:bg-amber-900/10"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700/30"
-              }`}
-            >
-              {/* Rank */}
-              <div className="col-span-1 flex justify-center">
-                <RankBadge rank={entry.rank} />
-              </div>
+            return (
+              <div
+                key={entry.friend_id}
+                className={`grid grid-cols-12 gap-2 px-4 py-3 items-center border-b border-gray-100 dark:border-gray-700 last:border-b-0 transition-colors ${
+                  isHighlighted
+                    ? "bg-blue-50 dark:bg-blue-900/20"
+                    : isPrizePosition
+                    ? "bg-amber-50/50 dark:bg-amber-900/10"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                }`}
+              >
+                {/* Rank */}
+                <div className="col-span-2 sm:col-span-1 flex justify-center">
+                  <RankBadge rank={entry.rank} />
+                </div>
 
-              {/* Name */}
-              <div className="col-span-4 sm:col-span-3">
-                <div className="font-medium text-gray-900 dark:text-white truncate">
-                  {entry.name}
-                  {isHighlighted && (
-                    <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">
-                      (Tú)
+                {/* Name */}
+                <div className="col-span-4 sm:col-span-3">
+                  <div className="font-medium text-gray-900 dark:text-white truncate">
+                    {entry.name}
+                    {isHighlighted && (
+                      <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">
+                        (Tú)
+                      </span>
+                    )}
+                  </div>
+                  <PointsBreakdown entry={entry} />
+                </div>
+
+                {/* Points */}
+                <div className="col-span-2 text-center">
+                  <div className="font-bold text-lg text-amber-600 dark:text-amber-400">
+                    {entry.total_points}
+                  </div>
+                </div>
+
+                {/* Windows opened */}
+                <div className="col-span-2 sm:col-span-3 text-center">
+                  <span className="text-gray-700 dark:text-gray-300">
+                    {entry.windows_opened}
+                  </span>
+                  <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm">
+                    /{TOTAL_CONTEST_WINDOWS}
+                  </span>
+                  {entry.windows_opened === TOTAL_CONTEST_WINDOWS && (
+                    <span
+                      className="ml-1 text-green-500"
+                      role="img"
+                      aria-label="Asistencia perfecta"
+                      title="Asistencia perfecta"
+                    >
+                      ✓
                     </span>
                   )}
                 </div>
-                {/* Mobile: show points breakdown */}
-                <div className="sm:hidden">
-                  <PointsBreakdown entry={entry} />
-                </div>
-              </div>
 
-              {/* Points */}
-              <div className="col-span-3 sm:col-span-2 text-center">
-                <div className="font-bold text-lg text-amber-600 dark:text-amber-400">
-                  {entry.total_points}
-                </div>
-                {/* Desktop: show points breakdown */}
-                <div className="hidden sm:block">
-                  <PointsBreakdown entry={entry} />
-                </div>
-              </div>
-
-              {/* Windows opened - hidden on mobile */}
-              <div className="col-span-3 text-center hidden sm:block">
-                <span className="text-gray-700 dark:text-gray-300">
-                  {entry.windows_opened}
-                </span>
-                <span className="text-gray-400 dark:text-gray-500">
-                  /{TOTAL_CONTEST_WINDOWS}
-                </span>
-                {entry.windows_opened === TOTAL_CONTEST_WINDOWS && (
-                  <span
-                    className="ml-1 text-green-500"
-                    title="Perfect attendance!"
-                  >
-                    ✓
-                  </span>
-                )}
-              </div>
-
-              {/* 1st place count - hidden on mobile */}
-              <div className="col-span-3 text-center hidden sm:block">
-                {entry.first_place_count > 0 ? (
-                  <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
-                    <span className="text-sm">🥇</span>
-                    <span className="font-medium">
-                      ×{entry.first_place_count}
+                {/* 1st place count */}
+                <div className="col-span-2 sm:col-span-3 text-center">
+                  {entry.first_place_count > 0 ? (
+                    <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                      <span className="text-sm">🥇</span>
+                      <span className="font-medium">
+                        ×{entry.first_place_count}
+                      </span>
                     </span>
-                  </span>
-                ) : (
-                  <span className="text-gray-400 dark:text-gray-500">-</span>
-                )}
+                  ) : (
+                    <span className="text-gray-400 dark:text-gray-500">-</span>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Legend */}
