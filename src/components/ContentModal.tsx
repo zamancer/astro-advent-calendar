@@ -92,32 +92,73 @@ export default function ContentModal({
     };
   }, [isOpen, onClose, prevDay, nextDay, navigateTo]);
 
+  // Check if an element or its ancestors are scrollable
+  const isInsideScrollableElement = (element: EventTarget | null): boolean => {
+    if (!(element instanceof HTMLElement)) return false;
+
+    let current: HTMLElement | null = element;
+    while (current && current !== document.body) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      const isScrollable =
+        (overflowY === "auto" || overflowY === "scroll") &&
+        current.scrollHeight > current.clientHeight;
+
+      if (isScrollable) return true;
+      current = current.parentElement;
+    }
+    return false;
+  };
+
+  // Track if touch started in a scrollable area
+  const touchStartedInScrollable = useRef(false);
+
   // Touch handlers for swipe navigation (mobile)
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Check if touch originated from a scrollable element
+    touchStartedInScrollable.current = isInsideScrollableElement(e.target);
+
+    // If inside scrollable content, don't track for navigation
+    if (touchStartedInScrollable.current) {
+      setTouchStart(null);
+      setTouchEnd(null);
+      return;
+    }
+
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientY);
     setSwipeDirection(null);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    // Skip if touch started in scrollable area
+    if (touchStartedInScrollable.current || touchStart === null) return;
+
     const currentTouch = e.targetTouches[0].clientY;
     setTouchEnd(currentTouch);
 
     // Show visual feedback during swipe
-    if (touchStart !== null) {
-      const diff = touchStart - currentTouch;
-      if (diff > 20 && nextDay !== null) {
-        setSwipeDirection("up");
-      } else if (diff < -20 && prevDay !== null) {
-        setSwipeDirection("down");
-      } else {
-        setSwipeDirection(null);
-      }
+    const diff = touchStart - currentTouch;
+    if (diff > 20 && nextDay !== null) {
+      setSwipeDirection("up");
+    } else if (diff < -20 && prevDay !== null) {
+      setSwipeDirection("down");
+    } else {
+      setSwipeDirection(null);
     }
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    // Skip if touch started in scrollable area
+    if (touchStartedInScrollable.current) {
+      touchStartedInScrollable.current = false;
+      return;
+    }
+
+    if (!touchStart || !touchEnd) {
+      setSwipeDirection(null);
+      return;
+    }
 
     const distance = touchStart - touchEnd;
     const isSwipeUp = distance > SWIPE_THRESHOLD;
@@ -133,6 +174,7 @@ export default function ContentModal({
     setTouchStart(null);
     setTouchEnd(null);
     setSwipeDirection(null);
+    touchStartedInScrollable.current = false;
   };
 
   if (!isOpen || !content) return null;
